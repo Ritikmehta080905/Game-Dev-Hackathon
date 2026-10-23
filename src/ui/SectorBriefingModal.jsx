@@ -61,18 +61,18 @@ const SECTOR_BRIEFINGS = {
     badge: '☕ CAMPUS CANTEEN & LABS',
     spots: 'Chai & Samosa Counter • Classroom 301 Doors • Phased Concrete Walls • Neon Glitch Cyber-Bridges',
     anomalyTitle: '⚠️ ANOMALY: MULTI-DIMENSIONAL RIFT',
-    anomalyDesc: 'Reality has split into two co-existing layers: the Real Campus and the Glitch Campus. A solid wall blocks the hallway in the Real layer, while the void bridge only exists in the Glitch layer.',
+    anomalyDesc: 'Reality has split into two co-existing layers: REAL CAMPUS and GLITCH LAYER. A solid concrete wall blocks the corridor in the Real layer, and the cyber-bridges over the void only materialize in the Glitch layer!',
     objectiveTitle: '🎯 YOUR OBJECTIVE & HOW TO PLAY:',
     steps: [
-      'Press [Q] to Switch Dimensions (Costs 15 Energy) — the solid wall phases into a ghost outline so you can walk through.',
-      'While in the Glitch dimension (magenta world), the glowing cyber-bridge becomes solid to walk on.',
-      'Switch back to the Real dimension before the Glitch laser strikes to safely reach the final canteen balcony.'
+      '1. PUZZLE 1 (WALL): Walk up to the security wall. Press [Q] to switch to GLITCH layer — the wall turns into a glowing magenta hologram with collider disabled so you can walk right through it!',
+      '2. PUZZLE 2 (BRIDGES): Keep GLITCH mode active — the two glowing cyber-bridges across the void become solid to jump across.',
+      '3. PUZZLE 3 (LASER): At the midway checkpoint, press [Q] to switch back to REAL layer to deactivate the sweeping Glitch laser, then step onto the final balcony and access the exit terminal!'
     ],
     unlockedKey: {
       key: 'Q',
       action: 'DIMENSION SWITCH',
       cost: '15 ENERGY',
-      desc: 'Instantly swaps active reality between REAL and GLITCH layers, altering which platforms are solid.'
+      desc: 'Swaps reality between REAL and GLITCH layers: phases the blocking wall open & solidifies cyber-bridges over the void.'
     }
   },
   4: {

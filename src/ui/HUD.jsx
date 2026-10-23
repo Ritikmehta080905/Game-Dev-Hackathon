@@ -54,7 +54,7 @@ const LEVEL_THEMES = {
     deptTag: '☕ CAMPUS CANTEEN & DEPT OF COMPUTER ENGG',
     docRole: 'STUDENT CAFETERIA RECEIPT & LAB 301 PASS',
     anomaly: 'Campus reality split into two layers! Solid concrete wall blocks the Real layer, and the cyber-bridge only exists in Glitch layer.',
-    howToPlay: 'Press [Q] to Switch Dimensions (Costs 15 Energy) — phase through walls and walk across the glowing cyber-bridge over the abyss!',
+    howToPlay: 'Press [Q] to phase through the wall -> Jump across Glitch cyber-bridges -> Press [Q] at checkpoint to deactivate laser!',
     keyPrompt: '[Q] DIMENSION SWITCH',
     accent: '#FF2E93',
     secondaryAccent: '#FF9E3D',
@@ -62,7 +62,7 @@ const LEVEL_THEMES = {
     bgTint: 'rgba(255, 46, 147, 0.08)',
     borderStyle: '2px solid #FF2E93',
     badgeBg: 'rgba(255, 46, 147, 0.15)',
-    monitorText: 'DIMENSIONAL PHASE RIFT: USE [Q] TO TOGGLE REAL CAMPUS & GLITCH AURA',
+    monitorText: 'CORRIDOR BLOCKED: PRESS [Q] TO TURN WALL HOLOGRAPHIC & PASS THROUGH',
     activeRule: 'layer'
   },
   4: {

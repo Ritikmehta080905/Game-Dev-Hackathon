@@ -14,7 +14,7 @@ import Collectible from '../entities/Collectible';
 import Checkpoint from '../entities/Checkpoint';
 import Terminal from '../entities/Terminal';
 
-export default function Level4({ playerPosRef, ghostPosRef }) {
+export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
   return (
     <group>
       {/* ========================================================
@@ -113,11 +113,13 @@ export default function Level4({ playerPosRef, ghostPosRef }) {
         position={[-4, 6.2, -31]}
         size={[6, 0.8, 6]}
         dimension="GLITCH"
+        activeDimension={activeDimension}
       />
       <DimensionPlatform
         position={[4, 7.8, -39]}
         size={[6, 0.8, 6]}
         dimension="GLITCH"
+        activeDimension={activeDimension}
       />
 
       {/* ========================================================
