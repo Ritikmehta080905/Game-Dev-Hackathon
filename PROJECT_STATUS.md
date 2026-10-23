@@ -15,9 +15,9 @@
 | **Milestone 3** | Complete First Level: The Broken Gate (Puzzles, fragments, checkpoints, exit, pause) | ✅ **COMPLETE** | Verified full loop: Boot → Menu → Level 1 → Checkpoints → Pause Menu |
 | **Milestone 4** | Core Mechanics: Time Freeze `[F]` & Dimension Switch `[Q]` | ✅ **COMPLETE** | Verified kinematic laser/platform freeze + real/glitch phase colliders |
 | **Milestone 5** | 4 Distinct Playable Campus Levels (Broken Gate, Library, Lab, Core) | ✅ **COMPLETE** | All 4 campus sectors playable, sector selector & progression verified |
-| **Milestone 6** | Real College Campus UI & Path Visibility Overhaul (Whole Website) | ✅ **COMPLETE** | Atharva University branding, Student ID badge, Exam Bell timer, Attendance health bar, Marks Card, Visible pavers & lamps |
-| **Milestone 7** | Time Echo `[E]` & Web Audio Ambience (Ghost clone for pressure plate, sector synth) | ⏳ PENDING | Up next |
-| **Milestone 8** | QA, Production Build & Vercel Deployment | ✅ **VERIFIED** | `npm run build` exits with code 0 (8.09s) |
+| **Milestone 6** | Real College Campus UI & Path Visibility Overhaul (Whole Website) | ✅ **COMPLETE** | Campus Zero arcade styling, Cadet ID badge, Bell timer, Shield bar, Diagnostic Card, Visible pavers & lamps |
+| **Milestone 7** | Time Echo `[E]` & Web Audio Ambience (Ghost clone for pressure plate, sector synth) | ✅ **COMPLETE** | 3D Time Echo Ghost clone recording & replay on `[E]` + linked pressure plate & tape-rewind synth |
+| **Milestone 8** | QA, Production Build & Vercel Deployment | ✅ **VERIFIED** | `npm run build` exits with code 0 |
 
 ---
 

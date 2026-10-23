@@ -146,6 +146,27 @@ class AudioSystem {
     });
   }
 
+  playTimeEcho() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(880, this.ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(220, this.ctx.currentTime + 0.18);
+      gain.gain.setValueAtTime(0.14, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.18);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.18);
+      setTimeout(() => this.playTone(660, 'sine', 0.15, 0.12), 120);
+      setTimeout(() => this.playTone(990, 'sine', 0.2, 0.15), 200);
+    } catch (e) {}
+  }
+
   startDrone() {
     if (this.muted || this.isDroneActive) return;
     this.init();

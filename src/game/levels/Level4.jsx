@@ -16,7 +16,7 @@ import Terminal from '../entities/Terminal';
 import { GameState } from '../../systems/GameState';
 import { Sound } from '../../systems/AudioSystem';
 
-export default function Level4({ playerPosRef }) {
+export default function Level4({ playerPosRef, ghostPosRef }) {
   // Corrupted Admin Boss Glitch Twist (Doc §9):
   // Every 28 seconds, the Corrupted Admin attempts to override reality!
   useEffect(() => {
@@ -105,6 +105,7 @@ export default function Level4({ playerPosRef }) {
       <PressurePlate
         position={[4, 0.05, 4]}
         playerPosRef={playerPosRef}
+        ghostPosRef={ghostPosRef}
         doorPosition={[0, 2.6, -3]}
         doorSize={[10, 4.2, 0.5]}
       />

@@ -18,6 +18,7 @@ export default function Player({ playerPosRef, gravityInverted }) {
   const flipPressedRef = useRef(false);
   const freezePressedRef = useRef(false);
   const dimensionPressedRef = useRef(false);
+  const echoPressedRef = useRef(false);
   const wasGroundedRef = useRef(false);
 
   const targetRotationZ = gravityInverted ? Math.PI : 0;
@@ -67,6 +68,21 @@ export default function Player({ playerPosRef, gravityInverted }) {
       dimensionPressedRef.current = false;
     }
   }, [keys.dimension]);
+
+  // 4. Listen for Time Echo [E]
+  useEffect(() => {
+    if (keys.interact && !echoPressedRef.current) {
+      echoPressedRef.current = true;
+      const res = GameState.triggerTimeEcho();
+      if (res) {
+        Sound.playTimeEcho();
+      } else {
+        Sound.playTone(180, 'sawtooth', 0.1, 0.1); // Not enough energy
+      }
+    } else if (!keys.interact) {
+      echoPressedRef.current = false;
+    }
+  }, [keys.interact]);
 
   // 4. Listen for Manual Reset [R] and Hazard Hit Events
   useEffect(() => {

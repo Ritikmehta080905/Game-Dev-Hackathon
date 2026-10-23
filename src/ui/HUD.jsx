@@ -73,15 +73,15 @@ const LEVEL_THEMES = {
     deptTag: '⚡ CENTRAL MAINFRAME // ROOT TERMINAL',
     docRole: 'SYSADMIN ROOT ACCESS TERMINAL // REBOOT',
     anomaly: 'Corrupted Admin System Override! Blast door locked, moving server lifts active, and laser abyss guarding the root terminal.',
-    howToPlay: 'Master ALL Mechanics! Step on Pressure Plate -> Use [F] on lift -> [Q] on cyber-bridge -> [G] to reach gantry & press REBOOT!',
-    keyPrompt: '[G] + [F] + [Q] ALL RULES',
+    howToPlay: 'Master ALL Mechanics! Press [E] on Pressure Plate to spawn Ghost -> Use [F] on lift -> [Q] on cyber-bridge -> [G] to reach gantry & press REBOOT!',
+    keyPrompt: '[E] + [G] + [F] + [Q] ALL RULES',
     accent: '#7B4BFF',
     secondaryAccent: '#00E5FF',
     accentGlow: 'rgba(123, 75, 255, 0.35)',
     bgTint: 'rgba(123, 75, 255, 0.08)',
     borderStyle: '2px solid #7B4BFF',
     badgeBg: 'rgba(123, 75, 255, 0.15)',
-    monitorText: 'CORRUPTED ADMIN LOCKDOWN: COMBINE [G] + [F] + [Q] TO REBOOT SYSTEM',
+    monitorText: 'CORRUPTED ADMIN LOCKDOWN: COMBINE [E] ECHO + [G] + [F] + [Q] TO REBOOT SYSTEM',
     activeRule: 'all'
   }
 };
@@ -246,6 +246,18 @@ export default function HUD() {
         </div>
       )}
 
+      {/* Time Echo Status Badges */}
+      {state.timeEchoRecording && (
+        <div style={{ ...styles.speedBoostBadge, background: 'rgba(239, 68, 68, 0.25)', borderColor: '#EF4444', color: '#EF4444' }}>
+          ⏺️ TIME ECHO RECORDING: WALK ONTO PRESSURE PLATE — PRESS [E] TO SPAWN GHOST!
+        </div>
+      )}
+      {state.timeEchoActive && (
+        <div style={{ ...styles.speedBoostBadge, background: 'rgba(0, 229, 255, 0.25)', borderColor: '#00E5FF', color: '#00E5FF' }}>
+          ⚡ TIME ECHO ACTIVE: CYAN GHOST CLONE REPLAYING MOVEMENTS &amp; HOLDING PRESSURE PLATE!
+        </div>
+      )}
+
       {/* ========================================================
           2. BOTTOM WORKSPACE: VISIBLE RULES PANEL & HOTKEY CONTROLS
           ======================================================== */}
@@ -306,6 +318,26 @@ export default function HUD() {
               )}
             </div>
 
+            {(theme.activeRule === 'all' || state.timeEchoRecording || state.timeEchoActive) && (
+              <div style={styles.codeLine}>
+                <span style={styles.varName}>echo</span> ={' '}
+                <button
+                  style={{
+                    ...styles.ruleTagBtn,
+                    borderColor: state.timeEchoRecording ? '#EF4444' : (state.timeEchoActive ? '#00E5FF' : '#7B4BFF'),
+                    color: state.timeEchoRecording ? '#EF4444' : (state.timeEchoActive ? '#00E5FF' : '#7B4BFF')
+                  }}
+                  onClick={() => {
+                    const res = GameState.triggerTimeEcho();
+                    if (res) Sound.playTimeEcho();
+                  }}
+                >
+                  {state.timeEchoRecording ? 'RECORDING (5s) [E]' : (state.timeEchoActive ? 'GHOST_REPLAY [E]' : 'STANDBY [E]')}
+                </button>
+                <span style={{ ...styles.activeRuleTag, color: theme.accent }}>● TARGET RULE</span>
+              </div>
+            )}
+
             <div style={styles.codeLine}>
               <span style={styles.varName}>attendance</span> ={' '}
               <span style={{ color: attendanceColor, fontWeight: 'bold' }}>{state.attendance}%</span>;
@@ -354,6 +386,24 @@ export default function HUD() {
               }}
             >
               <kbd style={styles.kbd}>Q</kbd> Dimension (15)
+            </button>
+          </div>
+          <div style={styles.hotkeyItem}>
+            <button
+              style={{
+                ...styles.keyBtn,
+                borderColor: state.timeEchoRecording ? '#EF4444' : (state.timeEchoActive ? '#00E5FF' : (state.currentLevel === 4 ? '#7B4BFF' : 'rgba(255,255,255,0.2)')),
+                color: state.timeEchoRecording ? '#EF4444' : (state.timeEchoActive ? '#00E5FF' : '#F8FAFC'),
+                background: state.timeEchoRecording ? 'rgba(239, 68, 68, 0.2)' : (state.timeEchoActive ? 'rgba(0, 229, 255, 0.2)' : 'transparent')
+              }}
+              onClick={() => {
+                const res = GameState.triggerTimeEcho();
+                if (res) Sound.playTimeEcho();
+              }}
+              title="Record & Replay Ghost Clone to Hold Pressure Plates (E)"
+            >
+              <kbd style={styles.kbd}>E</kbd>{' '}
+              {state.timeEchoRecording ? '● STOP (REC)' : (state.timeEchoActive ? 'GHOST ACTIVE' : 'Echo (40)')}
             </button>
           </div>
           <div style={styles.hotkeyItem}>

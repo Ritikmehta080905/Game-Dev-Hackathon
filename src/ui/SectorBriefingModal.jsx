@@ -87,16 +87,17 @@ const SECTOR_BRIEFINGS = {
     anomalyDesc: 'The final mainframe is completely locked down! Heavy security blast doors guard the chamber, moving server lifts oscillate rapidly, and the Root Reboot Terminal is suspended at the highest ceiling point.',
     objectiveTitle: '🎯 YOUR OBJECTIVE & HOW TO PLAY:',
     steps: [
-      'Step onto the glowing floor Pressure Plate to open the heavy firewall blast door.',
+      'Press [E] to Record Time Echo (Costs 40 Energy), walk onto the floor Pressure Plate, then press [E] again to spawn a cyan ghost clone that holds the plate down.',
+      'Walk through the open firewall blast door while the ghost holds the plate.',
       'Use Time Freeze [F] to safely board the fast moving server lift.',
       'Use Dimension Switch [Q] to navigate the phased cyber-bridge across the mainframe abyss.',
-      'Press [G] to Flip Gravity up to the ceiling gantry and press the REBOOT BUTTON to save the campus!'
+      'Press [G] to Flip Gravity up to the ceiling gantry and press the REBOOT BUTTON to save the simulation!'
     ],
     unlockedKey: {
-      key: 'G + F + Q',
-      action: 'MASTER ALL MECHANICS',
+      key: 'E + G + F + Q',
+      action: 'TIME ECHO & MASTER ALL MECHANICS',
       cost: 'MANAGE ENERGY WISELY',
-      desc: 'Combine Gravity Inversion, Time Freeze, and Dimensional Phase Shift to reboot the central mainframe.'
+      desc: 'Use Time Echo ghost clone on pressure plate, and combine Gravity Inversion, Time Freeze, and Dimension Switch.'
     }
   }
 };

@@ -10,6 +10,7 @@ import Level2 from './levels/Level2';
 import Level3 from './levels/Level3';
 import Level4 from './levels/Level4';
 import CameraController from './player/CameraController';
+import TimeEchoGhost from './player/TimeEchoGhost';
 import CampusEnvironment, { ENV_SETTINGS } from './CampusEnvironment';
 import { GameState } from '../systems/GameState';
 
@@ -24,6 +25,7 @@ export default function GameCanvas() {
   const [currentLevel, setCurrentLevel] = useState(GameState.currentLevel);
   const [gravityInverted, setGravityInverted] = useState(GameState.gravityInverted);
   const playerPosRef = useRef({ x: 0, y: 2, z: 8 });
+  const ghostPosRef = useRef(null);
 
   useEffect(() => {
     return GameState.subscribe((state) => {
@@ -51,8 +53,9 @@ export default function GameCanvas() {
 
         {/* Rapier Physics World */}
         <Physics gravity={gravityVector}>
-          <LevelComponent playerPosRef={playerPosRef} />
+          <LevelComponent playerPosRef={playerPosRef} ghostPosRef={ghostPosRef} />
           <Player playerPosRef={playerPosRef} gravityInverted={gravityInverted} />
+          <TimeEchoGhost ghostPosRef={ghostPosRef} playerPosRef={playerPosRef} />
         </Physics>
       </Canvas>
     </div>

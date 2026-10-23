@@ -34,6 +34,10 @@ class GameStateManager {
     this.coffeeCollected = 0;
     this.adminGlitchWarning = null;
     this.adminGlitchActive = false;
+    this.timeEchoRecording = false;
+    this.timeEchoActive = false;
+    this.timeEchoFrames = [];
+    this.timeEchoTimeout = null;
     this.studentInfo = {
       name: 'Cadet Debugger',
       role: 'Reality Architect',
@@ -75,6 +79,7 @@ class GameStateManager {
     this.showSectorIntro = true;
     this.detentionReason = '';
     this.checkpoint = [0, 2, 8];
+    this.clearTimeEcho();
     // Level specific exam bell times
     const timerMap = { 1: 90, 2: 120, 3: 150, 4: 180 };
     this.examTimer = timerMap[levelId] || 90;
@@ -100,6 +105,7 @@ class GameStateManager {
   }
 
   returnToPortal() {
+    this.clearTimeEcho();
     this.isDetained = false;
     this.isTimeOut = false;
     this.detentionReason = '';
@@ -172,6 +178,61 @@ class GameStateManager {
     }, durationMs);
 
     return true;
+  }
+
+  triggerTimeEcho() {
+    // If currently recording, finish immediately and start replaying
+    if (this.timeEchoRecording) {
+      this.timeEchoRecording = false;
+      if (this.timeEchoTimeout) clearTimeout(this.timeEchoTimeout);
+      this.timeEchoActive = this.timeEchoFrames.length > 5;
+      this.notify();
+      return 'PLAYBACK';
+    }
+
+    // If ghost is already active, dismiss it
+    if (this.timeEchoActive) {
+      this.timeEchoActive = false;
+      this.timeEchoFrames = [];
+      this.notify();
+      return 'DISMISSED';
+    }
+
+    // Otherwise, start recording moves (costs 40 Energy per doc §4)
+    if (!this.useEnergy(40)) {
+      return false;
+    }
+
+    this.timeEchoRecording = true;
+    this.timeEchoActive = false;
+    this.timeEchoFrames = [];
+    this.notify();
+
+    // Automatically stop recording after 5.0s (Doc §4.4)
+    this.timeEchoTimeout = setTimeout(() => {
+      if (this.timeEchoRecording) {
+        this.timeEchoRecording = false;
+        this.timeEchoActive = this.timeEchoFrames.length > 5;
+        this.notify();
+      }
+    }, 5000);
+
+    return 'RECORDING';
+  }
+
+  recordEchoFrame(frame) {
+    if (!this.timeEchoRecording) return;
+    if (this.timeEchoFrames.length < 360) {
+      this.timeEchoFrames.push(frame);
+    }
+  }
+
+  clearTimeEcho() {
+    if (this.timeEchoTimeout) clearTimeout(this.timeEchoTimeout);
+    this.timeEchoRecording = false;
+    this.timeEchoActive = false;
+    this.timeEchoFrames = [];
+    this.notify();
   }
 
   takeHit(amount = 25, reason = 'Contact with security anomaly / fall into void!') {
