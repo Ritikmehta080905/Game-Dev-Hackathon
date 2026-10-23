@@ -280,6 +280,10 @@ export default function Level3({ playerPosRef, activeDimension }) {
         playerPosRef={playerPosRef}
         isLocked={!doorUnlocked}
         lockMessage="⚠ QUARANTINED // DECRYPT WORKSTATIONS ALPHA & BETA IN LAB 301"
+        onAutoUnlock={() => {
+          GameState.setLevelPuzzle(3, 'doorUnlocked', true);
+          Sound.playPowerRestored();
+        }}
         storyRevealData={{
           id: 'l3_project_atharva_reveal',
           type: 'terminal',

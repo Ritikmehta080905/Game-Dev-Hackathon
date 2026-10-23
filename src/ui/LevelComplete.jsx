@@ -1,7 +1,7 @@
 // ATHARVA.EXE — LevelComplete: Semester Marksheet & Grade Card
 // Official university grade report with CGPA, attendance score, and semester progression!
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { GameState } from '../systems/GameState';
 import { Sound } from '../systems/AudioSystem';
 
@@ -37,6 +37,17 @@ export default function LevelComplete() {
       GameState.startLevel(data.levelId + 1);
     }
   };
+
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.code === 'KeyE' || e.code === 'Enter' || e.code === 'Space') {
+        e.preventDefault();
+        handleNext();
+      }
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [data, isFinalLevel]);
 
   const handleReplay = () => {
     GameState.startLevel(data.levelId);

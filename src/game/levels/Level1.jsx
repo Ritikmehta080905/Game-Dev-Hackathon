@@ -392,14 +392,15 @@ export default function Level1({ playerPosRef }) {
       {/* ========================================================
           7B. INVERTED EMERGENCY CIRCUIT BREAKER STATION (PUZZLE 1)
           ======================================================== */}
-      {/* Mounted upside-down on the ceiling gantry walkway at [3.2, 13.88, -36] */}
+      {/* Mounted on ceiling gantry directly in the walkway at [0, 13.88, -34] */}
       <StoryTerminal
-        position={[3.2, 13.88, -36]}
+        position={[0, 13.88, -34]}
         rotation={[Math.PI, 0, 0]}
         label="CIRCUIT BREAKER CB-01"
         promptText={powerRestored ? '✔ BREAKER CLOSED (ACTIVE)' : '[E] SWITCH EMERGENCY BREAKER'}
         accentColor={powerRestored ? '#10B981' : '#FF9E3D'}
         isActivated={powerRestored}
+        triggerRadius={4.5}
         playerPosRef={playerPosRef}
         onActivate={() => {
           if (!powerRestored) {
@@ -430,9 +431,9 @@ export default function Level1({ playerPosRef }) {
       />
 
       {/* Heavy High-Voltage Power Conduit running along Skywalk to Exit Gateway */}
-      <group position={[3.2, 13.84, -41.5]}>
+      <group position={[0, 13.84, -40.5]}>
         <mesh>
-          <boxGeometry args={[0.15, 0.08, 11]} />
+          <boxGeometry args={[0.25, 0.08, 13]} />
           <meshStandardMaterial
             color={powerRestored ? '#00E5FF' : '#78350F'}
             emissive={powerRestored ? '#00E5FF' : '#78350F'}
@@ -453,6 +454,10 @@ export default function Level1({ playerPosRef }) {
         playerPosRef={playerPosRef}
         isLocked={!powerRestored}
         lockMessage="⚠ GATE OFFLINE // RESTORE BREAKER ON SKYWALK"
+        onAutoUnlock={() => {
+          GameState.setLevelPuzzle(1, 'powerRestored', true);
+          Sound.playPowerRestored();
+        }}
         storyRevealData={{
           id: 'l1_exit_attendance_reveal',
           type: 'attendance',

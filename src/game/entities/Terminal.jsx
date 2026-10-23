@@ -1,7 +1,7 @@
 // ATHARVA.EXE — Terminal: 3D Exit Gateway & System Reboot Portal
-// Supports objective verification (power/puzzle lock) and story reveal modal integration
+// Supports objective verification, auto-unlock on interaction, and seamless sector transitions
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Text } from '@react-three/drei';
 import { GameState } from '../../systems/GameState';
@@ -13,52 +13,81 @@ export default function Terminal({
   playerPosRef,
   isLocked = false,
   lockMessage = '⚠ GATE OFFLINE // RESTORE POWER CIRCUIT',
-  storyRevealData = null
+  storyRevealData = null,
+  onAutoUnlock = null
 }) {
   const portalRef = useRef();
   const [triggered, setTriggered] = useState(false);
-  const [warnCooldown, setWarnCooldown] = useState(false);
+  const [inRange, setInRange] = useState(false);
+
+  const triggerTerminal = () => {
+    if (triggered || GameState.activeStoryModal || GameState.showSectorIntro) return;
+
+    if (isLocked && onAutoUnlock) {
+      onAutoUnlock();
+    }
+
+    setTriggered(true);
+    Sound.playPowerRestored();
+
+    if (storyRevealData) {
+      GameState.openStoryModal({
+        ...storyRevealData,
+        onAction: () => {
+          Sound.playLevelComplete();
+          GameState.completeLevel();
+        }
+      });
+    } else {
+      Sound.playLevelComplete();
+      GameState.completeLevel();
+    }
+  };
+
+  useEffect(() => {
+    const handleKey = (e) => {
+      if ((e.code === 'KeyE' || e.code === 'Enter') && inRange && !triggered) {
+        triggerTerminal();
+      }
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [inRange, triggered, isLocked, storyRevealData]);
 
   useFrame((state, delta) => {
     if (portalRef.current) {
       portalRef.current.rotation.z += delta * (isLocked ? 0.2 : 0.8);
     }
 
-    if (!triggered && playerPosRef && playerPosRef.current) {
+    if (playerPosRef && playerPosRef.current) {
       const p = playerPosRef.current;
       const distSq = (p.x - position[0]) ** 2 + (p.y - position[1]) ** 2 + (p.z - position[2]) ** 2;
 
-      if (distSq < 3.24) { // Radius 1.8m
-        if (isLocked) {
-          if (!warnCooldown) {
-            setWarnCooldown(true);
-            Sound.playTone(180, 'sawtooth', 0.12, 0.15);
-            setTimeout(() => setWarnCooldown(false), 2000);
-          }
-        } else {
-          setTriggered(true);
-          if (storyRevealData) {
-            GameState.openStoryModal({
-              ...storyRevealData,
-              onAction: () => {
-                Sound.playLevelComplete();
-                GameState.completeLevel();
-              }
-            });
-          } else {
-            Sound.playLevelComplete();
-            GameState.completeLevel();
-          }
-        }
+      // Close enough for 3D prompt (radius 4.0m)
+      const near = distSq < 16.0;
+      if (near !== inRange) {
+        setInRange(near);
+      }
+
+      // Directly stepping through or touching the portal (radius 2.2m)
+      if (!triggered && distSq < 4.84) {
+        triggerTerminal();
       }
     }
   });
 
-  const activeColor = isLocked ? '#EF4444' : '#00E5FF';
-  const emissiveInt = isLocked ? 0.3 : 0.8;
+  const activeColor = (isLocked && !inRange) ? '#EF4444' : '#00E5FF';
+  const emissiveInt = (isLocked && !inRange) ? 0.3 : 0.9;
 
   return (
-    <group position={position} rotation={rotation}>
+    <group
+      position={position}
+      rotation={rotation}
+      onClick={(e) => {
+        e.stopPropagation();
+        triggerTerminal();
+      }}
+    >
       {/* Archway Pillars */}
       <mesh position={[-1.2, 1.5, 0]}>
         <boxGeometry args={[0.3, 3, 0.4]} />
@@ -86,28 +115,45 @@ export default function Terminal({
           color={activeColor}
           wireframe
           transparent
-          opacity={isLocked ? 0.25 : 0.65}
+          opacity={isLocked && !inRange ? 0.25 : 0.75}
         />
       </mesh>
 
-      {/* Reboot Gateway Light */}
+      {/* Gateway Light */}
       <pointLight
         color={activeColor}
-        intensity={isLocked ? 1.0 : 3.0}
-        distance={8}
+        intensity={isLocked && !inRange ? 1.0 : 3.5}
+        distance={10}
         position={[0, 1.5, 0]}
       />
 
-      {/* Status Warning Text if locked */}
-      {isLocked && (
+      {/* Status Warning / Interaction Prompt */}
+      {inRange ? (
         <group position={[0, 3.7, 0]}>
           <mesh position={[0, 0, -0.01]}>
-            <planeGeometry args={[3.6, 0.45]} />
-            <meshBasicMaterial color="#090E21" transparent opacity={0.85} />
+            <planeGeometry args={[4.2, 0.5]} />
+            <meshBasicMaterial color="#090E21" transparent opacity={0.92} />
           </mesh>
           <Text
             position={[0, 0, 0.02]}
             fontSize={0.16}
+            color="#FFE14D"
+            fontWeight="bold"
+            anchorX="center"
+            anchorY="middle"
+          >
+            [E] AUDIT ATTENDANCE &amp; PASS GATE ▶
+          </Text>
+        </group>
+      ) : isLocked ? (
+        <group position={[0, 3.7, 0]}>
+          <mesh position={[0, 0, -0.01]}>
+            <planeGeometry args={[3.8, 0.45]} />
+            <meshBasicMaterial color="#090E21" transparent opacity={0.85} />
+          </mesh>
+          <Text
+            position={[0, 0, 0.02]}
+            fontSize={0.15}
             color="#EF4444"
             fontWeight="bold"
             anchorX="center"
@@ -116,7 +162,7 @@ export default function Terminal({
             {lockMessage}
           </Text>
         </group>
-      )}
+      ) : null}
     </group>
   );
 }

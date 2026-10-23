@@ -356,6 +356,10 @@ export default function Level2({ playerPosRef }) {
             ? '⚠ SHUTTER LOCKED // CALIBRATE CONSOLE ON BALCONY'
             : `⚠ ARCHIVE RESTRICTED // RECOVER ALL 3 CATALOGUE CARDS (${fragmentsCount}/3)`
         }
+        onAutoUnlock={() => {
+          GameState.setLevelPuzzle(2, 'archiveDoorUnlocked', true);
+          Sound.playPowerRestored();
+        }}
         storyRevealData={{
           id: 'l2_anya_sharma_reveal',
           type: 'attendance',
