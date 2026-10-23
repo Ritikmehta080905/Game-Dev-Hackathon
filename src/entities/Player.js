@@ -73,11 +73,20 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         // Landing event
         Audio.playLand();
         this.squashAndStretch(1.2, 0.8);
+        Effects.createLandPuff(this.scene, this.x, this.y, RulesState.gravityDir);
       }
     } else {
       this.coyoteCounter = Math.max(0, this.coyoteCounter - delta);
     }
     this.wasGrounded = grounded;
+
+    // Movement & Flip Trailing Afterimages
+    if (Math.abs(this.body.velocity.x) > 160 || Math.abs(this.body.velocity.y) > 220) {
+      if (!this.lastTrailTime || time - this.lastTrailTime > 90) {
+        Effects.createGhostTrail(this.scene, this, RulesState.gravityDir === -1 ? 0xFF2E93 : 0x00E5FF);
+        this.lastTrailTime = time;
+      }
+    }
 
     // 3. Jump Input Buffering
     const jumpPressed = Phaser.Input.Keyboard.JustDown(this.cursors.up) ||
@@ -142,6 +151,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     const jumpVel = -RulesState.gravityDir * PHYSICS.JUMP_SPEED;
     this.body.setVelocityY(jumpVel);
     this.squashAndStretch(0.8, 1.25);
+    Effects.createJumpDust(this.scene, this.x, this.y, RulesState.gravityDir);
     Effects.createEmitter(this.scene, this.x, this.y + (RulesState.gravityDir * 20), 'particle_spark', 6);
   }
 
@@ -164,6 +174,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     Audio.playHit();
     Effects.shake(this.scene, 0.02, 160);
     Effects.flash(this.scene, COLORS.MAGENTA, 120);
+    Effects.createGlitchBurst(this.scene, this.x, this.y, 16);
 
     const isDead = RulesState.damage(amount);
     Score.recordDeath();

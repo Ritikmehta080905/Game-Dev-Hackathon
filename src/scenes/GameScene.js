@@ -244,6 +244,8 @@ export default class GameScene extends Phaser.Scene {
       RulesState.setGravity(-RulesState.gravityDir);
       Audio.playGravityFlip();
       Effects.shake(this, 0.015, 100);
+      Effects.triggerGlitchShaderPulse(180);
+      Effects.createGlitchBurst(this, this.player.x, this.player.y, 8);
     });
 
     // 2. Time Freeze [F]
@@ -260,6 +262,12 @@ export default class GameScene extends Phaser.Scene {
       RulesState.setTimeScale(0.0);
       Audio.playTimeFreeze();
       Effects.flash(this, COLORS.CYAN, 200);
+      Effects.triggerGlitchShaderPulse(250);
+
+      // Frosted particles around hazards
+      for (const h of this.hazards) {
+        Effects.createFreezeFrost(this, h.x, h.y);
+      }
 
       // Freeze duration (3 seconds)
       this.time.delayedCall(POWERS.FREEZE.duration, () => {
@@ -292,6 +300,8 @@ export default class GameScene extends Phaser.Scene {
       RulesState.setLayer(targetLayer);
       Audio.playDimensionSwitch();
       Effects.flash(this, targetLayer === 'GLITCH' ? COLORS.MAGENTA : COLORS.CYAN, 120);
+      Effects.triggerGlitchShaderPulse(220);
+      Effects.createGlitchBurst(this, this.player.x, this.player.y, 14);
       this.updatePlatformLayerCollisions();
     });
 
@@ -457,6 +467,8 @@ export default class GameScene extends Phaser.Scene {
     Audio.playDeath();
     Effects.shake(this, 0.03, 300);
     Effects.flash(this, COLORS.MAGENTA, 300);
+    Effects.triggerGlitchShaderPulse(380);
+    Effects.createGlitchBurst(this, this.player.x, this.player.y, 22);
 
     this.scene.pause();
     this.uiScene.showWarning(reason, 2000);
@@ -478,11 +490,13 @@ export default class GameScene extends Phaser.Scene {
     const totalBits = this.levelData.collectibles.filter(c => c.type === 'bit').length;
     const result = Score.calculateLevelResult(this.levelId, Math.ceil(RulesState.examTimer), totalBits);
 
-    this.scene.stop('UIScene');
-    this.scene.start('ResultsScene', {
-      levelId: this.levelId,
-      result: result,
-      isFinalLevel: (this.levelId === 4)
+    Effects.glitchWipe(this, () => {
+      this.scene.stop('UIScene');
+      this.scene.start('ResultsScene', {
+        levelId: this.levelId,
+        result: result,
+        isFinalLevel: (this.levelId === 4)
+      });
     });
   }
 }

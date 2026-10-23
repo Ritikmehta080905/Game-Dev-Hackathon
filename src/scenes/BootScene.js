@@ -273,6 +273,37 @@ export default class BootScene extends Phaser.Scene {
       ctx.arc(4, 4, 3, 0, Math.PI * 2);
       ctx.fill();
     });
+
+    // 15. Jump & Landing Dust Particle (10x10)
+    this.createCanvasTexture('dust_particle', 10, 10, (ctx) => {
+      ctx.fillStyle = 'rgba(0, 229, 255, 0.6)';
+      ctx.beginPath();
+      ctx.arc(5, 5, 4, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // 16. Time Freeze Frost Shard (12x12)
+    this.createCanvasTexture('frost_shard', 12, 12, (ctx) => {
+      ctx.fillStyle = '#E0F7FA';
+      ctx.beginPath();
+      ctx.moveTo(6, 0);
+      ctx.lineTo(12, 6);
+      ctx.lineTo(6, 12);
+      ctx.lineTo(0, 6);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#00E5FF';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    });
+
+    // 17. Glitch Digital Shard (14x6)
+    this.createCanvasTexture('glitch_shard', 14, 6, (ctx) => {
+      ctx.fillStyle = '#FF2E93';
+      ctx.fillRect(0, 0, 14, 6);
+      ctx.fillStyle = '#00E5FF';
+      ctx.fillRect(3, 1, 8, 4);
+    });
   }
 
   createCanvasTexture(key, width, height, drawCallback) {
