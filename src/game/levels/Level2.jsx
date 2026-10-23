@@ -121,9 +121,10 @@ export default function Level2({ playerPosRef }) {
       {/* ========================================================
           2. PUZZLE 1: SWEEPING RFID SCANNER LASER CORRIDOR
           ======================================================== */}
+      {/* Platform 1: Wide landing platform with safe front & flank zones */}
       <CampusPlatform
-        position={[0, 1.0, -5]}
-        size={[13, 0.8, 7]}
+        position={[0, 1.0, -6.0]}
+        size={[14, 0.8, 7.5]}
         pavementColor="#334155"
         curbColor="#FF2E93"
         accentColor="#00E5FF"
@@ -132,66 +133,80 @@ export default function Level2({ playerPosRef }) {
       />
 
       {/* RFID Security Laser Stanchion Pillars */}
-      <RfidSecurityGate position={[-5.8, 2.2, -5]} warningTexture={warningTexture} />
-      <RfidSecurityGate position={[5.8, 2.2, -5]} warningTexture={warningTexture} />
+      <RfidSecurityGate position={[-6.2, 2.2, -6.0]} warningTexture={warningTexture} />
+      <RfidSecurityGate position={[6.2, 2.2, -6.0]} warningTexture={warningTexture} />
 
+      {/* PINK ROD #1: Sweeping RFID Scanner Laser */}
       <Hazard
-        position={[0, 1.5, -5]}
+        position={[0, 1.8, -7.0]}
         axis="x"
-        range={11}
-        speed={2.6}
-        beamLength={8}
-        playerPosRef={playerPosRef}
-      />
-
-      {/* ========================================================
-          3. PUZZLE 2: DUAL MOVING ARCHIVE SHELVES (TIME FREEZE [F])
-          ======================================================== */}
-      {/* Rapid Archive Stack A (Left to Right) */}
-      <MovingPlatform
-        position={[-3.0, 2.5, -11]}
-        axis="x"
-        distance={9}
-        speed={3.2}
-        size={[5.5, 0.8, 5.0]}
-        glowColor="#00E5FF"
-      />
-
-      {/* Mid-air Hazard Laser sweeping between moving shelves */}
-      <Hazard
-        position={[0, 3.2, -14]}
-        axis="x"
-        range={8}
-        speed={2.8}
+        range={7.0}
+        speed={2.0}
         beamLength={6}
         playerPosRef={playerPosRef}
       />
 
-      {/* Rapid Archive Stack B (Right to Left) */}
+      {/* ========================================================
+          3. PUZZLE 2: DUAL WIDE MOVING ARCHIVE SHELVES (TIME FREEZE [F])
+          ======================================================== */}
+      {/* Rapid Archive Stack A: Widened to 8.0m for easy standing & jumping */}
       <MovingPlatform
-        position={[3.0, 3.8, -17]}
+        position={[-2.5, 2.2, -12.5]}
         axis="x"
-        distance={9}
-        speed={3.2}
-        size={[5.5, 0.8, 5.0]}
+        distance={5.0}
+        speed={2.2}
+        size={[8.0, 0.8, 5.0]}
+        glowColor="#00E5FF"
+      />
+
+      {/* CENTRAL STUDY REST ISLAND: Safe haven to stand between the two pink rods */}
+      <CampusPlatform
+        position={[0, 2.8, -17.5]}
+        size={[8.5, 0.8, 4.5]}
+        pavementColor="#1e293b"
+        curbColor="#00E5FF"
+        accentColor="#FFE14D"
+        hasLamps={true}
+        hasGuideArrows={true}
+      />
+      <StudyCarrel position={[-2.5, 3.7, -17.5]} woodTexture={woodTexture} />
+      <BookReturnCart position={[2.5, 3.7, -17.5]} woodTexture={woodTexture} />
+
+      {/* PINK ROD #2: Mid-air Hazard Laser (Separated 13.5m from Rod #1 for ample standing space) */}
+      <Hazard
+        position={[0, 3.6, -20.5]}
+        axis="x"
+        range={7.0}
+        speed={2.2}
+        beamLength={6}
+        playerPosRef={playerPosRef}
+      />
+
+      {/* Rapid Archive Stack B: Widened to 8.0m for easy landing */}
+      <MovingPlatform
+        position={[2.5, 3.8, -23.5]}
+        axis="x"
+        distance={5.0}
+        speed={2.2}
+        size={[8.0, 0.8, 5.0]}
         glowColor="#10B981"
       />
 
       {/* Overhead Inverted Ceiling Catwalk (Gravity Flip [G] + Time Freeze [F] Multi-Stage Puzzle) */}
-      <RigidBody type="fixed" colliders={false} position={[0, 13.5, -14]}>
-        <CuboidCollider args={[3.2, 0.4, 4.5]} />
+      <RigidBody type="fixed" colliders={false} position={[0, 13.5, -18.0]}>
+        <CuboidCollider args={[4.0, 0.4, 6.0]} />
         <mesh receiveShadow castShadow>
-          <boxGeometry args={[6.4, 0.8, 9.0]} />
+          <boxGeometry args={[8.0, 0.8, 12.0]} />
           <meshStandardMaterial color="#0f172a" roughness={0.4} metalness={0.6} />
         </mesh>
         {/* Underneath walking surface for inverted student */}
         <mesh position={[0, -0.41, 0]} rotation={[Math.PI / 2, 0, 0]} receiveShadow>
-          <planeGeometry args={[6.0, 8.6]} />
+          <planeGeometry args={[7.6, 11.6]} />
           <meshStandardMaterial color="#334155" roughness={0.3} metalness={0.2} />
         </mesh>
         {/* Inverted Edge Guide Lines */}
         <mesh position={[0, -0.42, 0]} rotation={[Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[6.2, 8.8]} />
+          <planeGeometry args={[7.8, 11.8]} />
           <meshBasicMaterial color="#00e5ff" wireframe />
         </mesh>
       </RigidBody>
@@ -200,8 +215,8 @@ export default function Level2({ playerPosRef }) {
           4. MIDWAY CHECKPOINT BALCONY
           ======================================================== */}
       <CampusPlatform
-        position={[0, 4.8, -25]}
-        size={[10, 0.8, 7]}
+        position={[0, 4.8, -29.5]}
+        size={[11, 0.8, 7.5]}
         pavementColor="#1e293b"
         curbColor="#00E5FF"
         accentColor="#7B4BFF"
@@ -210,17 +225,17 @@ export default function Level2({ playerPosRef }) {
       />
 
       {/* Modern Glass Railing on Checkpoint Balcony Edges */}
-      <GlassBalustrade position={[-4.8, 5.7, -25]} length={6.8} rotation={[0, Math.PI / 2, 0]} glassTexture={glassTexture} />
-      <GlassBalustrade position={[4.8, 5.7, -25]} length={6.8} rotation={[0, Math.PI / 2, 0]} glassTexture={glassTexture} />
+      <GlassBalustrade position={[-5.3, 5.7, -29.5]} length={7.2} rotation={[0, Math.PI / 2, 0]} glassTexture={glassTexture} />
+      <GlassBalustrade position={[5.3, 5.7, -29.5]} length={7.2} rotation={[0, Math.PI / 2, 0]} glassTexture={glassTexture} />
 
-      <Checkpoint position={[0, 5.3, -25]} playerPosRef={playerPosRef} />
+      <Checkpoint position={[0, 5.3, -29.5]} playerPosRef={playerPosRef} />
 
       {/* Canteen Coffee Cup on Midway Balcony */}
-      <CoffeeCup position={[-3.5, 5.8, -24]} id="l2_coffee_1" playerPosRef={playerPosRef} />
+      <CoffeeCup position={[-3.5, 5.8, -29.0]} id="l2_coffee_1" playerPosRef={playerPosRef} />
 
       {/* STASIS SHUTTER OVERRIDE CONSOLE (STAGE 2 PUZZLE) */}
       <StoryTerminal
-        position={[3.6, 5.2, -25]}
+        position={[3.6, 5.2, -29.5]}
         rotation={[0, -Math.PI / 2, 0]}
         label="STASIS SHUTTER OVERRIDE"
         promptText={archiveDoorUnlocked ? '✔ SHUTTER DISENGAGED' : '[E] CALIBRATE STASIS SHUTTER'}
@@ -256,7 +271,7 @@ export default function Level2({ playerPosRef }) {
       />
 
       {/* Physical Stasis Security Shutter Mesh */}
-      <group position={[0, archiveDoorUnlocked ? 9.5 : 6.8, -28.5]}>
+      <group position={[0, archiveDoorUnlocked ? 9.5 : 6.8, -33.5]}>
         <mesh castShadow>
           <boxGeometry args={[7.5, 3.2, 0.2]} />
           <meshStandardMaterial
@@ -292,18 +307,18 @@ export default function Level2({ playerPosRef }) {
           ======================================================== */}
       {/* Vertical Moving Shelf Lift */}
       <MovingPlatform
-        position={[0, 6.5, -31]}
+        position={[0, 6.5, -36.5]}
         axis="y"
         distance={4.5}
         speed={2.2}
-        size={[4.5, 0.8, 4.5]}
+        size={[5.0, 0.8, 5.0]}
         glowColor={archiveDoorUnlocked ? '#10B981' : '#FFE14D'}
       />
 
       {/* Upper Study Mezzanine Platform */}
       <CampusPlatform
-        position={[0, 8.6, -39]}
-        size={[15, 0.8, 11]}
+        position={[0, 8.6, -44.5]}
+        size={[16, 0.8, 11]}
         pavementColor="#1e293b"
         curbColor="#00E5FF"
         accentColor="#FFE14D"
@@ -312,13 +327,13 @@ export default function Level2({ playerPosRef }) {
       />
 
       {/* Mezzanine Protective Glass Balustrades */}
-      <GlassBalustrade position={[0, 9.5, -33.6]} length={14.8} rotation={[0, 0, 0]} glassTexture={glassTexture} />
-      <GlassBalustrade position={[-7.3, 9.5, -39]} length={10.8} rotation={[0, Math.PI / 2, 0]} glassTexture={glassTexture} />
-      <GlassBalustrade position={[7.3, 9.5, -39]} length={10.8} rotation={[0, Math.PI / 2, 0]} glassTexture={glassTexture} />
+      <GlassBalustrade position={[0, 9.5, -39.1]} length={15.8} rotation={[0, 0, 0]} glassTexture={glassTexture} />
+      <GlassBalustrade position={[-7.8, 9.5, -44.5]} length={10.8} rotation={[0, Math.PI / 2, 0]} glassTexture={glassTexture} />
+      <GlassBalustrade position={[7.8, 9.5, -44.5]} length={10.8} rotation={[0, Math.PI / 2, 0]} glassTexture={glassTexture} />
 
       {/* Mezzanine Upper Book Stacks */}
       <LibraryBookStack
-        position={[-6, 12, -39]}
+        position={[-6.2, 12, -44.5]}
         size={[2.0, 6, 8]}
         department="QUANTUM ALGORITHMS"
         aisleNo="MEZZ 01"
@@ -326,7 +341,7 @@ export default function Level2({ playerPosRef }) {
         woodTexture={woodTexture}
       />
       <LibraryBookStack
-        position={[6, 12, -39]}
+        position={[6.2, 12, -44.5]}
         size={[2.0, 6, 8]}
         department="OPERATING SYSTEMS ARCHITECTURE"
         aisleNo="MEZZ 02"
@@ -335,11 +350,11 @@ export default function Level2({ playerPosRef }) {
       />
 
       {/* Architectural Concrete Support Columns Under Balcony */}
-      <mesh position={[-6.5, 4.0, -39]} castShadow>
+      <mesh position={[-6.5, 4.0, -44.5]} castShadow>
         <cylinderGeometry args={[0.35, 0.45, 8.6, 12]} />
         <meshStandardMaterial color="#475569" roughness={0.7} />
       </mesh>
-      <mesh position={[6.5, 4.0, -39]} castShadow>
+      <mesh position={[6.5, 4.0, -44.5]} castShadow>
         <cylinderGeometry args={[0.35, 0.45, 8.6, 12]} />
         <meshStandardMaterial color="#475569" roughness={0.7} />
       </mesh>
@@ -348,7 +363,7 @@ export default function Level2({ playerPosRef }) {
           6. EXIT CATALOGUE TERMINAL ON UPPER STUDY MEZZANINE (STORY REVEAL)
           ======================================================== */}
       <Terminal
-        position={[0, 9.1, -43]}
+        position={[0, 9.1, -48.5]}
         playerPosRef={playerPosRef}
         isLocked={!archiveDoorUnlocked || fragmentsCount < 3}
         lockMessage={
@@ -398,9 +413,9 @@ export default function Level2({ playerPosRef }) {
       {/* Catalogue Card 1: Ground Reading Hall Desk */}
       <Collectible position={[0, 1.4, 9]} id="l2_frag_1" playerPosRef={playerPosRef} />
       {/* Catalogue Card 2: Inverted Ceiling Catwalk (Reached via Gravity Flip [G]) */}
-      <Collectible position={[0, 12.3, -14]} id="l2_frag_2" playerPosRef={playerPosRef} />
+      <Collectible position={[0, 12.3, -18.0]} id="l2_frag_2" playerPosRef={playerPosRef} />
       {/* Catalogue Card 3: Upper Study Mezzanine Reference Table */}
-      <Collectible position={[4.5, 9.8, -39]} id="l2_frag_3" playerPosRef={playerPosRef} />
+      <Collectible position={[4.5, 9.8, -44.5]} id="l2_frag_3" playerPosRef={playerPosRef} />
 
       {/* ========================================================
           8. HIDDEN EXAM NOTE (DOC §4)
