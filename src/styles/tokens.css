@@ -1,16 +1,47 @@
 :root {
-  --bg-navy: #060914;
-  --bg-panel: rgba(11, 16, 38, 0.92);
-  --bg-panel-border: rgba(0, 229, 255, 0.3);
+  /* Official Atharva University & GlitchVerse Palette */
+  --bg-navy: #0c152e;
+  --bg-campus-dark: #0a0f24;
+  --bg-panel: rgba(12, 21, 46, 0.94);
+  --bg-card: rgba(17, 28, 60, 0.96);
+  --bg-card-hover: rgba(26, 42, 88, 0.98);
+  --border-cyan: rgba(0, 229, 255, 0.4);
+  --border-gold: rgba(255, 225, 77, 0.4);
+
+  /* University Accents */
   --cyan-electric: #00E5FF;
   --cyan-glow: rgba(0, 229, 255, 0.35);
-  --magenta-corrupt: #FF2E93;
+  --magenta-glitch: #FF2E93;
   --magenta-glow: rgba(255, 46, 147, 0.35);
   --amber-warm: #FF9E3D;
-  --yellow-fragment: #FFE14D;
-  --purple-frame: #7B4BFF;
-  --white-text: #F8FAFC;
-  --muted-text: #94A3B8;
+  --yellow-gold: #FFE14D;
+  --purple-royal: #7B4BFF;
+  --green-attendance: #10B981;
+  --red-detained: #EF4444;
+
+  /* Typography */
   --font-mono: 'Fira Code', monospace;
-  --font-sans: 'Outfit', sans-serif;
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+
+  /* Text Colors */
+  --text-primary: #F8FAFC;
+  --text-secondary: #CBD5E1;
+  --text-muted: #94A3B8;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(10, 15, 36, 0.6);
+}
+::-webkit-scrollbar-thumb {
+  background: #00E5FF;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #FFE14D;
 }

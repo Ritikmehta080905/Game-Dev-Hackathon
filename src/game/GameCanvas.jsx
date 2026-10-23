@@ -9,6 +9,8 @@ import Level1 from './levels/Level1';
 import Level2 from './levels/Level2';
 import Level3 from './levels/Level3';
 import Level4 from './levels/Level4';
+import CameraController from './player/CameraController';
+import CampusEnvironment, { ENV_SETTINGS } from './CampusEnvironment';
 import { GameState } from '../systems/GameState';
 
 const levelMap = {
@@ -32,37 +34,20 @@ export default function GameCanvas() {
 
   const gravityVector = gravityInverted ? [0, 9.81, 0] : [0, -9.81, 0];
   const LevelComponent = levelMap[currentLevel] || Level1;
+  const env = ENV_SETTINGS[currentLevel] || ENV_SETTINGS[1];
 
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden' }}>
       <Canvas
         shadows
-        camera={{ position: [0, 6, 17], fov: 60 }}
+        camera={{ position: [0, 4.5, 14.5], fov: 60 }}
         style={{ width: '100%', height: '100%' }}
       >
-        <color attach="background" args={['#060914']} />
-        <ambientLight intensity={0.4} />
-        <directionalLight
-          position={[10, 22, 12]}
-          intensity={1.1}
-          castShadow
-          shadow-mapSize-width={1024}
-          shadow-mapSize-height={1024}
-        />
-        {/* Dynamic Atmosphere Lights */}
-        <pointLight position={[0, 4, 6]} color="#00E5FF" intensity={2.2} distance={22} />
-        <pointLight position={[0, 13, -34]} color="#FF2E93" intensity={2.5} distance={26} />
+        <color attach="background" args={[env.skyColor]} />
+        <CampusEnvironment level={currentLevel} />
 
-        {/* Orbit Camera for Mouse Look */}
-        <OrbitControls
-          makeDefault
-          enableDamping
-          dampingFactor={0.08}
-          minDistance={4}
-          maxDistance={22}
-          maxPolarAngle={Math.PI - 0.1}
-          minPolarAngle={0.1}
-        />
+        {/* Dynamic Third-Person Follow POV & Orbit Camera */}
+        <CameraController playerPosRef={playerPosRef} gravityInverted={gravityInverted} />
 
         {/* Rapier Physics World */}
         <Physics gravity={gravityVector}>

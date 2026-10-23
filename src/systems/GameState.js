@@ -1,6 +1,6 @@
-// ATHARVA.EXE — Authoritative Global Game State System
+// ATHARVA.EXE — Authoritative Global Game State System (Atharva University Campus Edition)
 
-const SAVE_KEY = 'ATHARVA_EXE_PROGRESS_3D';
+const SAVE_KEY = 'ATHARVA_EXE_PROGRESS_CAMPUS_V2';
 
 class GameStateManager {
   constructor() {
@@ -10,21 +10,35 @@ class GameStateManager {
   }
 
   reset() {
-    this.screen = 'BOOT'; // 'BOOT', 'MENU', 'GAME', 'PAUSE', 'LEVEL_COMPLETE'
+    this.screen = 'BOOT'; // 'BOOT', 'MENU', 'GAME', 'PAUSE', 'LEVEL_COMPLETE', 'FINAL_CONVOCATION'
     this.currentLevel = 1;
     this.gravityInverted = false;
     this.timeFrozen = false;
     this.freezeCooldown = 0;
     this.activeDimension = 'REAL'; // 'REAL' or 'GLITCH'
-    this.attendance = 100;
+    this.attendance = 100; // Health: starts at 100%, 25% lost per hit. 0% = DETAINED
+    this.glitchEnergy = 100; // Fuel for powers: G=20, F=35, Q=15
     this.score = 0;
     this.fragmentsCollected = 0;
     this.totalFragments = 3;
-    this.examTimer = 90;
+    this.examTimer = 90; // Countdown clock until exam bell
     this.respawns = 0;
-    this.checkpoint = [0, 2, 0];
+    this.checkpoint = [0, 2, 8];
     this.unlockedLevels = 1;
+    this.isDetained = false;
+    this.isTimeOut = false;
+    this.showSectorIntro = true;
+    this.detentionReason = '';
     this.levelCompletedData = null;
+    this.studentInfo = {
+      name: 'Aditya Sharma',
+      role: 'Student Debugger',
+      rollNo: 'ATH-2026-CS42',
+      prn: '202301640098',
+      department: 'Computer Engineering',
+      semester: 'Semester VI',
+      college: 'Atharva College of Engineering, Mumbai'
+    };
   }
 
   subscribe(callback) {
@@ -48,28 +62,96 @@ class GameStateManager {
     this.gravityInverted = false;
     this.timeFrozen = false;
     this.activeDimension = 'REAL';
+    this.attendance = 100;
+    this.glitchEnergy = 100;
     this.fragmentsCollected = 0;
     this.respawns = 0;
-    this.checkpoint = [0, 2, 0];
-    this.examTimer = levelId === 1 ? 90 : 120;
+    this.isDetained = false;
+    this.isTimeOut = false;
+    this.showSectorIntro = true;
+    this.detentionReason = '';
+    this.checkpoint = [0, 2, 8];
+    // Level specific exam bell times
+    const timerMap = { 1: 90, 2: 120, 3: 150, 4: 180 };
+    this.examTimer = timerMap[levelId] || 90;
     this.screen = 'GAME';
     this.notify();
+
+    // Trigger player and camera reset to the start of the level
+    if (typeof window !== 'undefined' && window.dispatchEvent) {
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('player-respawn'));
+      }, 50);
+    }
+  }
+
+  dismissSectorIntro() {
+    this.showSectorIntro = false;
+    this.notify();
+  }
+
+  openSectorIntro() {
+    this.showSectorIntro = true;
+    this.notify();
+  }
+
+  returnToPortal() {
+    this.isDetained = false;
+    this.isTimeOut = false;
+    this.detentionReason = '';
+    this.showSectorIntro = false;
+    this.attendance = 100;
+    this.glitchEnergy = 100;
+    this.gravityInverted = false;
+    this.timeFrozen = false;
+    this.activeDimension = 'REAL';
+    this.checkpoint = [0, 2, 8];
+    this.setScreen('MENU');
+    if (typeof window !== 'undefined' && window.dispatchEvent) {
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('player-respawn'));
+      }, 50);
+    }
+  }
+
+  useEnergy(amount) {
+    if (this.glitchEnergy >= amount) {
+      this.glitchEnergy = Math.max(0, this.glitchEnergy - amount);
+      this.notify();
+      return true;
+    }
+    return false;
+  }
+
+  refillEnergy(amount) {
+    if (this.glitchEnergy < 100) {
+      this.glitchEnergy = Math.min(100, this.glitchEnergy + amount);
+      this.notify();
+    }
   }
 
   toggleGravity() {
-    this.gravityInverted = !this.gravityInverted;
-    this.notify();
-    return this.gravityInverted;
+    if (this.useEnergy(20)) {
+      this.gravityInverted = !this.gravityInverted;
+      this.notify();
+      return true;
+    }
+    return false;
   }
 
   toggleDimension() {
-    this.activeDimension = this.activeDimension === 'REAL' ? 'GLITCH' : 'REAL';
-    this.notify();
-    return this.activeDimension;
+    if (this.useEnergy(15)) {
+      this.activeDimension = this.activeDimension === 'REAL' ? 'GLITCH' : 'REAL';
+      this.notify();
+      return true;
+    }
+    return false;
   }
 
   triggerTimeFreeze(durationMs = 3000) {
     if (this.timeFrozen || this.freezeCooldown > 0) return false;
+    if (!this.useEnergy(35)) return false;
+
     this.timeFrozen = true;
     this.notify();
 
@@ -86,6 +168,46 @@ class GameStateManager {
     }, durationMs);
 
     return true;
+  }
+
+  takeHit(amount = 25, reason = 'Contact with security anomaly / fall into void!') {
+    this.attendance = Math.max(0, this.attendance - amount);
+    this.recordDeath();
+
+    if (this.attendance <= 0) {
+      this.isDetained = true;
+      this.detentionReason = reason || 'Attendance dropped below 75% threshold! Detained from exams.';
+    }
+    this.notify();
+  }
+
+  clearDetention() {
+    this.attendance = 100;
+    this.glitchEnergy = 100;
+    this.isDetained = false;
+    this.gravityInverted = false;
+    this.timeFrozen = false;
+    this.activeDimension = 'REAL';
+    this.detentionReason = '';
+    this.notify();
+    if (typeof window !== 'undefined' && window.dispatchEvent) {
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('player-respawn'));
+      }, 50);
+    }
+  }
+
+  tickTimer(seconds = 1) {
+    if (this.screen !== 'GAME' || this.isDetained || this.isTimeOut || this.showSectorIntro) return;
+    this.examTimer = Math.max(0, this.examTimer - seconds);
+    if (this.examTimer <= 0) {
+      this.isTimeOut = true;
+    }
+    this.notify();
+  }
+
+  clearTimeOut() {
+    this.startLevel(this.currentLevel);
   }
 
   collectFragment() {
@@ -105,14 +227,26 @@ class GameStateManager {
     this.notify();
   }
 
+  getRankData() {
+    // CGPA Calculation based on score & performance out of 10.0
+    const rawCgpa = Math.min(10.0, Math.max(3.2, ((this.score + 200) / 60) * 1.1));
+    const cgpa = rawCgpa.toFixed(1);
+    let rank = 'Average Student';
+    if (rawCgpa >= 9.0) rank = "Dean's List / Gold Medalist";
+    else if (rawCgpa >= 7.0) rank = 'Topper (First Class)';
+    else if (rawCgpa < 4.0) rank = 'Backbencher (ATKT / Remedial)';
+    return { cgpa, rank };
+  }
+
   completeLevel() {
     const timeBonus = Math.max(0, Math.floor(this.examTimer) * 2);
-    const fragmentBonus = this.fragmentsCollected * 100;
     const finalScore = this.score + 250 + timeBonus;
 
     let stars = 1;
     if (this.fragmentsCollected >= this.totalFragments) stars = 2;
     if (this.fragmentsCollected >= this.totalFragments && this.respawns === 0) stars = 3;
+
+    const { cgpa, rank } = this.getRankData();
 
     this.levelCompletedData = {
       levelId: this.currentLevel,
@@ -121,15 +255,21 @@ class GameStateManager {
       fragments: this.fragmentsCollected,
       totalFragments: this.totalFragments,
       respawns: this.respawns,
-      stars
+      attendance: this.attendance,
+      stars,
+      cgpa,
+      rank
     };
 
     if (this.currentLevel < 4) {
       this.unlockedLevels = Math.max(this.unlockedLevels, this.currentLevel + 1);
       this.saveProgress();
+      this.screen = 'LEVEL_COMPLETE';
+    } else {
+      this.unlockedLevels = 4;
+      this.saveProgress();
+      this.screen = 'FINAL_CONVOCATION';
     }
-
-    this.screen = 'LEVEL_COMPLETE';
     this.notify();
   }
 
@@ -147,6 +287,18 @@ class GameStateManager {
     try {
       localStorage.setItem(SAVE_KEY, JSON.stringify({ unlockedLevels: this.unlockedLevels }));
     } catch (e) {}
+  }
+
+  resetProgress() {
+    this.unlockedLevels = 1;
+    this.saveProgress();
+    this.notify();
+  }
+
+  unlockAllLevels() {
+    this.unlockedLevels = 4;
+    this.saveProgress();
+    this.notify();
   }
 }
 

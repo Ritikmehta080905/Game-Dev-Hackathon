@@ -56,8 +56,7 @@ export default function Hazard({
       if (inBeam) {
         hitCooldownRef.current = 1.0; // 1s invulnerability cooldown
         Sound.playDeath();
-        GameState.recordDeath();
-        // Respawn at checkpoint
+        GameState.takeHit(25, 'Security Laser Anomaly contact! -25% Attendance deduction.');
         if (window.dispatchEvent) {
           window.dispatchEvent(new CustomEvent('player-respawn'));
         }

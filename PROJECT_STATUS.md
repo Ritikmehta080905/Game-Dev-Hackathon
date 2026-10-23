@@ -1,7 +1,7 @@
 # PROJECT_STATUS.md — ATHARVA.EXE: CAMPUS ZERO
 
 **Event**: Artificial Arcade VI | **Problem Statement**: PS01 GlitchVerse ("The World Is Broken")  
-**Current Milestone**: Milestones 4 & 5 Completed (4 Levels & Core Mechanics) → Advancing to Milestone 6  
+**Current Milestone**: Milestone 6 Completed (Real Campus & College UI Overhaul, Path Visibility Upgrade)  
 **Last Updated**: October 23, 2026
 
 ---
@@ -15,43 +15,30 @@
 | **Milestone 3** | Complete First Level: The Broken Gate (Puzzles, fragments, checkpoints, exit, pause) | ✅ **COMPLETE** | Verified full loop: Boot → Menu → Level 1 → Checkpoints → Pause Menu |
 | **Milestone 4** | Core Mechanics: Time Freeze `[F]` & Dimension Switch `[Q]` | ✅ **COMPLETE** | Verified kinematic laser/platform freeze + real/glitch phase colliders |
 | **Milestone 5** | 4 Distinct Playable Campus Levels (Broken Gate, Library, Lab, Core) | ✅ **COMPLETE** | All 4 campus sectors playable, sector selector & progression verified |
-| **Milestone 6** | UI/UX & Settings Polish (Settings modal, sector lore intro cards, victory screen) | 🔄 **IN PROGRESS** | Next task |
+| **Milestone 6** | Real College Campus UI & Path Visibility Overhaul (Whole Website) | ✅ **COMPLETE** | Atharva University branding, Student ID badge, Exam Bell timer, Attendance health bar, Marks Card, Visible pavers & lamps |
 | **Milestone 7** | Time Echo `[E]` & Web Audio Ambience (Ghost clone for pressure plate, sector synth) | ⏳ PENDING | Up next |
-| **Milestone 8** | QA, Production Build & Vercel Deployment | ✅ **VERIFIED** | `npm run build` exits with code 0 (6.59s) |
+| **Milestone 8** | QA, Production Build & Vercel Deployment | ✅ **VERIFIED** | `npm run build` exits with code 0 (8.09s) |
 
 ---
 
-## 🛠️ Verified Working Systems
-1. **Boot Screen**: Cinematic cyber initialization sequence with Space/Click entry.
-2. **Main Menu & Sector Select**: Live 3D campus background, Sector Select modal launching directly into Sectors 1, 2, 3, or 4, and How to Play modal.
-3. **Sector 1 — The Broken Gate**:
-   - Campus entry monument pillars and holographic crossbeam.
-   - Stepping platforms over void gaps, 3 Data Fragments, magenta/cyan Checkpoint.
-   - Ground fissure barrier requiring Gravity Flip `[G]` to traverse ceiling corridor to inverted Terminal.
-4. **Sector 2 — The Infinite Library**:
-   - Vast bookshelf corridors and hovering reading platforms.
-   - Rapidly moving book archive platform requiring Time Freeze `[F]` to safely board and cross.
-   - Sweeping red security laser scanner that pauses during active freeze.
-5. **Sector 3 — The Fractured Lab**:
-   - High-tech server and workstation benches.
-   - Phased Real barriers and Glitch neon cyber-bridges requiring Dimension Switch `[Q]` to cross the void.
-   - Glitch-dimension laser defenses.
-6. **Sector 4 — The Core Reboot**:
-   - Central campus mainframe nexus.
-   - Heavy firewall barrier door linked to a glowing floor Pressure Plate.
-   - Moving elevator, phase-shifted glitch bridge, and high-altitude ceiling Root Terminal requiring gravity inversion.
-7. **Reality Debugger HUD**:
-   - Real-time telemetry for `GRAVITY` (NORMAL / INVERTED), `TIME` (RUNNING / FROZEN), and `DIMENSION` (REAL / GLITCH).
-   - Fragment counters, elapsed timer, score tracking, and visual keyboard control prompts.
-8. **Pause, Restart & Progression**:
-   - `Escape` key toggles Pause overlay; full 4-level sequential completion flow with final victory scorecard.
-
----
-
-## 📋 Immediate Next Steps (Milestone 6 & 7)
-1. **Milestone 6: Settings Modal & Sector Lore Cards**:
-   - Settings Modal (Audio volume slider, mouse look sensitivity, graphics quality toggle).
-   - Cinematic Sector Intro overlay when entering each level (Sector title, code designation, and glitch advisory).
-2. **Milestone 7: Time Echo Mechanic (`[E]`) & Audio Atmosphere**:
-   - Clone ghost recording buffer for automated pressure plate holding.
-   - Multi-tone Web Audio ambient generator for each campus sector.
+## 🛠️ Verified Working Campus Systems
+1. **Atharva University Boot Terminal**:
+   - Official university crest, student credentials authentication (Aditya Sharma | ATH-2026-CS42 | Sem VI), and GlitchVerse emergency announcement.
+2. **Campus Hub & Sector Select (Main Menu)**:
+   - Official **Student ID Card Widget** (Photo avatar, Roll No, PRN, Attendance % bar, CGPA tracker 9.8/10.0, Canteen status).
+   - **Examination Notice Board #404** circulars with campus humor.
+   - 4 Department Passes with clear objectives and rules.
+   - Interactive **Student Handbook** modal with campus rules and hotkey guide.
+3. **Crystal-Clear Visible Path Environment (`CampusPlatform` & `CampusEnvironment`)**:
+   - High-contrast flagstone paving (`#475569`), illuminated neon safety curbs (`#00E5FF`, `#FFE14D`), painted directional chevron guide arrows (`▲ ▲ ▲`), and glowing campus corner lampposts.
+   - Dusk/sunset campus atmosphere lighting, illuminated distant campus wings (Block A, IT Tower, Central Auditorium), and lawn quads.
+4. **Authentic Campus HUD**:
+   - **Exam Bell Countdown Timer** (`🔔 01:30`) with critical threshold alerts.
+   - **Campus Attendance % Meter** (Player health starting at 100%, 25% deducted per hit; detention advisory if < 75%).
+   - **Glitch Energy Bar** (Powers cost energy; refills automatically while standing on solid campus ground).
+   - **Visible Rules Panel** (Live variables: `gravity`, `time_scale`, `layer`, `attendance` with clickable rule toggles).
+5. **Detention System (`DetainedModal`)**:
+   - Triggers when attendance reaches 0% or on fatal fall; provides official detention memo, campus humor excuses, and medical certificate condonation respawn button.
+6. **Semester Marksheet & Degree Convocation**:
+   - **Level Complete**: Official Atharva University Grade Card with subject code, attendance score, SGPA, credits earned, and 3-star rating.
+   - **Final Convocation**: Gold Medal Degree Certificate for rebooting the central mainframe.

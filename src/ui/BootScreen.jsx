@@ -1,4 +1,5 @@
-// ATHARVA.EXE — BootScreen: Cinematic Cyber Boot Sequence
+// ATHARVA.EXE — BootScreen: Atharva University Campus Terminal Initialization
+// Authentic college portal login, university seal & exam emergency bulletin!
 
 import React, { useEffect } from 'react';
 import { GameState } from '../systems/GameState';
@@ -23,22 +24,53 @@ export default function BootScreen() {
 
   return (
     <div style={styles.overlay} onClick={handleProceed}>
-      <div style={styles.content}>
-        <div style={styles.tag}>ARTIFICIAL ARCADE VI  •  ATHARVA UNIVERSITY</div>
-        <h1 style={styles.title}>ATHARVA.EXE</h1>
-        <div style={styles.subtitle}>CAMPUS ZERO</div>
-        <p style={styles.desc}>“The world is broken. Debug reality.”</p>
-
-        <div style={styles.terminalBox}>
-          <div>&gt; INITIALIZING EXPERIMENTAL CAMPUS SIMULATION... [OK]</div>
-          <div>&gt; DETECTING SYSTEM ANOMALIES... 4 SECTORS CORRUPTED</div>
-          <div>&gt; STUDENT DEBUGGER INTERFACE: MOUNTED</div>
-          <div>&gt; REALITY ENGINE: AWAITING REBOOT SIGNALS</div>
+      <div style={styles.card}>
+        {/* Atharva University Crest Header */}
+        <div style={styles.crestRow}>
+          <div style={styles.crestIcon}>🏛️</div>
+          <div style={styles.univText}>
+            <div style={styles.univName}>ATHARVA UNIVERSITY, MUMBAI</div>
+            <div style={styles.univSub}>COLLEGE OF ENGINEERING & TECHNOLOGY • ESTD 1999</div>
+          </div>
+          <div style={styles.eventBadge}>PS01: GLITCHVERSE</div>
         </div>
 
+        <div style={styles.heroSection}>
+          <div style={styles.titleGlitch}>ATHARVA.EXE</div>
+          <div style={styles.campusTag}>CAMPUS ZERO: THE WORLD IS BROKEN</div>
+          <div style={styles.eventQuote}>
+            “A bug has corrupted the campus rules. Classrooms float, gravity is inverted, and clocks run backwards. Reach the Server Room to reboot the system before the exam bell rings!”
+          </div>
+        </div>
+
+        {/* Live Student Kiosk Terminal Box */}
+        <div style={styles.terminalBox}>
+          <div style={styles.terminalHeader}>
+            <span>⚡ ATHARVA STUDENT ERP v4.2 // EMERGENCY DEBUGGER</span>
+            <span style={{ color: '#4ADE80' }}>● SERVER FAULT ACTIVE</span>
+          </div>
+          <div style={styles.terminalLine}>
+            <span style={{ color: '#00E5FF' }}>&gt; CANDIDATE:</span> Aditya Sharma (Roll No: ATH-2026-CS42 | Sem VI)
+          </div>
+          <div style={styles.terminalLine}>
+            <span style={{ color: '#FFE14D' }}>&gt; ATTENDANCE:</span> 100% [EXAM HALL TICKET ISSUED]
+          </div>
+          <div style={styles.terminalLine}>
+            <span style={{ color: '#FF2E93' }}>&gt; ALERT:</span> 4 Campus Sectors Damaged (Main Gate, Library, Canteen, Core)
+          </div>
+          <div style={styles.terminalLine}>
+            <span style={{ color: '#38BDF8' }}>&gt; TOOLKIT:</span> Reality Debugger [G: Gravity, F: Time, Q: Dimension]
+          </div>
+        </div>
+
+        {/* Call to Action Button */}
         <button style={styles.enterBtn} onClick={handleProceed}>
-          PRESS [SPACE] OR CLICK TO INITIALIZE &gt;_
+          ENTER CAMPUS PORTAL [SPACE / CLICK] ▶
         </button>
+
+        <div style={styles.footerNote}>
+          ARTIFICIAL ARCADE VI (24-HOUR BUILD) • ATHARVA UNIVERSITY CAMPUS, MALAD WEST
+        </div>
       </div>
     </div>
   );
@@ -51,69 +83,136 @@ const styles = {
     left: 0,
     width: '100%',
     height: '100%',
-    background: 'radial-gradient(circle at 50% 50%, #0d1533 0%, #060914 100%)',
+    background: 'radial-gradient(ellipse at 50% 40%, #172554 0%, #0c152e 60%, #060a17 100%)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 100,
-    cursor: 'pointer'
+    cursor: 'pointer',
+    fontFamily: '"Plus Jakarta Sans", sans-serif'
   },
-  content: {
+  card: {
+    background: 'rgba(15, 23, 42, 0.94)',
+    border: '1.5px solid rgba(0, 229, 255, 0.4)',
+    borderRadius: '14px',
+    padding: '36px 44px',
+    maxWidth: '720px',
+    width: '90%',
     textAlign: 'center',
-    maxWidth: '680px',
-    padding: '30px',
-    fontFamily: '"Fira Code", monospace'
+    boxShadow: '0 0 60px rgba(0, 229, 255, 0.25), 0 20px 40px rgba(0, 0, 0, 0.6)',
+    backdropFilter: 'blur(10px)'
   },
-  tag: {
+  crestRow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottom: '1px solid rgba(0, 229, 255, 0.2)',
+    paddingBottom: '16px',
+    marginBottom: '22px'
+  },
+  crestIcon: {
+    fontSize: '32px',
+    background: 'rgba(0, 229, 255, 0.1)',
+    borderRadius: '10px',
+    padding: '8px'
+  },
+  univText: {
+    textAlign: 'left',
+    marginLeft: '12px',
+    flex: 1
+  },
+  univName: {
+    color: '#F8FAFC',
+    fontWeight: '800',
+    fontSize: '15px',
+    letterSpacing: '1.5px'
+  },
+  univSub: {
+    color: '#FFE14D',
+    fontSize: '11px',
+    fontWeight: '600',
+    letterSpacing: '1px'
+  },
+  eventBadge: {
+    background: 'rgba(255, 46, 147, 0.15)',
+    border: '1px solid #FF2E93',
     color: '#FF2E93',
-    fontSize: '13px',
-    letterSpacing: '3px',
-    marginBottom: '16px'
+    padding: '5px 12px',
+    borderRadius: '20px',
+    fontSize: '11px',
+    fontWeight: '700',
+    letterSpacing: '1px'
   },
-  title: {
+  heroSection: {
+    marginBottom: '24px'
+  },
+  titleGlitch: {
     color: '#00E5FF',
-    fontSize: '64px',
-    fontFamily: 'Outfit, sans-serif',
+    fontFamily: '"Outfit", sans-serif',
+    fontSize: '60px',
     fontWeight: '900',
     margin: '0 0 6px 0',
-    letterSpacing: '2px',
-    textShadow: '0 0 30px rgba(0, 229, 255, 0.4)'
+    letterSpacing: '3px',
+    textShadow: '0 0 30px rgba(0, 229, 255, 0.5)'
   },
-  subtitle: {
+  campusTag: {
     color: '#FFE14D',
-    fontSize: '20px',
-    letterSpacing: '6px',
-    marginBottom: '16px',
-    fontWeight: 'bold'
+    fontSize: '16px',
+    fontWeight: '800',
+    letterSpacing: '4px',
+    marginBottom: '12px'
   },
-  desc: {
-    color: '#94A3B8',
-    fontSize: '15px',
-    fontStyle: 'italic',
-    marginBottom: '28px'
+  eventQuote: {
+    color: '#CBD5E1',
+    fontSize: '14px',
+    lineHeight: '1.6',
+    maxWidth: '580px',
+    margin: '0 auto',
+    fontStyle: 'italic'
   },
   terminalBox: {
-    background: 'rgba(11, 16, 38, 0.85)',
-    border: '1px solid #7B4BFF',
-    borderRadius: '6px',
+    background: '#090e21',
+    border: '1px solid rgba(123, 75, 255, 0.4)',
+    borderRadius: '8px',
     padding: '16px 20px',
     textAlign: 'left',
+    fontFamily: '"Fira Code", monospace',
     fontSize: '12px',
-    color: '#CBD5E1',
     lineHeight: '1.8',
-    marginBottom: '32px'
+    marginBottom: '26px'
+  },
+  terminalHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+    paddingBottom: '6px',
+    marginBottom: '10px',
+    color: '#94A3B8',
+    fontSize: '11px',
+    fontWeight: 'bold'
+  },
+  terminalLine: {
+    color: '#E2E8F0'
   },
   enterBtn: {
-    background: '#0F172A',
-    color: '#00E5FF',
-    border: '1.5px solid #00E5FF',
-    borderRadius: '4px',
-    padding: '12px 28px',
-    fontSize: '14px',
-    fontWeight: 'bold',
-    fontFamily: 'inherit',
+    background: 'linear-gradient(135deg, #0284c7 0%, #00E5FF 100%)',
+    color: '#060a17',
+    border: 'none',
+    borderRadius: '8px',
+    padding: '14px 34px',
+    fontSize: '15px',
+    fontWeight: '800',
+    letterSpacing: '1px',
     cursor: 'pointer',
-    boxShadow: '0 0 15px rgba(0, 229, 255, 0.25)',
-    transition: 'all 0.2s'
+    boxShadow: '0 0 25px rgba(0, 229, 255, 0.4)',
+    transition: 'all 0.2s',
+    fontFamily: 'inherit',
+    marginBottom: '16px'
+  },
+  footerNote: {
+    color: '#64748B',
+    fontSize: '11px',
+    letterSpacing: '1px',
+    fontWeight: '600'
   }
 };

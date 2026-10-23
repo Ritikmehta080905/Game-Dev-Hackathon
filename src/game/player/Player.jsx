@@ -1,4 +1,5 @@
-// ATHARVA.EXE — Player: 3D Controller & Reality Mechanics (Teammate 1: Character & Controls)
+// ATHARVA.EXE — Player: Student Debugger Controller & Reality Mechanics
+// Vibrant campus student character model (college hoodie, backpack, ID lanyard) & fluid physics!
 
 import React, { useRef, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
@@ -25,8 +26,12 @@ export default function Player({ playerPosRef, gravityInverted }) {
   useEffect(() => {
     if (keys.flip && !flipPressedRef.current) {
       flipPressedRef.current = true;
-      GameState.toggleGravity();
-      Sound.playGravityFlip();
+      const success = GameState.toggleGravity();
+      if (success) {
+        Sound.playGravityFlip();
+      } else {
+        Sound.playTone(180, 'sawtooth', 0.1, 0.1); // Not enough energy
+      }
     } else if (!keys.flip) {
       flipPressedRef.current = false;
     }
@@ -40,6 +45,8 @@ export default function Player({ playerPosRef, gravityInverted }) {
       if (triggered) {
         Sound.playTone(900, 'sine', 0.3, 0.2);
         setTimeout(() => Sound.playTone(600, 'sine', 0.3, 0.15), 100);
+      } else {
+        Sound.playTone(180, 'sawtooth', 0.1, 0.1);
       }
     } else if (!keys.freeze) {
       freezePressedRef.current = false;
@@ -50,8 +57,12 @@ export default function Player({ playerPosRef, gravityInverted }) {
   useEffect(() => {
     if (keys.dimension && !dimensionPressedRef.current) {
       dimensionPressedRef.current = true;
-      GameState.toggleDimension();
-      Sound.playTone(350, 'sawtooth', 0.12, 0.15);
+      const success = GameState.toggleDimension();
+      if (success) {
+        Sound.playTone(350, 'sawtooth', 0.12, 0.15);
+      } else {
+        Sound.playTone(180, 'sawtooth', 0.1, 0.1);
+      }
     } else if (!keys.dimension) {
       dimensionPressedRef.current = false;
     }
@@ -72,16 +83,24 @@ export default function Player({ playerPosRef, gravityInverted }) {
 
   const respawnPlayer = () => {
     if (!rbRef.current) return;
-    const cp = GameState.checkpoint || [0, 2, 0];
-    rbRef.current.setTranslation({ x: cp[0], y: cp[1] + 1.0, z: cp[2] }, true);
+    const cp = GameState.checkpoint || [0, 2, 8];
+    rbRef.current.setTranslation({ x: cp[0], y: cp[1] + 1.2, z: cp[2] }, true);
     rbRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true);
     rbRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true);
+    if (playerPosRef) {
+      playerPosRef.current = { x: cp[0], y: cp[1] + 1.2, z: cp[2] };
+    }
     Sound.playDeath();
-    GameState.recordDeath();
   };
 
   useFrame((state, delta) => {
     if (!rbRef.current) return;
+
+    // Do not process physics movement or fall damage if player is detained, timed out, or in menus/pause
+    if (GameState.screen !== 'GAME' || GameState.isDetained || GameState.isTimeOut || GameState.showSectorIntro) {
+      rbRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true);
+      return;
+    }
 
     const translation = rbRef.current.translation();
     const linvel = rbRef.current.linvel();
@@ -92,12 +111,13 @@ export default function Player({ playerPosRef, gravityInverted }) {
 
     // Fall Detection Boundary
     if (translation.y < -15 || translation.y > 35) {
+      GameState.takeHit(25, 'Fell through broken campus floorboards into the courtyard!');
       respawnPlayer();
       return;
     }
 
     // Movement
-    const moveSpeed = 8.5;
+    const moveSpeed = 9.0;
     const forward = (keys.forward ? 1 : 0) - (keys.backward ? 1 : 0);
     const side = (keys.right ? 1 : 0) - (keys.left ? 1 : 0);
 
@@ -142,6 +162,11 @@ export default function Player({ playerPosRef, gravityInverted }) {
     // Ground / Ceiling Contact & Jump
     const isGrounded = Math.abs(linvel.y) < 0.25;
 
+    // Refill Glitch Energy when student is safely on solid ground!
+    if (isGrounded) {
+      GameState.refillEnergy(delta * 16);
+    }
+
     if (isGrounded && !wasGroundedRef.current) {
       Sound.playLand();
     }
@@ -150,12 +175,12 @@ export default function Player({ playerPosRef, gravityInverted }) {
     if (keys.jump && canJumpRef.current && isGrounded) {
       canJumpRef.current = false;
       Sound.playJump();
-      const jumpImpulse = gravityInverted ? -8.2 : 8.2;
+      const jumpImpulse = gravityInverted ? -8.5 : 8.5;
       rbRef.current.applyImpulse({ x: 0, y: jumpImpulse, z: 0 }, true);
 
       setTimeout(() => {
         canJumpRef.current = true;
-      }, 350);
+      }, 320);
     }
 
     // Smooth Inverted Rotation
@@ -165,15 +190,6 @@ export default function Player({ playerPosRef, gravityInverted }) {
         targetRotationZ,
         delta * 9
       );
-    }
-
-    // Camera follow
-    if (state.controls) {
-      state.controls.target.lerp(
-        new THREE.Vector3(translation.x, translation.y + 1, translation.z),
-        delta * 8
-      );
-      state.controls.update();
     }
   });
 
@@ -186,36 +202,66 @@ export default function Player({ playerPosRef, gravityInverted }) {
       friction={0.2}
       linearDamping={0.2}
     >
-      <CapsuleCollider args={[0.5, 0.4]} />
+      <CapsuleCollider args={[0.55, 0.45]} />
 
+      {/* STUDENT DEBUGGER CHARACTER MODEL */}
       <group ref={visualRef}>
+        {/* Student Varsity Jacket / College Hoodie Body */}
         <mesh castShadow position={[0, 0, 0]}>
-          <capsuleGeometry args={[0.4, 0.7, 8, 16]} />
-          <meshStandardMaterial color="#1E1B4B" roughness={0.6} />
+          <capsuleGeometry args={[0.42, 0.75, 8, 16]} />
+          <meshStandardMaterial color="#2563eb" roughness={0.4} metalness={0.2} />
         </mesh>
 
-        <mesh position={[0, 0.35, 0.3]}>
-          <boxGeometry args={[0.5, 0.18, 0.25]} />
+        {/* White College Varsity Chest Stripe */}
+        <mesh position={[0, 0.05, 0.38]}>
+          <boxGeometry args={[0.5, 0.15, 0.1]} />
+          <meshStandardMaterial color="#ffffff" roughness={0.3} />
+        </mesh>
+
+        {/* Student Backpack on the Back */}
+        <mesh position={[0, 0.05, -0.38]} castShadow>
+          <boxGeometry args={[0.5, 0.6, 0.28]} />
+          <meshStandardMaterial color="#b45309" roughness={0.7} />
+        </mesh>
+
+        {/* Backpack Pocket & Zipper */}
+        <mesh position={[0, -0.05, -0.53]}>
+          <boxGeometry args={[0.35, 0.25, 0.06]} />
+          <meshStandardMaterial color="#78350f" roughness={0.8} />
+        </mesh>
+
+        {/* Glowing Student Visor / Debugger Headset */}
+        <mesh position={[0, 0.42, 0.3]}>
+          <boxGeometry args={[0.52, 0.2, 0.26]} />
           <meshStandardMaterial
             color="#00E5FF"
             emissive="#00E5FF"
-            emissiveIntensity={1.2}
-            roughness={0.2}
+            emissiveIntensity={1.4}
+            roughness={0.1}
           />
         </mesh>
 
-        <mesh position={[0, -0.05, 0.38]}>
-          <boxGeometry args={[0.2, 0.25, 0.05]} />
-          <meshStandardMaterial color="#FFE14D" roughness={0.4} />
+        {/* College Student ID Card Lanyard hanging from the Neck */}
+        <mesh position={[0, -0.08, 0.44]}>
+          <boxGeometry args={[0.22, 0.3, 0.04]} />
+          <meshStandardMaterial
+            color="#FFE14D"
+            emissive="#FFE14D"
+            emissiveIntensity={0.6}
+            roughness={0.3}
+          />
         </mesh>
 
-        <mesh position={[-0.18, -0.7, 0.05]}>
-          <boxGeometry args={[0.18, 0.2, 0.3]} />
-          <meshStandardMaterial color="#FF9E3D" roughness={0.5} />
+        {/* Left Sneaker (White Campus Shoes) */}
+        <mesh position={[-0.2, -0.72, 0.08]} castShadow>
+          <boxGeometry args={[0.2, 0.2, 0.34]} />
+          <meshStandardMaterial color="#ffffff" roughness={0.4} />
         </mesh>
-        <mesh position={[0.18, -0.7, 0.05]}>
-          <boxGeometry args={[0.18, 0.2, 0.3]} />
-          <meshStandardMaterial color="#FF9E3D" roughness={0.5} />
+
+        {/* Right Sneaker (White Campus Shoes) */}
+        <mesh position={[0.2, -0.72, 0.08]} castShadow>
+          <boxGeometry args={[0.2, 0.2, 0.34]} />
+          <meshStandardMaterial color="#ffffff" roughness={0.4} />
         </mesh>
       </group>
     </RigidBody>

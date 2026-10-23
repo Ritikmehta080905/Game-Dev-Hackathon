@@ -7,6 +7,7 @@ import MainMenu from './ui/MainMenu';
 import HUD from './ui/HUD';
 import PauseMenu from './ui/PauseMenu';
 import LevelComplete from './ui/LevelComplete';
+import FinalConvocation from './ui/FinalConvocation';
 import { GameState } from './systems/GameState';
 import './styles/tokens.css';
 
@@ -49,6 +50,7 @@ export default function App() {
         </>
       )}
       {screen === 'LEVEL_COMPLETE' && <LevelComplete />}
+      {screen === 'FINAL_CONVOCATION' && <FinalConvocation />}
     </div>
   );
 }
