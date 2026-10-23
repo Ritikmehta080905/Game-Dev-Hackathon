@@ -72,16 +72,16 @@ const LEVEL_THEMES = {
     environment: 'Mainframe Array • Security Firewall Blast Door • Floor Pressure Plate • Quantum Root Core',
     deptTag: '⚡ ATHARVA CENTRAL DATA CENTER & ROOT MAINFRAME',
     docRole: 'SYSADMIN ROOT ACCESS TERMINAL // REBOOT',
-    anomaly: 'Corrupted Admin System Override! Blast door locked, moving server lifts active, and laser abyss guarding the root terminal.',
-    howToPlay: 'Master ALL Mechanics! Step on Pressure Plate -> Use [F] on lift -> [Q] on cyber-bridge -> [G] to reach gantry & press REBOOT!',
-    keyPrompt: '[G] + [F] + [Q] ALL RULES',
+    anomaly: 'Firewall blast door locked by pressure plate! Corrupted Admin System Override guarding root mainframe terminal.',
+    howToPlay: 'Stand on Pink Plate & Press [E] to spawn Ghost Clone to hold it down -> Use [F] on lift -> [Q] on cyber-bridge -> [G] to reach gantry & press REBOOT!',
+    keyPrompt: '[E] CLONE + [F] + [Q] + [G]',
     accent: '#7B4BFF',
     secondaryAccent: '#00E5FF',
     accentGlow: 'rgba(123, 75, 255, 0.35)',
     bgTint: 'rgba(123, 75, 255, 0.08)',
     borderStyle: '2px solid #7B4BFF',
     badgeBg: 'rgba(123, 75, 255, 0.15)',
-    monitorText: 'CORRUPTED ADMIN LOCKDOWN: COMBINE [G] + [F] + [Q] TO REBOOT SYSTEM',
+    monitorText: 'FIREWALL LOCKED: STAND ON PINK PLATE & PRESS [E] TO SPAWN GHOST CLONE',
     activeRule: 'all'
   }
 };
@@ -283,6 +283,25 @@ export default function HUD() {
               )}
             </div>
 
+            <div style={{ ...styles.codeLine, ...(state.currentLevel === 4 ? styles.activeCodeLine : {}) }}>
+              <span style={styles.varName}>time_echo</span> ={' '}
+              <button
+                style={{
+                  ...styles.ruleTagBtn,
+                  borderColor: state.timeEchoActive ? '#00E5FF' : '#FF2E93',
+                  color: state.timeEchoActive ? '#00E5FF' : '#FF2E93'
+                }}
+                onClick={() => {
+                  window.dispatchEvent(new CustomEvent('trigger-time-echo'));
+                }}
+              >
+                {state.timeEchoActive ? 'CLONE ACTIVE [E]' : 'SPAWN CLONE [E]'}
+              </button>
+              {state.currentLevel === 4 && (
+                <span style={{ ...styles.activeRuleTag, color: '#00E5FF' }}>● PUZZLE 1 RULE</span>
+              )}
+            </div>
+
             <div style={styles.codeLine}>
               <span style={styles.varName}>attendance</span> ={' '}
               <span style={{ color: attendanceColor, fontWeight: 'bold' }}>{state.attendance}%</span>;
@@ -331,6 +350,21 @@ export default function HUD() {
               }}
             >
               <kbd style={styles.kbd}>Q</kbd> Dimension (15)
+            </button>
+          </div>
+          <div style={styles.hotkeyItem}>
+            <button
+              style={{
+                ...styles.keyBtn,
+                borderColor: state.currentLevel === 4 || state.timeEchoActive ? '#00E5FF' : 'rgba(255,255,255,0.2)',
+                background: state.timeEchoActive ? 'rgba(0, 229, 255, 0.25)' : 'rgba(15, 23, 42, 0.75)'
+              }}
+              onClick={() => {
+                window.dispatchEvent(new CustomEvent('trigger-time-echo'));
+              }}
+              title="Spawn Student Ghost Clone on Pressure Plate (Key E)"
+            >
+              <kbd style={styles.kbd}>E</kbd> Clone (40)
             </button>
           </div>
           <div style={styles.hotkeyItem}>

@@ -24,11 +24,17 @@ export default function GameCanvas() {
   const [currentLevel, setCurrentLevel] = useState(GameState.currentLevel);
   const [gravityInverted, setGravityInverted] = useState(GameState.gravityInverted);
   const playerPosRef = useRef({ x: 0, y: 2, z: 8 });
+  const ghostPosRef = useRef(null);
 
   useEffect(() => {
     return GameState.subscribe((state) => {
       setCurrentLevel(state.currentLevel);
       setGravityInverted(state.gravityInverted);
+      if (state.timeEchoActive && state.timeEchoPos) {
+        ghostPosRef.current = state.timeEchoPos;
+      } else {
+        ghostPosRef.current = null;
+      }
     });
   }, []);
 
@@ -51,8 +57,8 @@ export default function GameCanvas() {
 
         {/* Rapier Physics World */}
         <Physics gravity={gravityVector}>
-          <LevelComponent playerPosRef={playerPosRef} />
-          <Player playerPosRef={playerPosRef} gravityInverted={gravityInverted} />
+          <LevelComponent playerPosRef={playerPosRef} ghostPosRef={ghostPosRef} />
+          <Player playerPosRef={playerPosRef} ghostPosRef={ghostPosRef} gravityInverted={gravityInverted} />
         </Physics>
       </Canvas>
     </div>

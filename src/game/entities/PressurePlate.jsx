@@ -16,14 +16,14 @@ export default function PressurePlate({ position, playerPosRef, ghostPosRef, doo
     if (playerPosRef && playerPosRef.current) {
       const p = playerPosRef.current;
       const distSq = (p.x - position[0]) ** 2 + (p.y - position[1]) ** 2 + (p.z - position[2]) ** 2;
-      if (distSq < 1.8) pressed = true;
+      if (distSq < 3.2) pressed = true;
     }
 
     // Check ghost clone proximity (Time Echo)
     if (ghostPosRef && ghostPosRef.current) {
       const g = ghostPosRef.current;
       const distSq = (g.x - position[0]) ** 2 + (g.y - position[1]) ** 2 + (g.z - position[2]) ** 2;
-      if (distSq < 1.8) pressed = true;
+      if (distSq < 3.2) pressed = true;
     }
 
     if (pressed !== wasPressedRef.current) {

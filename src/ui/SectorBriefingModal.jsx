@@ -87,16 +87,16 @@ const SECTOR_BRIEFINGS = {
     anomalyDesc: 'The final mainframe is completely locked down! Heavy security blast doors guard the chamber, moving server lifts oscillate rapidly, and the Root Reboot Terminal is suspended at the highest ceiling point.',
     objectiveTitle: '🎯 YOUR OBJECTIVE & HOW TO PLAY:',
     steps: [
-      'Step onto the glowing floor Pressure Plate to open the heavy firewall blast door.',
-      'Use Time Freeze [F] to safely board the fast moving server lift.',
+      'Step onto the glowing pink Pressure Plate and press [E] (Time Echo) to spawn your cyan Student Ghost Clone — the clone holds the plate down to keep the firewall blast door open!',
+      'Use Time Freeze [F] to safely board the fast moving server lift across the void.',
       'Use Dimension Switch [Q] to navigate the phased cyber-bridge across the mainframe abyss.',
       'Press [G] to Flip Gravity up to the ceiling gantry and press the REBOOT BUTTON to save the campus!'
     ],
     unlockedKey: {
-      key: 'G + F + Q',
-      action: 'MASTER ALL MECHANICS',
-      cost: 'MANAGE ENERGY WISELY',
-      desc: 'Combine Gravity Inversion, Time Freeze, and Dimensional Phase Shift to complete the final exam.'
+      key: 'E (CLONE) + G + F + Q',
+      action: 'SPAWN CLONE & ALL RULES',
+      cost: 'E=40 | G=20 | F=35 | Q=15',
+      desc: 'Stand on the pink pressure plate and press [E] to spawn your ghost clone to hold it down, then combine all mechanics!'
     }
   }
 };

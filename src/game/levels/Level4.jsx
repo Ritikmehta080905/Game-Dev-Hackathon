@@ -3,16 +3,18 @@
 
 import React from 'react';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
+import { Text } from '@react-three/drei';
 import CampusPlatform from '../entities/CampusPlatform';
 import MovingPlatform from '../entities/MovingPlatform';
 import DimensionPlatform from '../entities/DimensionPlatform';
 import Hazard from '../entities/Hazard';
 import PressurePlate from '../entities/PressurePlate';
+import GhostClone from '../entities/GhostClone';
 import Collectible from '../entities/Collectible';
 import Checkpoint from '../entities/Checkpoint';
 import Terminal from '../entities/Terminal';
 
-export default function Level4({ playerPosRef }) {
+export default function Level4({ playerPosRef, ghostPosRef }) {
   return (
     <group>
       {/* ========================================================
@@ -44,9 +46,39 @@ export default function Level4({ playerPosRef }) {
       <PressurePlate
         position={[4, 0.05, 4]}
         playerPosRef={playerPosRef}
+        ghostPosRef={ghostPosRef}
         doorPosition={[0, 2.6, -3]}
         doorSize={[10, 4.2, 0.5]}
       />
+
+      {/* 3D Holographic Guide Floating Above Pink Pressure Plate */}
+      <group position={[4, 2.2, 4]}>
+        <mesh>
+          <planeGeometry args={[3.4, 0.7]} />
+          <meshBasicMaterial color="#090E21" transparent opacity={0.88} />
+        </mesh>
+        <Text
+          position={[0, 0.12, 0.02]}
+          fontSize={0.16}
+          color="#FF2E93"
+          anchorX="center"
+          anchorY="middle"
+        >
+          ▼ PINK PRESSURE PLATE ▼
+        </Text>
+        <Text
+          position={[0, -0.12, 0.02]}
+          fontSize={0.13}
+          color="#00E5FF"
+          anchorX="center"
+          anchorY="middle"
+        >
+          STAND HERE &amp; PRESS [E] TO CLONE
+        </Text>
+      </group>
+
+      {/* 3D Visual Ghost Clone standing on plate */}
+      <GhostClone ghostPosRef={ghostPosRef} />
 
       {/* ========================================================
           3. PUZZLE 2: RAPID SERVER LIFT PLATFORM (TIME FREEZE [F])

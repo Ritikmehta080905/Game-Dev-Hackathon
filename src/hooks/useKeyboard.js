@@ -13,6 +13,7 @@ export function useKeyboard() {
     freeze: false,
     dimension: false,
     interact: false,
+    echo: false,
     reset: false
   });
 
@@ -52,7 +53,7 @@ export function useKeyboard() {
           setKeys((k) => ({ ...k, dimension: true }));
           break;
         case 'KeyE':
-          setKeys((k) => ({ ...k, interact: true }));
+          setKeys((k) => ({ ...k, interact: true, echo: true }));
           break;
         case 'KeyR':
           setKeys((k) => ({ ...k, reset: true }));
@@ -93,7 +94,7 @@ export function useKeyboard() {
           setKeys((k) => ({ ...k, dimension: false }));
           break;
         case 'KeyE':
-          setKeys((k) => ({ ...k, interact: false }));
+          setKeys((k) => ({ ...k, interact: false, echo: false }));
           break;
         case 'KeyR':
           setKeys((k) => ({ ...k, reset: false }));

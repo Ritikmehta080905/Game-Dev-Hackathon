@@ -16,6 +16,8 @@ class GameStateManager {
     this.timeFrozen = false;
     this.freezeCooldown = 0;
     this.activeDimension = 'REAL'; // 'REAL' or 'GLITCH'
+    this.timeEchoActive = false; // Clone state for Level 4 pressure plate [E]
+    this.timeEchoPos = null;
     this.attendance = 100; // Health: starts at 100%, 25% lost per hit. 0% = DETAINED
     this.glitchEnergy = 100; // Fuel for powers: G=20, F=35, Q=15
     this.score = 0;
@@ -62,6 +64,8 @@ class GameStateManager {
     this.gravityInverted = false;
     this.timeFrozen = false;
     this.activeDimension = 'REAL';
+    this.timeEchoActive = false;
+    this.timeEchoPos = null;
     this.attendance = 100;
     this.glitchEnergy = 100;
     this.fragmentsCollected = 0;
@@ -105,6 +109,8 @@ class GameStateManager {
     this.gravityInverted = false;
     this.timeFrozen = false;
     this.activeDimension = 'REAL';
+    this.timeEchoActive = false;
+    this.timeEchoPos = null;
     this.checkpoint = [0, 2, 8];
     this.setScreen('MENU');
     if (typeof window !== 'undefined' && window.dispatchEvent) {
@@ -170,6 +176,40 @@ class GameStateManager {
     return true;
   }
 
+  triggerTimeEcho(playerPos) {
+    if (this.timeEchoActive) {
+      this.timeEchoActive = false;
+      this.timeEchoPos = null;
+      this.notify();
+      return { active: false };
+    }
+
+    // Clone costs 40 glitch energy (or allow if standing on ground with at least 20)
+    if (!this.useEnergy(40) && this.glitchEnergy < 20) {
+      return { active: false, reason: 'low_energy' };
+    }
+
+    // Default snap to pressure plate position in Level 4
+    let spawnPos = { x: 4, y: 0.1, z: 4 };
+    if (playerPos) {
+      const distToPlate = Math.sqrt(
+        (playerPos.x - 4) ** 2 +
+        (playerPos.y - 0.05) ** 2 +
+        (playerPos.z - 4) ** 2
+      );
+      if (distToPlate <= 3.5) {
+        spawnPos = { x: 4, y: 0.1, z: 4 };
+      } else {
+        spawnPos = { x: playerPos.x, y: playerPos.y, z: playerPos.z };
+      }
+    }
+
+    this.timeEchoActive = true;
+    this.timeEchoPos = spawnPos;
+    this.notify();
+    return { active: true, pos: spawnPos };
+  }
+
   takeHit(amount = 25, reason = 'Contact with security anomaly / fall into void!') {
     this.attendance = Math.max(0, this.attendance - amount);
     this.recordDeath();
@@ -188,6 +228,8 @@ class GameStateManager {
     this.gravityInverted = false;
     this.timeFrozen = false;
     this.activeDimension = 'REAL';
+    this.timeEchoActive = false;
+    this.timeEchoPos = null;
     this.detentionReason = '';
     this.notify();
     if (typeof window !== 'undefined' && window.dispatchEvent) {

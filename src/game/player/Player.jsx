@@ -68,7 +68,37 @@ export default function Player({ playerPosRef, gravityInverted }) {
     }
   }, [keys.dimension]);
 
-  // 4. Listen for Manual Reset [R] and Hazard Hit Events
+  // 4. Listen for Time Echo / Ghost Clone [E]
+  const echoPressedRef = useRef(false);
+  const triggerEcho = () => {
+    const pos = playerPosRef && playerPosRef.current ? playerPosRef.current : null;
+    const res = GameState.triggerTimeEcho(pos);
+    if (res && res.active) {
+      Sound.playTone(580, 'sine', 0.15, 0.2);
+      setTimeout(() => Sound.playTone(880, 'sine', 0.25, 0.2), 120);
+    } else if (res && !res.active) {
+      Sound.playTone(320, 'sine', 0.15, 0.15);
+    } else {
+      Sound.playTone(180, 'sawtooth', 0.1, 0.1);
+    }
+  };
+
+  useEffect(() => {
+    const handleEchoEvent = () => triggerEcho();
+    window.addEventListener('trigger-time-echo', handleEchoEvent);
+    return () => window.removeEventListener('trigger-time-echo', handleEchoEvent);
+  }, []);
+
+  useEffect(() => {
+    if ((keys.echo || keys.interact) && !echoPressedRef.current) {
+      echoPressedRef.current = true;
+      triggerEcho();
+    } else if (!keys.echo && !keys.interact) {
+      echoPressedRef.current = false;
+    }
+  }, [keys.echo, keys.interact]);
+
+  // 5. Listen for Manual Reset [R] and Hazard Hit Events
   useEffect(() => {
     if (keys.reset) {
       respawnPlayer();
