@@ -1,8 +1,6 @@
-// ATHARVA.EXE — CampusPlatform: Highly Visible Campus Walkways, Paved Stones & Lit Gantries
-// Eliminates the invisible dark-void issue by providing bright pavers, safety curb neon, and campus lamps!
-
-import React from 'react';
+import React, { useMemo } from 'react';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
+import { getGranitePaversTexture, getConcreteBumpTexture } from '../materials/CampusMaterials';
 
 export default function CampusPlatform({
   position = [0, 0, 0],
@@ -17,6 +15,8 @@ export default function CampusPlatform({
 }) {
   const [w, h, d] = size;
   const lampOffset = 0.4;
+  const paverTexture = useMemo(() => getGranitePaversTexture(), []);
+  const bumpTexture = useMemo(() => getConcreteBumpTexture(), []);
 
   return (
     <RigidBody type="fixed" colliders={false} position={position}>
@@ -27,8 +27,10 @@ export default function CampusPlatform({
         <boxGeometry args={[w, h, d]} />
         <meshStandardMaterial
           color={pavementColor}
-          roughness={0.4}
-          metalness={0.2}
+          bumpMap={bumpTexture}
+          bumpScale={0.03}
+          roughness={0.5}
+          metalness={0.15}
         />
       </mesh>
 
@@ -36,8 +38,9 @@ export default function CampusPlatform({
       <mesh position={[0, (h / 2) + 0.015, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[w * 0.94, d * 0.94]} />
         <meshStandardMaterial
-          color="#f8fafc"
-          roughness={0.25}
+          map={paverTexture}
+          color="#f1f5f9"
+          roughness={0.35}
           metalness={0.05}
         />
       </mesh>
@@ -58,7 +61,7 @@ export default function CampusPlatform({
         <meshBasicMaterial color={curbColor} />
       </mesh>
 
-      {/* Campus Directional Chevron Guide Markers (Shows player exactly where the path leads!) */}
+      {/* Campus Directional Chevron Guide Markers */}
       {hasGuideArrows && (
         <group position={[0, (h / 2) + 0.03, 0]}>
           {[-d * 0.25, 0, d * 0.25].map((zPos, idx) => (
@@ -97,13 +100,16 @@ function CampusBollard({ position, color }) {
         <cylinderGeometry args={[0.08, 0.1, 0.9, 8]} />
         <meshStandardMaterial color="#0F172A" metalness={0.8} roughness={0.3} />
       </mesh>
-      {/* Glowing Lantern Cap */}
+      {/* Glowing Lantern Cap (Emissive) */}
       <mesh position={[0, 0.95, 0]}>
         <sphereGeometry args={[0.16, 12, 12]} />
-        <meshBasicMaterial color={color} />
+        <meshStandardMaterial
+          color={color}
+          emissive={color}
+          emissiveIntensity={2.2}
+          roughness={0.2}
+        />
       </mesh>
-      {/* Light illuminating the walkway surface */}
-      <pointLight position={[0, 0.95, 0]} color={color} intensity={0.9} distance={4} />
     </group>
   );
 }

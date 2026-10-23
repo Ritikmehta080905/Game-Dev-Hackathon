@@ -49,6 +49,8 @@ export default function GameCanvas() {
     <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden' }}>
       <Canvas
         shadows
+        dpr={[1, 1.5]}
+        gl={{ antialias: true, powerPreference: 'high-performance', stencil: false }}
         camera={{ position: [0, 4.5, 14.5], fov: 60 }}
         style={{ width: '100%', height: '100%' }}
       >

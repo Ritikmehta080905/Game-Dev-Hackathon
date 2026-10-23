@@ -1,24 +1,21 @@
-// ATHARVA.EXE — CampusEnvironment: Realistic Atharva University Campus Horizon, Sunlight & Courtyard Grounds
-// Replaces the dark black void with bright daylight, a radiant sun, warm sunlight beams, and lush campus grounds!
-
-import React from 'react';
+import React, { useMemo } from 'react';
+import * as THREE from 'three';
+import { getGranitePaversTexture, getConcreteBumpTexture, getWindowGlassTexture } from './materials/CampusMaterials';
 
 export const ENV_SETTINGS = {
   1: {
-    skyColor: '#38bdf8', // Radiant sunny Mumbai college sky
+    skyColor: '#38bdf8', // Radiant sunny college sky
     fogColor: '#bae6fd', // Soft daytime sun haze
     fogNear: 55,
     fogFar: 210,
     sunColor: '#fffbeb', // Warm brilliant sun
     sunGlowColor: '#fde047',
     sunPos: [35, 55, -45],
-    sunlightIntensity: 2.6,
+    sunlightIntensity: 2.2,
     ambientSky: '#38bdf8',
     ambientGround: '#86efac',
-    ambientIntensity: 1.25,
-    pointLight1: '#38bdf8',
-    pointLight2: '#fde047',
-    groundColor: '#e2e8f0', // Clean campus plaza limestone
+    ambientIntensity: 1.1,
+    groundColor: '#cbd5e1', // Clean campus plaza limestone
     lawnColor: '#16a34a',   // Lush green campus turf
     gridColor1: '#0284c7',
     gridColor2: '#94a3b8',
@@ -34,13 +31,11 @@ export const ENV_SETTINGS = {
     sunColor: '#fef08a',
     sunGlowColor: '#5eead4',
     sunPos: [-35, 50, -45],
-    sunlightIntensity: 2.4,
+    sunlightIntensity: 2.0,
     ambientSky: '#67e8f9',
     ambientGround: '#a7f3d0',
-    ambientIntensity: 1.2,
-    pointLight1: '#10B981',
-    pointLight2: '#FFE14D',
-    groundColor: '#f1f5f9',
+    ambientIntensity: 1.05,
+    groundColor: '#cbd5e1',
     lawnColor: '#15803d',
     gridColor1: '#0d9488',
     gridColor2: '#cbd5e1',
@@ -56,12 +51,10 @@ export const ENV_SETTINGS = {
     sunColor: '#fef08a',
     sunGlowColor: '#f97316',
     sunPos: [40, 48, -40],
-    sunlightIntensity: 2.8,
+    sunlightIntensity: 2.4,
     ambientSky: '#fed7aa',
     ambientGround: '#fde047',
-    ambientIntensity: 1.3,
-    pointLight1: '#f97316',
-    pointLight2: '#FF2E93',
+    ambientIntensity: 1.15,
     groundColor: '#fef3c7',
     lawnColor: '#16a34a',
     gridColor1: '#ea580c',
@@ -78,12 +71,10 @@ export const ENV_SETTINGS = {
     sunColor: '#ffffff',
     sunGlowColor: '#a78bfa',
     sunPos: [0, 60, -40],
-    sunlightIntensity: 2.7,
+    sunlightIntensity: 2.3,
     ambientSky: '#c7d2fe',
     ambientGround: '#67e8f9',
-    ambientIntensity: 1.3,
-    pointLight1: '#7B4BFF',
-    pointLight2: '#38bdf8',
+    ambientIntensity: 1.15,
     groundColor: '#f8fafc',
     lawnColor: '#22c55e',
     gridColor1: '#6366f1',
@@ -96,6 +87,7 @@ export const ENV_SETTINGS = {
 
 export default function CampusEnvironment({ level = 1 }) {
   const env = ENV_SETTINGS[level] || ENV_SETTINGS[1];
+  const paverTexture = useMemo(() => getGranitePaversTexture(), []);
 
   return (
     <group>
@@ -106,95 +98,86 @@ export default function CampusEnvironment({ level = 1 }) {
       <group position={env.sunPos}>
         {/* Core Sun Disc */}
         <mesh>
-          <sphereGeometry args={[6.5, 32, 32]} />
+          <sphereGeometry args={[6.5, 24, 24]} />
           <meshBasicMaterial color={env.sunColor} />
         </mesh>
         {/* Inner Sun Corona Aura */}
         <mesh>
-          <sphereGeometry args={[10.5, 32, 32]} />
+          <sphereGeometry args={[10.5, 24, 24]} />
           <meshBasicMaterial color={env.sunGlowColor} transparent opacity={0.35} />
         </mesh>
-        {/* Outer Sun Radiance */}
-        <mesh>
-          <sphereGeometry args={[16, 32, 32]} />
-          <meshBasicMaterial color={env.sunGlowColor} transparent opacity={0.15} />
-        </mesh>
-        {/* Radiant Sunlight Point Light */}
-        <pointLight color={env.sunColor} intensity={3.5} distance={200} />
       </group>
 
-      {/* 3. ILLUMINATING CAMPUS DAYLIGHT */}
-      {/* Natural daylight hemisphere bounce */}
+      {/* 3. NATURAL DAYLIGHT HEMISPHERE BOUNCE */}
       <hemisphereLight
         skyColor={env.ambientSky}
         groundColor={env.ambientGround}
         intensity={env.ambientIntensity}
       />
 
-      {/* Main Campus Directional Sunlight */}
+      {/* Optimized Campus Directional Sunlight (1024x1024 with tight frustum) */}
       <directionalLight
         position={[env.sunPos[0] * 0.7, env.sunPos[1] * 0.7, env.sunPos[2] * 0.7]}
         intensity={env.sunlightIntensity}
         color={env.sunColor}
         castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
-        shadow-camera-far={140}
-        shadow-camera-left={-35}
-        shadow-camera-right={35}
-        shadow-camera-top={35}
-        shadow-camera-bottom={-35}
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
+        shadow-camera-far={120}
+        shadow-camera-left={-28}
+        shadow-camera-right={28}
+        shadow-camera-top={28}
+        shadow-camera-bottom={-28}
+        shadow-bias={-0.0004}
       />
 
-      {/* Warm Campus Accent Fill Lights */}
-      <pointLight position={[0, 12, 10]} color={env.pointLight1} intensity={1.8} distance={45} />
-      <pointLight position={[0, 16, -28]} color={env.pointLight2} intensity={2.0} distance={50} />
-
-      {/* 4. LOWER CAMPUS COURTYARD GROUND (At y = -12, visible below elevated walkways!) */}
+      {/* 4. LOWER CAMPUS COURTYARD GROUND (At y = -12, visible below elevated walkways) */}
       <group position={[0, -12, -15]}>
-        {/* Sprawling Campus Ground (Clean Limestone Plaza Paving) */}
+        {/* Sprawling Campus Ground (Textured Granite Plaza Paving) */}
         <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[180, 180]} />
-          <meshStandardMaterial color={env.groundColor} roughness={0.6} />
+          <meshStandardMaterial
+            map={paverTexture}
+            color={env.groundColor}
+            roughness={0.65}
+            metalness={0.05}
+          />
         </mesh>
 
         {/* Campus Green Lawns / Quad Turf Patches */}
-        <mesh position={[-32, 0.05, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <mesh position={[-32, 0.05, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
           <planeGeometry args={[38, 130]} />
-          <meshStandardMaterial color={env.lawnColor} roughness={0.8} />
+          <meshStandardMaterial color={env.lawnColor} roughness={0.85} />
         </mesh>
-        <mesh position={[32, 0.05, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <mesh position={[32, 0.05, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
           <planeGeometry args={[38, 130]} />
-          <meshStandardMaterial color={env.lawnColor} roughness={0.8} />
+          <meshStandardMaterial color={env.lawnColor} roughness={0.85} />
         </mesh>
 
-        {/* Central Campus Roadway & Paving Lines */}
-        <gridHelper args={[180, 45, env.gridColor1, env.gridColor2]} position={[0, 0.1, 0]} />
-
-        {/* Distant Campus Building Blocks (Atharva Engineering Wings) */}
+        {/* Distant Campus Building Blocks */}
         <CampusBuilding
-          position={[-48, 16, -20]}
-          size={[24, 32, 50]}
+          position={[-50, 16, -20]}
+          size={[26, 32, 52]}
           bodyColor={env.buildingBody}
           trimColor={env.buildingTrim}
           label="ENGINEERING BLOCK A"
         />
         <CampusBuilding
-          position={[48, 16, -20]}
-          size={[24, 32, 50]}
+          position={[50, 16, -20]}
+          size={[26, 32, 52]}
           bodyColor={env.buildingBody}
           trimColor={env.buildingTrim}
           label="IT & MCA TOWER"
         />
         <CampusBuilding
-          position={[0, 18, -75]}
-          size={[85, 36, 20]}
+          position={[0, 18, -78]}
+          size={[90, 36, 22]}
           bodyColor={env.buildingBody}
           trimColor={env.buildingTrim}
           label={env.centerBuilding}
         />
 
-        {/* Campus Courtyard Palm / Shade Trees */}
+        {/* Campus Courtyard Shade Trees */}
         {[-22, -11, 11, 22].map((x, idx) => (
           <React.Fragment key={idx}>
             <CampusTree position={[x - 6, 0, -5]} />
@@ -208,12 +191,21 @@ export default function CampusEnvironment({ level = 1 }) {
 }
 
 function CampusBuilding({ position, size, bodyColor = '#f8fafc', trimColor = '#0284c7', label }) {
+  const windowTexture = useMemo(() => getWindowGlassTexture(), []);
+  const bumpTexture = useMemo(() => getConcreteBumpTexture(), []);
+
   return (
     <group position={position}>
-      {/* Modern Bright Campus Building Body */}
+      {/* Modern Bright Campus Building Body with Concrete Bump */}
       <mesh receiveShadow castShadow>
         <boxGeometry args={size} />
-        <meshStandardMaterial color={bodyColor} roughness={0.35} metalness={0.1} />
+        <meshStandardMaterial
+          color={bodyColor}
+          bumpMap={bumpTexture}
+          bumpScale={0.04}
+          roughness={0.4}
+          metalness={0.1}
+        />
       </mesh>
 
       {/* Windows Grid Reflecting the Bright Daylight Sky */}
@@ -221,8 +213,12 @@ function CampusBuilding({ position, size, bodyColor = '#f8fafc', trimColor = '#0
         <group key={r} position={[0, yOff, (size[2] / 2) + 0.1]}>
           {[-size[0] / 3, 0, size[0] / 3].map((xOff, c) => (
             <mesh key={c} position={[xOff, 0, 0]}>
-              <planeGeometry args={[3.5, 2.5]} />
-              <meshBasicMaterial color={(r + c) % 2 === 0 ? '#bae6fd' : '#7dd3fc'} transparent opacity={0.8} />
+              <planeGeometry args={[4.2, 3.2]} />
+              <meshStandardMaterial
+                map={windowTexture}
+                roughness={0.15}
+                metalness={0.8}
+              />
             </mesh>
           ))}
         </group>
@@ -230,8 +226,8 @@ function CampusBuilding({ position, size, bodyColor = '#f8fafc', trimColor = '#0
 
       {/* Roof Parapet / Architectural Trim */}
       <mesh position={[0, size[1] / 2 + 1, 0]}>
-        <boxGeometry args={[size[0] * 0.95, 2, size[2] * 0.95]} />
-        <meshStandardMaterial color={trimColor} metalness={0.3} roughness={0.4} />
+        <boxGeometry args={[size[0] * 0.96, 2, size[2] * 0.96]} />
+        <meshStandardMaterial color={trimColor} metalness={0.4} roughness={0.35} />
       </mesh>
     </group>
   );
@@ -240,19 +236,19 @@ function CampusBuilding({ position, size, bodyColor = '#f8fafc', trimColor = '#0
 function CampusTree({ position }) {
   return (
     <group position={position}>
-      {/* Tree Trunk */}
-      <mesh position={[0, 3.5, 0]}>
-        <cylinderGeometry args={[0.35, 0.5, 7, 6]} />
-        <meshStandardMaterial color="#78350f" roughness={0.9} />
+      {/* Tapered Tree Trunk */}
+      <mesh position={[0, 3.5, 0]} castShadow>
+        <cylinderGeometry args={[0.3, 0.55, 7, 8]} />
+        <meshStandardMaterial color="#5c3818" roughness={0.9} />
       </mesh>
-      {/* Lush Green Foliage Canopy */}
-      <mesh position={[0, 8, 0]}>
-        <dodecahedronGeometry args={[2.6, 1]} />
-        <meshStandardMaterial color="#15803d" roughness={0.7} />
+      {/* Multi-tier Lush Green Foliage Canopy */}
+      <mesh position={[0, 7.8, 0]} castShadow>
+        <dodecahedronGeometry args={[2.8, 1]} />
+        <meshStandardMaterial color="#15803d" roughness={0.75} />
       </mesh>
-      <mesh position={[0, 10.2, 0]}>
-        <dodecahedronGeometry args={[1.9, 1]} />
-        <meshStandardMaterial color="#22c55e" roughness={0.7} />
+      <mesh position={[0, 10.0, 0]} castShadow>
+        <dodecahedronGeometry args={[2.0, 1]} />
+        <meshStandardMaterial color="#22c55e" roughness={0.75} />
       </mesh>
     </group>
   );

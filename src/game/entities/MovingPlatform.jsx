@@ -1,9 +1,10 @@
 // ATHARVA.EXE — MovingPlatform: Time-Freezable Kinematic Platform
 
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import { GameState } from '../../systems/GameState';
+import { getWarningStripeTexture } from '../materials/CampusMaterials';
 
 export default function MovingPlatform({
   position = [0, 0, 0],
@@ -16,6 +17,7 @@ export default function MovingPlatform({
 }) {
   const rbRef = useRef();
   const progressRef = useRef(0);
+  const warningTexture = useMemo(() => getWarningStripeTexture(), []);
 
   useFrame((state, delta) => {
     if (!rbRef.current) return;
@@ -40,13 +42,24 @@ export default function MovingPlatform({
   return (
     <RigidBody ref={rbRef} type="kinematicPositionBased" colliders={false} position={position}>
       <CuboidCollider args={[size[0] / 2, size[1] / 2, size[2] / 2]} />
+      {/* Platform Core Body */}
       <mesh receiveShadow castShadow>
         <boxGeometry args={size} />
         <meshStandardMaterial
           color={color}
-          roughness={0.4}
-          metalness={0.3}
+          roughness={0.3}
+          metalness={0.6}
         />
+      </mesh>
+
+      {/* Hazard Warning Stripe Skirting along Sides */}
+      <mesh position={[0, 0, size[2] / 2 + 0.01]}>
+        <planeGeometry args={[size[0], size[1] * 0.8]} />
+        <meshBasicMaterial map={warningTexture} />
+      </mesh>
+      <mesh position={[0, 0, -size[2] / 2 - 0.01]} rotation={[0, Math.PI, 0]}>
+        <planeGeometry args={[size[0], size[1] * 0.8]} />
+        <meshBasicMaterial map={warningTexture} />
       </mesh>
 
       {/* Glowing Border Trim */}
@@ -57,3 +70,4 @@ export default function MovingPlatform({
     </RigidBody>
   );
 }
+

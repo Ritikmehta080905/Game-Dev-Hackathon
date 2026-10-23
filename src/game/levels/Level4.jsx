@@ -1,7 +1,7 @@
 // ATHARVA.EXE — Level 4: The Core Reboot (Central Server Room & Data Center)
 // Combines Gravity Flip [G], Time Freeze [F], Dimension Switch [Q] & Pressure Plate for the finale!
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import { Text } from '@react-three/drei';
 import CampusPlatform from '../entities/CampusPlatform';
@@ -17,8 +17,17 @@ import Checkpoint from '../entities/Checkpoint';
 import Terminal from '../entities/Terminal';
 import { GameState } from '../../systems/GameState';
 import { Sound } from '../../systems/AudioSystem';
+import {
+  getServerRackTexture,
+  getWarningStripeTexture,
+  getGlitchCircuitTexture
+} from '../materials/CampusMaterials';
 
 export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
+  const serverRackTexture = useMemo(() => getServerRackTexture(), []);
+  const warningTexture = useMemo(() => getWarningStripeTexture(), []);
+  const circuitTexture = useMemo(() => getGlitchCircuitTexture(), []);
+
   // Corrupted Admin Boss Glitch Twist (Doc §9):
   // Every 28 seconds, the Corrupted Admin attempts to override reality!
   useEffect(() => {
@@ -76,6 +85,7 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
       GameState.setAdminGlitchActive(false);
     };
   }, []);
+
   return (
     <group>
       {/* ========================================================
@@ -84,22 +94,35 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
       <CampusPlatform
         position={[0, -0.4, 6]}
         size={[18, 0.8, 16]}
-        pavementColor="#1e293b"
+        pavementColor="#0f172a"
         curbColor="#FFE14D"
         accentColor="#00E5FF"
         hasLamps={true}
         hasGuideArrows={true}
       />
 
-      {/* Massive Server Towers flanking the entrance */}
-      <DataServerRack position={[-7.5, 6, 6]} />
-      <DataServerRack position={[7.5, 6, 6]} />
+      {/* Massive 42U Server Blade Racks flanking the entrance */}
+      <DataServerCluster position={[-7.5, 4.8, 6]} serverTexture={serverRackTexture} />
+      <DataServerCluster position={[7.5, 4.8, 6]} serverTexture={serverRackTexture} />
 
-      {/* Data Center Overhead Sign */}
-      <mesh position={[0, 9.5, 6]}>
-        <planeGeometry args={[12, 1.0]} />
-        <meshBasicMaterial color="#00E5FF" />
-      </mesh>
+      {/* Overhead Yellow Fiber Optic Cable Trays */}
+      <OverheadCableTray position={[0, 8.8, 6]} />
+
+      {/* Datacenter Status Overhead Sign */}
+      <group position={[0, 9.5, 6]}>
+        <mesh castShadow>
+          <boxGeometry args={[12, 1.0, 0.1]} />
+          <meshStandardMaterial color="#0f172a" metalness={0.6} roughness={0.3} />
+        </mesh>
+        <mesh position={[0, 0, 0.06]}>
+          <planeGeometry args={[11.6, 0.8]} />
+          <meshStandardMaterial
+            color="#00e5ff"
+            emissive="#00e5ff"
+            emissiveIntensity={1.2}
+          />
+        </mesh>
+      </group>
 
       {/* ========================================================
           2. PUZZLE 1: CAMPUS FIREWALL DOOR & ILLUMINATED PRESSURE PLATE
@@ -141,6 +164,28 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
       {/* 3D Visual Ghost Clone standing on plate */}
       <GhostClone ghostPosRef={ghostPosRef} />
 
+      {/* Firewall Door Industrial Archway Posts with Hazard Stripes */}
+      <group position={[-5.4, 2.6, -3]}>
+        <mesh castShadow>
+          <boxGeometry args={[0.8, 4.4, 0.8]} />
+          <meshStandardMaterial color="#1e293b" metalness={0.8} roughness={0.3} />
+        </mesh>
+        <mesh position={[0.41, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
+          <planeGeometry args={[0.7, 4.2]} />
+          <meshBasicMaterial map={warningTexture} />
+        </mesh>
+      </group>
+      <group position={[5.4, 2.6, -3]}>
+        <mesh castShadow>
+          <boxGeometry args={[0.8, 4.4, 0.8]} />
+          <meshStandardMaterial color="#1e293b" metalness={0.8} roughness={0.3} />
+        </mesh>
+        <mesh position={[-0.41, 0, 0]} rotation={[0, -Math.PI / 2, 0]}>
+          <planeGeometry args={[0.7, 4.2]} />
+          <meshBasicMaterial map={warningTexture} />
+        </mesh>
+      </group>
+
       {/* ========================================================
           3. PUZZLE 2: RAPID SERVER LIFT PLATFORM (TIME FREEZE [F])
           ======================================================== */}
@@ -159,13 +204,21 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
       <CampusPlatform
         position={[0, 4.8, -23]}
         size={[9, 0.8, 7]}
-        pavementColor="#334155"
+        pavementColor="#1e293b"
         curbColor="#00E5FF"
         accentColor="#7B4BFF"
         hasLamps={true}
         hasGuideArrows={true}
       />
       <Checkpoint position={[0, 5.3, -23]} playerPosRef={playerPosRef} />
+
+      {/* Auxiliary Backup Rack on Checkpoint Platform */}
+      <group position={[-3.6, 6.2, -23]}>
+        <mesh castShadow>
+          <boxGeometry args={[1.2, 2.8, 1.2]} />
+          <meshStandardMaterial map={serverRackTexture} roughness={0.4} />
+        </mesh>
+      </group>
 
       {/* ========================================================
           5. PUZZLE 3: THE GLITCH BRIDGE (DIMENSION SWITCH [Q])
@@ -191,31 +244,72 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
         <CuboidCollider args={[6.5, 0.6, 9]} />
         <mesh receiveShadow castShadow>
           <boxGeometry args={[13, 1.2, 18]} />
-          <meshStandardMaterial color="#2a0826" roughness={0.4} metalness={0.6} />
+          <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.7} />
         </mesh>
-        {/* Walking surface on underside */}
+        {/* Walking surface on underside (interlocking granite pavers) */}
         <mesh position={[0, -0.61, 0]} rotation={[Math.PI / 2, 0, 0]} receiveShadow>
           <planeGeometry args={[12.4, 17.4]} />
-          <meshStandardMaterial color="#475569" roughness={0.3} />
+          <meshStandardMaterial
+            color="#334155"
+            roughness={0.3}
+            metalness={0.2}
+          />
         </mesh>
         {/* Inverted Ceiling Runway Lights */}
         <mesh position={[0, -0.62, 0]} rotation={[Math.PI / 2, 0, 0]}>
           <planeGeometry args={[12.8, 17.8]} />
-          <meshBasicMaterial color="#FFE14D" wireframe />
+          <meshBasicMaterial color="#ffe14d" wireframe />
+        </mesh>
+        {/* Catwalk Edge Guardrails (underside) */}
+        <mesh position={[-6.2, -0.9, 0]}>
+          <boxGeometry args={[0.08, 0.6, 17.6]} />
+          <meshStandardMaterial color="#f59e0b" metalness={0.8} />
+        </mesh>
+        <mesh position={[6.2, -0.9, 0]}>
+          <boxGeometry args={[0.08, 0.6, 17.6]} />
+          <meshStandardMaterial color="#f59e0b" metalness={0.8} />
         </mesh>
       </RigidBody>
 
-      {/* Central Quantum Mainframe Cylinder */}
-      <mesh position={[0, 10, -48]}>
-        <cylinderGeometry args={[1.8, 1.8, 13, 16]} />
-        <meshStandardMaterial
-          color="#00E5FF"
-          emissive="#00E5FF"
-          emissiveIntensity={0.8}
-          wireframe
-        />
-      </mesh>
-      <pointLight position={[0, 10, -48]} color="#00E5FF" intensity={3.5} distance={20} />
+      {/* Central Quantum Mainframe Core Architecture */}
+      <group position={[0, 10, -48]}>
+        {/* Primary Quantum Mainframe Cylinder */}
+        <mesh>
+          <cylinderGeometry args={[1.8, 1.8, 13, 24]} />
+          <meshStandardMaterial
+            color="#00e5ff"
+            emissive="#00e5ff"
+            emissiveIntensity={1.8}
+            wireframe
+          />
+        </mesh>
+
+        {/* Concentric Cryogenic Containment Rings */}
+        {[-4.5, -1.5, 1.5, 4.5].map((y, i) => (
+          <mesh key={i} position={[0, y, 0]} rotation={[Math.PI / 2, 0, 0]}>
+            <torusGeometry args={[2.4, 0.14, 12, 32]} />
+            <meshStandardMaterial
+              color="#94a3b8"
+              metalness={0.9}
+              roughness={0.2}
+            />
+          </mesh>
+        ))}
+
+        {/* Pulsating Internal Quantum Singularity Core */}
+        <mesh>
+          <sphereGeometry args={[1.1, 16, 16]} />
+          <meshStandardMaterial
+            color="#ff2e93"
+            emissive="#ff2e93"
+            emissiveIntensity={2.5}
+            roughness={0.1}
+          />
+        </mesh>
+
+        {/* Tightly-tuned accent light with controlled distance */}
+        <pointLight color="#00e5ff" intensity={2.0} distance={12} />
+      </group>
 
       {/* Inverted Ceiling Terminal (Final System Reboot) */}
       <Terminal
@@ -243,20 +337,75 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
   );
 }
 
-function DataServerRack({ position }) {
+/**
+ * High-Density Datacenter Server Bay Cluster with PBR blade textures.
+ */
+function DataServerCluster({ position, serverTexture }) {
   return (
     <group position={position}>
-      <mesh receiveShadow castShadow>
-        <boxGeometry args={[2.8, 12, 2.8]} />
-        <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.8} />
-      </mesh>
-      {/* Blinking Activity LEDs */}
-      {[-4.5, -2.5, -0.5, 1.5, 3.5].map((y, i) => (
-        <mesh key={i} position={[0, y, 1.42]}>
-          <boxGeometry args={[2.0, 0.25, 0.05]} />
-          <meshBasicMaterial color={i % 2 === 0 ? '#00E5FF' : '#4ADE80'} />
-        </mesh>
+      {/* 3 Interlocking 42U Server Racks */}
+      {[-1.1, 0, 1.1].map((x, i) => (
+        <group key={i} position={[x, 0, 0]}>
+          {/* Rack Chassis */}
+          <mesh receiveShadow castShadow>
+            <boxGeometry args={[0.95, 9.6, 2.6]} />
+            <meshStandardMaterial color="#0b0f19" roughness={0.3} metalness={0.7} />
+          </mesh>
+          {/* Front Faceplate with Status LEDs and RJ45 Ports */}
+          <mesh position={[0, 0, 1.32]}>
+            <planeGeometry args={[0.88, 9.4]} />
+            <meshStandardMaterial map={serverTexture} roughness={0.4} />
+          </mesh>
+          {/* Rear Ventilation Grille */}
+          <mesh position={[0, 0, -1.32]} rotation={[0, Math.PI, 0]}>
+            <planeGeometry args={[0.88, 9.4]} />
+            <meshStandardMaterial map={serverTexture} roughness={0.4} />
+          </mesh>
+          {/* Top Status Beacon LED (Cyan / Amber) */}
+          <mesh position={[0, 4.9, 0.8]}>
+            <cylinderGeometry args={[0.04, 0.04, 0.12, 8]} />
+            <meshStandardMaterial
+              color={i === 1 ? '#00e5ff' : '#10b981'}
+              emissive={i === 1 ? '#00e5ff' : '#10b981'}
+              emissiveIntensity={2.0}
+            />
+          </mesh>
+        </group>
       ))}
     </group>
   );
 }
+
+/**
+ * Overhead Yellow Fiber-Optic Cable Trays suspended by steel rods.
+ */
+function OverheadCableTray({ position }) {
+  return (
+    <group position={position}>
+      {/* Perforated Cable Tray Basket */}
+      <mesh castShadow>
+        <boxGeometry args={[16, 0.12, 1.2]} />
+        <meshStandardMaterial color="#eab308" metalness={0.7} roughness={0.3} />
+      </mesh>
+      {/* Yellow Tray Side Lips */}
+      <mesh position={[0, 0.15, 0.58]}>
+        <boxGeometry args={[16, 0.22, 0.04]} />
+        <meshStandardMaterial color="#eab308" metalness={0.7} />
+      </mesh>
+      <mesh position={[0, 0.15, -0.58]}>
+        <boxGeometry args={[16, 0.22, 0.04]} />
+        <meshStandardMaterial color="#eab308" metalness={0.7} />
+      </mesh>
+      {/* Bundled Optical Fiber Patch Cables (Cyan & Magenta) */}
+      <mesh position={[0, 0.12, 0.2]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.06, 0.06, 16, 8]} />
+        <meshStandardMaterial color="#00e5ff" roughness={0.5} />
+      </mesh>
+      <mesh position={[0, 0.12, -0.2]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.06, 0.06, 16, 8]} />
+        <meshStandardMaterial color="#ff2e93" roughness={0.5} />
+      </mesh>
+    </group>
+  );
+}
+
