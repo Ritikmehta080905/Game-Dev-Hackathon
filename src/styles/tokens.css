@@ -1,0 +1,16 @@
+:root {
+  --bg-navy: #060914;
+  --bg-panel: rgba(11, 16, 38, 0.92);
+  --bg-panel-border: rgba(0, 229, 255, 0.3);
+  --cyan-electric: #00E5FF;
+  --cyan-glow: rgba(0, 229, 255, 0.35);
+  --magenta-corrupt: #FF2E93;
+  --magenta-glow: rgba(255, 46, 147, 0.35);
+  --amber-warm: #FF9E3D;
+  --yellow-fragment: #FFE14D;
+  --purple-frame: #7B4BFF;
+  --white-text: #F8FAFC;
+  --muted-text: #94A3B8;
+  --font-mono: 'Fira Code', monospace;
+  --font-sans: 'Outfit', sans-serif;
+}
