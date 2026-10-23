@@ -21,6 +21,7 @@ export default function StoryTerminalModal({ modalData }) {
     actionLabel = 'ACKNOWLEDGE & CLOSE [E]',
     actionSecondary = null,
     onAction = null,
+    choices = null,
     accent = '#00E5FF'
   } = modalData;
 
@@ -30,14 +31,22 @@ export default function StoryTerminalModal({ modalData }) {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.code === 'KeyE' || e.code === 'Space' || e.code === 'Escape' || e.code === 'Enter') {
+      if (!choices && (e.code === 'KeyE' || e.code === 'Space' || e.code === 'Escape' || e.code === 'Enter')) {
         e.preventDefault();
         handleClose();
+      } else if (choices) {
+        if (e.code === 'Digit1' && choices[0]) {
+          choices[0].onSelect();
+          GameState.closeStoryModal();
+        } else if (e.code === 'Digit2' && choices[1]) {
+          choices[1].onSelect();
+          GameState.closeStoryModal();
+        }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [modalData]);
+  }, [modalData, choices]);
 
   const handleClose = () => {
     Sound.playTone(550, 'sine', 0.08, 0.1);
@@ -113,17 +122,54 @@ export default function StoryTerminalModal({ modalData }) {
 
         {/* Action Button Footer */}
         <div style={styles.footer}>
-          <div style={styles.footerPrompt}>
-            <span>PRESS KEY </span>
-            <span style={{ ...styles.keyBadge, borderColor: accent, color: accent }}>[E]</span>
-            <span> OR CLICK TO PROCEED</span>
-          </div>
-          <button
-            style={{ ...styles.actionBtn, backgroundColor: accent, borderColor: accent }}
-            onClick={handleClose}
-          >
-            {actionLabel}
-          </button>
+          {choices ? (
+            <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+              <div style={styles.footerPrompt}>
+                <span>MAKE FINAL CHOICE: </span>
+                <span style={{ color: '#FFE14D', fontWeight: 'bold' }}>[1] OR [2]</span>
+              </div>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                {choices.map((c, idx) => (
+                  <button
+                    key={idx}
+                    style={{
+                      padding: '10px 18px',
+                      borderRadius: '6px',
+                      border: `1.5px solid ${c.color || accent}`,
+                      backgroundColor: c.primary ? (c.color || accent) : 'rgba(15, 23, 42, 0.85)',
+                      color: c.primary ? '#060A17' : (c.color || accent),
+                      fontWeight: '800',
+                      fontSize: '12px',
+                      cursor: 'pointer',
+                      fontFamily: 'inherit',
+                      boxShadow: c.primary ? `0 0 16px ${c.color || accent}50` : 'none'
+                    }}
+                    onClick={() => {
+                      Sound.playTone(680, 'triangle', 0.1, 0.15);
+                      if (c.onSelect) c.onSelect();
+                      GameState.closeStoryModal();
+                    }}
+                  >
+                    {c.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <>
+              <div style={styles.footerPrompt}>
+                <span>PRESS KEY </span>
+                <span style={{ ...styles.keyBadge, borderColor: accent, color: accent }}>[E]</span>
+                <span> OR CLICK TO PROCEED</span>
+              </div>
+              <button
+                style={{ ...styles.actionBtn, backgroundColor: accent, borderColor: accent }}
+                onClick={handleClose}
+              >
+                {actionLabel}
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

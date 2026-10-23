@@ -71,6 +71,8 @@ export default function Player({ playerPosRef, ghostPosRef, gravityInverted }) {
 
   // 4. Listen for Time Echo / Ghost Clone [E]
   const triggerEcho = () => {
+    // Ghost clone is specific to Level 4 server core interlock puzzle
+    if (GameState.currentLevel !== 4 || GameState.activeStoryModal) return;
     const pos = playerPosRef && playerPosRef.current ? playerPosRef.current : null;
     const res = GameState.triggerTimeEcho(pos);
     if (res && res.active) {
@@ -126,8 +128,8 @@ export default function Player({ playerPosRef, ghostPosRef, gravityInverted }) {
   useFrame((state, delta) => {
     if (!rbRef.current) return;
 
-    // Do not process physics movement or fall damage if player is detained, timed out, or in menus/pause
-    if (GameState.screen !== 'GAME' || GameState.isDetained || GameState.isTimeOut || GameState.showSectorIntro) {
+    // Do not process physics movement or fall damage if player is detained, timed out, or in menus/pause/modals
+    if (GameState.screen !== 'GAME' || GameState.isDetained || GameState.isTimeOut || GameState.showSectorIntro || GameState.activeStoryModal) {
       rbRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true);
       return;
     }

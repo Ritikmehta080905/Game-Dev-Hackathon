@@ -89,6 +89,7 @@ const LEVEL_THEMES = {
 
 export default function HUD() {
   const [state, setState] = useState({ ...GameState });
+  const [showDevRules, setShowDevRules] = useState(false);
 
   useEffect(() => {
     return GameState.subscribe((updated) => {
@@ -104,13 +105,15 @@ export default function HUD() {
     return () => clearInterval(timer);
   }, []);
 
-  // Listen for 'V' key to recenter POV, 'H' key to open sector guide
+  // Listen for 'V' key to recenter POV, 'H' key to open sector guide, 'O' key for dev rules
   useEffect(() => {
     const handleKey = (e) => {
       if (e.code === 'KeyV') {
         window.dispatchEvent(new CustomEvent('player-respawn'));
       } else if (e.code === 'KeyH') {
         GameState.openSectorIntro();
+      } else if (e.code === 'KeyO') {
+        setShowDevRules((prev) => !prev);
       }
     };
     window.addEventListener('keydown', handleKey);
@@ -263,87 +266,148 @@ export default function HUD() {
           2. BOTTOM WORKSPACE: VISIBLE RULES PANEL & HOTKEY CONTROLS
           ======================================================== */}
       <div style={styles.bottomRow}>
-        {/* Visible Rules Panel */}
-        <div style={{ ...styles.rulesPanel, borderColor: theme.accent, boxShadow: `0 0 25px ${theme.accentGlow}` }}>
-          <div style={styles.rulesHeader}>
-            <span style={{ ...styles.rulesTitle, color: theme.accent }}>⚡ CAMPUS RULES PANEL</span>
-            <span style={styles.rulesLive}>● EDITABLE</span>
-          </div>
-
-          <div style={styles.rulesCode}>
-            <div style={{ ...styles.codeLine, ...(theme.activeRule === 'gravity' || theme.activeRule === 'all' ? styles.activeCodeLine : {}) }}>
-              <span style={styles.varName}>gravity</span> ={' '}
-              <button
-                style={{ ...styles.ruleTagBtn, borderColor: state.gravityInverted ? '#FF2E93' : '#00E5FF', color: state.gravityInverted ? '#FF2E93' : '#00E5FF' }}
-                onClick={() => {
-                  GameState.toggleGravity();
-                  Sound.playGravityFlip();
-                }}
-              >
-                {gravityStr}
-              </button>
-              {(theme.activeRule === 'gravity' || theme.activeRule === 'all') && (
-                <span style={{ ...styles.activeRuleTag, color: theme.accent }}>● TARGET RULE</span>
-              )}
-            </div>
-
-            <div style={{ ...styles.codeLine, ...(theme.activeRule === 'time_scale' || theme.activeRule === 'all' ? styles.activeCodeLine : {}) }}>
-              <span style={styles.varName}>time_scale</span> ={' '}
-              <button
-                style={{ ...styles.ruleTagBtn, borderColor: state.timeFrozen ? '#00E5FF' : '#FFE14D', color: state.timeFrozen ? '#00E5FF' : '#FFE14D' }}
-                onClick={() => {
-                  GameState.triggerTimeFreeze();
-                  Sound.playTone(880, 'sine', 0.25, 0.2);
-                }}
-              >
-                {timeStr}
-              </button>
-              {(theme.activeRule === 'time_scale' || theme.activeRule === 'all') && (
-                <span style={{ ...styles.activeRuleTag, color: theme.accent }}>● TARGET RULE</span>
-              )}
-            </div>
-
-            <div style={{ ...styles.codeLine, ...(theme.activeRule === 'layer' || theme.activeRule === 'all' ? styles.activeCodeLine : {}) }}>
-              <span style={styles.varName}>layer</span> ={' '}
-              <button
-                style={{ ...styles.ruleTagBtn, borderColor: state.activeDimension === 'REAL' ? '#00E5FF' : '#FF2E93', color: state.activeDimension === 'REAL' ? '#00E5FF' : '#FF2E93' }}
-                onClick={() => {
-                  GameState.toggleDimension();
-                  Sound.playTone(350, 'sawtooth', 0.1, 0.15);
-                }}
-              >
-                {layerStr}
-              </button>
-              {(theme.activeRule === 'layer' || theme.activeRule === 'all') && (
-                <span style={{ ...styles.activeRuleTag, color: theme.accent }}>● TARGET RULE</span>
-              )}
-            </div>
-
-            <div style={{ ...styles.codeLine, ...(state.currentLevel === 4 ? styles.activeCodeLine : {}) }}>
-              <span style={styles.varName}>time_echo</span> ={' '}
+        {showDevRules ? (
+          /* Visible Rules Panel (Development Only) */
+          <div style={{ ...styles.rulesPanel, borderColor: theme.accent, boxShadow: `0 0 25px ${theme.accentGlow}` }}>
+            <div style={styles.rulesHeader}>
+              <span style={{ ...styles.rulesTitle, color: theme.accent }}>⚡ CAMPUS RULES PANEL</span>
               <button
                 style={{
-                  ...styles.ruleTagBtn,
-                  borderColor: state.timeEchoActive ? '#00E5FF' : '#FF2E93',
-                  color: state.timeEchoActive ? '#00E5FF' : '#FF2E93'
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  color: '#94A3B8',
+                  borderRadius: '4px',
+                  padding: '2px 8px',
+                  fontSize: '11px',
+                  cursor: 'pointer'
                 }}
-                onClick={() => {
-                  window.dispatchEvent(new CustomEvent('trigger-time-echo'));
-                }}
+                onClick={() => setShowDevRules(false)}
               >
-                {state.timeEchoActive ? 'CLONE ACTIVE [E]' : 'SPAWN CLONE [E]'}
+                ✕ HIDE [O]
               </button>
-              {state.currentLevel === 4 && (
-                <span style={{ ...styles.activeRuleTag, color: '#00E5FF' }}>● PUZZLE 1 RULE</span>
-              )}
             </div>
 
-            <div style={styles.codeLine}>
-              <span style={styles.varName}>attendance</span> ={' '}
-              <span style={{ color: attendanceColor, fontWeight: 'bold' }}>{state.attendance}%</span>;
+            <div style={styles.rulesCode}>
+              <div style={{ ...styles.codeLine, ...(theme.activeRule === 'gravity' || theme.activeRule === 'all' ? styles.activeCodeLine : {}) }}>
+                <span style={styles.varName}>gravity</span> ={' '}
+                <button
+                  style={{ ...styles.ruleTagBtn, borderColor: state.gravityInverted ? '#FF2E93' : '#00E5FF', color: state.gravityInverted ? '#FF2E93' : '#00E5FF' }}
+                  onClick={() => {
+                    GameState.toggleGravity();
+                    Sound.playGravityFlip();
+                  }}
+                >
+                  {gravityStr}
+                </button>
+                {(theme.activeRule === 'gravity' || theme.activeRule === 'all') && (
+                  <span style={{ ...styles.activeRuleTag, color: theme.accent }}>● TARGET RULE</span>
+                )}
+              </div>
+
+              <div style={{ ...styles.codeLine, ...(theme.activeRule === 'time_scale' || theme.activeRule === 'all' ? styles.activeCodeLine : {}) }}>
+                <span style={styles.varName}>time_scale</span> ={' '}
+                <button
+                  style={{ ...styles.ruleTagBtn, borderColor: state.timeFrozen ? '#00E5FF' : '#FFE14D', color: state.timeFrozen ? '#00E5FF' : '#FFE14D' }}
+                  onClick={() => {
+                    GameState.triggerTimeFreeze();
+                    Sound.playTone(880, 'sine', 0.25, 0.2);
+                  }}
+                >
+                  {timeStr}
+                </button>
+                {(theme.activeRule === 'time_scale' || theme.activeRule === 'all') && (
+                  <span style={{ ...styles.activeRuleTag, color: theme.accent }}>● TARGET RULE</span>
+                )}
+              </div>
+
+              <div style={{ ...styles.codeLine, ...(theme.activeRule === 'layer' || theme.activeRule === 'all' ? styles.activeCodeLine : {}) }}>
+                <span style={styles.varName}>layer</span> ={' '}
+                <button
+                  style={{ ...styles.ruleTagBtn, borderColor: state.activeDimension === 'REAL' ? '#00E5FF' : '#FF2E93', color: state.activeDimension === 'REAL' ? '#00E5FF' : '#FF2E93' }}
+                  onClick={() => {
+                    GameState.toggleDimension();
+                    Sound.playTone(350, 'sawtooth', 0.1, 0.15);
+                  }}
+                >
+                  {layerStr}
+                </button>
+                {(theme.activeRule === 'layer' || theme.activeRule === 'all') && (
+                  <span style={{ ...styles.activeRuleTag, color: theme.accent }}>● TARGET RULE</span>
+                )}
+              </div>
+
+              <div style={{ ...styles.codeLine, ...(state.currentLevel === 4 ? styles.activeCodeLine : {}) }}>
+                <span style={styles.varName}>time_echo</span> ={' '}
+                <button
+                  style={{
+                    ...styles.ruleTagBtn,
+                    borderColor: state.timeEchoActive ? '#00E5FF' : '#FF2E93',
+                    color: state.timeEchoActive ? '#00E5FF' : '#FF2E93'
+                  }}
+                  onClick={() => {
+                    window.dispatchEvent(new CustomEvent('trigger-time-echo'));
+                  }}
+                >
+                  {state.timeEchoActive ? 'CLONE ACTIVE [E]' : 'SPAWN CLONE [E]'}
+                </button>
+                {state.currentLevel === 4 && (
+                  <span style={{ ...styles.activeRuleTag, color: '#00E5FF' }}>● PUZZLE 1 RULE</span>
+                )}
+              </div>
+
+              <div style={styles.codeLine}>
+                <span style={styles.varName}>attendance</span> ={' '}
+                <span style={{ color: attendanceColor, fontWeight: 'bold' }}>{state.attendance}%</span>;
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          /* Sleek Contextual Objective & Clue Progress Pill */
+          <div style={{
+            background: 'rgba(15, 23, 42, 0.88)',
+            border: `1.5px solid ${theme.accent}`,
+            borderRadius: '8px',
+            padding: '10px 16px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px',
+            fontSize: '12px',
+            color: '#F8FAFC',
+            boxShadow: `0 0 20px ${theme.accentGlow}`,
+            backdropFilter: 'blur(8px)',
+            maxWidth: '560px'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '15px' }}>🎯</span>
+              <div>
+                <div style={{ fontSize: '10px', color: '#FFE14D', fontWeight: 'bold', letterSpacing: '0.5px' }}>
+                  CURRENT OBJECTIVE
+                </div>
+                <div style={{ fontSize: '12px', color: '#F8FAFC', fontWeight: '500' }}>
+                  {theme.howToPlay}
+                </div>
+              </div>
+            </div>
+
+            <button
+              style={{
+                background: 'rgba(255, 255, 255, 0.08)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                color: '#94A3B8',
+                borderRadius: '4px',
+                padding: '4px 8px',
+                fontSize: '10px',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                fontWeight: 'bold'
+              }}
+              onClick={() => setShowDevRules(true)}
+              title="Inspect Live Gameplay Rule Variables (Key O)"
+            >
+              ⚙️ DEV RULES [O]
+            </button>
+          </div>
+        )}
 
         {/* Quick Action & Hotkeys Bar */}
         <div style={{ ...styles.hotkeysBar, borderColor: theme.accent }}>

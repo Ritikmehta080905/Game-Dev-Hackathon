@@ -7,6 +7,7 @@ import { Sound } from '../systems/AudioSystem';
 
 export default function PauseMenu() {
   const [isMuted, setIsMuted] = useState(Sound.muted);
+  const [sensitivity, setSensitivity] = useState(GameState.mouseSensitivity || 1.0);
 
   const handleResume = (e) => {
     if (e) e.stopPropagation();
@@ -45,13 +46,44 @@ export default function PauseMenu() {
         <div style={styles.header}>
           <div style={styles.badge}>⏸️ SIMULATION PAUSED</div>
           <h2 style={styles.title}>GAME PAUSED</h2>
-          <div style={styles.sub}>SIMULATION CLOCK TEMPORARILY HALTED</div>
+          <div style={styles.sub}>PHYSICS CLOCK &amp; EXAM TIMER TEMPORARILY HALTED</div>
         </div>
 
         <div style={styles.infoBox}>
-          <div><strong>SECTOR:</strong> Sector 0{GameState.currentLevel}</div>
-          <div><strong>OPERATOR:</strong> {GameState.studentInfo?.name || 'Cadet Debugger'} ({GameState.studentInfo?.rollNo || 'CADET-0809'})</div>
-          <div><strong>INTEGRITY:</strong> {GameState.attendance}%</div>
+          <div><strong>SECTOR:</strong> Level 0{GameState.currentLevel}</div>
+          <div><strong>STUDENT:</strong> {GameState.studentInfo?.name || 'Karan Rao'} ({GameState.studentInfo?.rollNo || 'CS-2024-884'})</div>
+          <div><strong>ATTENDANCE:</strong> {GameState.attendance}%</div>
+          <div><strong>CLUES FOUND:</strong> {GameState.discoveredLogs.size} AUDITED</div>
+        </div>
+
+        {/* Sensitivity & Audio Settings */}
+        <div style={{
+          background: 'rgba(9, 14, 33, 0.8)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          borderRadius: '6px',
+          padding: '10px 14px',
+          marginBottom: '14px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px', color: '#94A3B8' }}>
+            <span>LOOK SENSITIVITY:</span>
+            <input
+              type="range"
+              min="0.5"
+              max="2.5"
+              step="0.1"
+              value={sensitivity}
+              onChange={(e) => {
+                const val = parseFloat(e.target.value);
+                setSensitivity(val);
+                GameState.setMouseSensitivity(val);
+              }}
+              style={{ width: '130px', cursor: 'pointer' }}
+            />
+            <span style={{ color: '#00E5FF', fontWeight: 'bold' }}>{sensitivity.toFixed(1)}x</span>
+          </div>
         </div>
 
         <div style={styles.btnGroup}>

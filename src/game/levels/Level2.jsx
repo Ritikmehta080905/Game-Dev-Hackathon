@@ -2,6 +2,7 @@
 // Features realistic academic book stacks, student study carrels, glass balustrades, and Time Freeze [F] puzzle!
 
 import React, { useState, useEffect, useMemo } from 'react';
+import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import CampusPlatform from '../entities/CampusPlatform';
 import MovingPlatform from '../entities/MovingPlatform';
 import Hazard from '../entities/Hazard';
@@ -25,10 +26,12 @@ export default function Level2({ playerPosRef }) {
   const [archiveDoorUnlocked, setArchiveDoorUnlocked] = useState(
     GameState.getLevelPuzzle(2, 'archiveDoorUnlocked') || false
   );
+  const [fragmentsCount, setFragmentsCount] = useState(GameState.fragmentsCollected);
 
   useEffect(() => {
     return GameState.subscribe((state) => {
       setArchiveDoorUnlocked(state.getLevelPuzzle(2, 'archiveDoorUnlocked') || false);
+      setFragmentsCount(state.fragmentsCollected);
     });
   }, []);
 
@@ -173,6 +176,25 @@ export default function Level2({ playerPosRef }) {
         size={[5.5, 0.8, 5.0]}
         glowColor="#10B981"
       />
+
+      {/* Overhead Inverted Ceiling Catwalk (Gravity Flip [G] + Time Freeze [F] Multi-Stage Puzzle) */}
+      <RigidBody type="fixed" colliders={false} position={[0, 13.5, -14]}>
+        <CuboidCollider args={[3.2, 0.4, 4.5]} />
+        <mesh receiveShadow castShadow>
+          <boxGeometry args={[6.4, 0.8, 9.0]} />
+          <meshStandardMaterial color="#0f172a" roughness={0.4} metalness={0.6} />
+        </mesh>
+        {/* Underneath walking surface for inverted student */}
+        <mesh position={[0, -0.41, 0]} rotation={[Math.PI / 2, 0, 0]} receiveShadow>
+          <planeGeometry args={[6.0, 8.6]} />
+          <meshStandardMaterial color="#334155" roughness={0.3} metalness={0.2} />
+        </mesh>
+        {/* Inverted Edge Guide Lines */}
+        <mesh position={[0, -0.42, 0]} rotation={[Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[6.2, 8.8]} />
+          <meshBasicMaterial color="#00e5ff" wireframe />
+        </mesh>
+      </RigidBody>
 
       {/* ========================================================
           4. MIDWAY CHECKPOINT BALCONY
@@ -328,8 +350,12 @@ export default function Level2({ playerPosRef }) {
       <Terminal
         position={[0, 9.1, -43]}
         playerPosRef={playerPosRef}
-        isLocked={!archiveDoorUnlocked}
-        lockMessage="⚠ SHUTTER LOCKED // CALIBRATE CONSOLE ON BALCONY"
+        isLocked={!archiveDoorUnlocked || fragmentsCount < 3}
+        lockMessage={
+          !archiveDoorUnlocked
+            ? '⚠ SHUTTER LOCKED // CALIBRATE CONSOLE ON BALCONY'
+            : `⚠ ARCHIVE RESTRICTED // RECOVER ALL 3 CATALOGUE CARDS (${fragmentsCount}/3)`
+        }
         storyRevealData={{
           id: 'l2_anya_sharma_reveal',
           type: 'attendance',
@@ -363,10 +389,13 @@ export default function Level2({ playerPosRef }) {
       />
 
       {/* ========================================================
-          7. 3 DATA FRAGMENTS (COLLEGE PEN DRIVES)
+          7. 3 ARCHIVED CATALOGUE RECORDS (REQUIRED TO ACCESS RESTRICTED ARCHIVE)
           ======================================================== */}
+      {/* Catalogue Card 1: Ground Reading Hall Desk */}
       <Collectible position={[0, 1.4, 9]} id="l2_frag_1" playerPosRef={playerPosRef} />
-      <Collectible position={[4.5, 2.4, -5]} id="l2_frag_2" playerPosRef={playerPosRef} />
+      {/* Catalogue Card 2: Inverted Ceiling Catwalk (Reached via Gravity Flip [G]) */}
+      <Collectible position={[0, 12.3, -14]} id="l2_frag_2" playerPosRef={playerPosRef} />
+      {/* Catalogue Card 3: Upper Study Mezzanine Reference Table */}
       <Collectible position={[4.5, 9.8, -39]} id="l2_frag_3" playerPosRef={playerPosRef} />
 
       {/* ========================================================

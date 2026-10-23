@@ -479,7 +479,8 @@ export default function Level1({ playerPosRef }) {
             '⚠️ CRITICAL DATABASE CONFLICT DETECTED:',
             'Student Karan Rao (CS-2024-884) was logged exiting campus at 7:42 PM today after the final evening bell.',
             'However, an identical biometric record exists from October 14, 2021 at 23:58 PM, registered under the exact same student identity alongside missing student Anya Sharma (CS-2021-042).',
-            'A cryptic automated message appears on your student terminal: "THE ATTENDANCE LEDGER DOES NOT LIE. PROCEED TO THE CENTRAL ARCHIVES TO RETRIEVE THE UNWRITTEN FILE."'
+            'A cryptic automated announcement chimes across the courtyard speakers:',
+            '📢 CAMPUS INTERCOM: "Attention remaining student. Turnstile gate unpowered. Maintenance corridor to the Central Library Archives is now open. Report immediately to Dewey Wing B to reconcile your file."'
           ],
           actionLabel: 'PROCEED TO LEVEL 2: THE ARCHIVES [E]'
         }}

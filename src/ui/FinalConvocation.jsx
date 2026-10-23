@@ -8,6 +8,7 @@ import { Sound } from '../systems/AudioSystem';
 export default function FinalConvocation() {
   const { cgpa, rank } = GameState.getRankData();
   const totalScore = GameState.score + 500;
+  const isArchitect = GameState.finalChoice === 'BECOME_ARCHITECT';
 
   const handleRestart = () => {
     Sound.playTone(600, 'square', 0.1, 0.1);
@@ -20,43 +21,76 @@ export default function FinalConvocation() {
 
   return (
     <div style={styles.overlay}>
-      <div style={styles.degreeCard}>
-        {/* Certificate Golden Border Frame */}
-        <div style={styles.innerBorder}>
+      <div style={{ ...styles.degreeCard, borderColor: isArchitect ? '#FF2E93' : '#FFE14D', boxShadow: isArchitect ? '0 0 80px rgba(255, 46, 147, 0.35)' : '0 0 80px rgba(255, 225, 77, 0.35)' }}>
+        {/* Certificate Golden/Neon Border Frame */}
+        <div style={{ ...styles.innerBorder, borderColor: isArchitect ? 'rgba(255, 46, 147, 0.4)' : 'rgba(255, 225, 77, 0.4)' }}>
           {/* Victory Seal & Ribbon */}
-          <div style={styles.sealRow}>
-            <div style={styles.sealBadge}>🎓</div>
+          <div style={{ ...styles.sealRow, borderBottomColor: isArchitect ? 'rgba(255, 46, 147, 0.3)' : 'rgba(255, 225, 77, 0.3)' }}>
+            <div style={styles.sealBadge}>{isArchitect ? '⚡' : '🎓'}</div>
             <div>
-              <div style={styles.univTitle}>ATHARVA.EXE // THE LAST ATTENDANCE</div>
-              <div style={styles.convocationHeader}>08:00 AM SUNRISE • RECONCILIATION COMPLETE</div>
+              <div style={{ ...styles.univTitle, color: isArchitect ? '#FF2E93' : '#FFE14D' }}>
+                ATHARVA.EXE // THE LAST ATTENDANCE
+              </div>
+              <div style={styles.convocationHeader}>
+                {isArchitect ? 'INFINITE GLITCHVERSE • SIMULATION TRANSCENDENCE' : '08:00 AM SUNRISE • RECONCILIATION COMPLETE'}
+              </div>
             </div>
-            <div style={styles.goldMedalPill}>RECONCILED: 100%</div>
+            <div style={{ ...styles.goldMedalPill, borderColor: isArchitect ? '#FF2E93' : '#FFE14D', color: isArchitect ? '#FF2E93' : '#FFE14D' }}>
+              {isArchitect ? 'ROOT ARCHITECT' : 'RECONCILED: 100%'}
+            </div>
           </div>
 
-          <h1 style={styles.certHeading}>CONVOCATION OF REALITY RESTORATION</h1>
-          <div style={styles.certSub}>CAMPUS ZERO CENTRAL EXAMINATION &amp; DATA SECURITY COUNCIL</div>
+          <h1 style={styles.certHeading}>
+            {isArchitect ? 'ASCENSION TO SIMULATION ARCHITECT' : 'CONVOCATION OF REALITY RESTORATION'}
+          </h1>
+          <div style={styles.certSub}>
+            {isArchitect ? 'CAMPUS ZERO ROOT QUANTUM CONSORTIUM' : 'CAMPUS ZERO CENTRAL EXAMINATION & DATA SECURITY COUNCIL'}
+          </div>
 
           <p style={styles.certBody}>
-            This is to officially certify that student daemon <strong>KARAN RAO (CS-2024-884)</strong> has successfully traversed the 4 corrupted campus sectors, solved the architectural fail-safes, de-archived missing researcher <strong>ANYA SHARMA (CS-2021-042)</strong>, and triggered the Quantum Master Reboot.
-            <br /><br />
-            The 7:42 PM recursive curfew has been dissolved. The university gates stand open in the morning sun, and all duplicate attendance records have been permanently cleared.
+            {isArchitect ? (
+              <>
+                This is to officially certify that student daemon <strong>KARAN RAO (CS-2024-884)</strong> has conquered all 4 corrupted sectors and chosen to assimilate with the Central Simulation Core. Rather than erasing the digital universe, you have unlocked permanent sysadmin privileges, providing researcher <strong>ANYA SHARMA (CS-2021-042)</strong> and all future digitized students an infinite world of creative physics, frozen time, and unconstrained exploration.
+              </>
+            ) : (
+              <>
+                This is to officially certify that student daemon <strong>KARAN RAO (CS-2024-884)</strong> has successfully traversed the 4 corrupted campus sectors, solved the architectural fail-safes, de-archived missing researcher <strong>ANYA SHARMA (CS-2021-042)</strong>, and triggered the Quantum Master Reboot.
+                <br /><br />
+                The 7:42 PM recursive curfew has been dissolved. The university gates stand open in the morning sun, and all duplicate attendance records have been permanently cleared.
+              </>
+            )}
           </p>
 
           {/* Student Status Reconciliation Grid */}
           <div style={{
             display: 'flex',
             justifyContent: 'space-around',
-            background: 'rgba(16, 185, 129, 0.1)',
-            border: '1px solid rgba(16, 185, 129, 0.3)',
+            background: isArchitect ? 'rgba(255, 46, 147, 0.1)' : 'rgba(16, 185, 129, 0.1)',
+            border: `1px solid ${isArchitect ? 'rgba(255, 46, 147, 0.3)' : 'rgba(16, 185, 129, 0.3)'}`,
             borderRadius: '8px',
             padding: '10px 16px',
             marginBottom: '20px',
             fontSize: '12px',
-            color: '#A7F3D0'
+            color: isArchitect ? '#FBCFE8' : '#A7F3D0'
           }}>
-            <div><strong>ANYA SHARMA</strong> [CS-2021-042]: <span style={{ color: '#10B981', fontWeight: 'bold' }}>DE-ARCHIVED &amp; SAFE</span></div>
-            <div><strong>KARAN RAO</strong> [CS-2024-884]: <span style={{ color: '#00E5FF', fontWeight: 'bold' }}>ATTENDANCE RECORDED</span></div>
-            <div><strong>CAMPUS MAIN GATE</strong>: <span style={{ color: '#FFE14D', fontWeight: 'bold' }}>UNLOCKED (08:00 AM)</span></div>
+            <div>
+              <strong>ANYA SHARMA</strong> [CS-2021-042]:{' '}
+              <span style={{ color: isArchitect ? '#FF2E93' : '#10B981', fontWeight: 'bold' }}>
+                {isArchitect ? 'CO-ARCHITECT // IMMORTAL' : 'DE-ARCHIVED & SAFE'}
+              </span>
+            </div>
+            <div>
+              <strong>KARAN RAO</strong> [CS-2024-884]:{' '}
+              <span style={{ color: '#00E5FF', fontWeight: 'bold' }}>
+                {isArchitect ? 'SYSADMIN CORE ACTIVE' : 'ATTENDANCE RECORDED'}
+              </span>
+            </div>
+            <div>
+              <strong>CAMPUS STATUS</strong>:{' '}
+              <span style={{ color: '#FFE14D', fontWeight: 'bold' }}>
+                {isArchitect ? 'INFINITE RUNTIME (ONLINE)' : 'UNLOCKED (08:00 AM)'}
+              </span>
+            </div>
           </div>
 
           {/* Academic Rank & Honors Box */}
@@ -83,7 +117,9 @@ export default function FinalConvocation() {
               <div style={styles.sigSub}>Lead Simulation Researcher [CS-2021-042]</div>
             </div>
             <div style={styles.sigCol}>
-              <div style={styles.goldStamp}>★ ATTENDANCE VERIFIED ★</div>
+              <div style={{ ...styles.goldStamp, borderColor: isArchitect ? '#FF2E93' : '#FFE14D', color: isArchitect ? '#FF2E93' : '#FFE14D' }}>
+                {isArchitect ? '★ ROOT SYSADMIN ★' : '★ ATTENDANCE VERIFIED ★'}
+              </div>
             </div>
             <div style={styles.sigCol}>
               <div style={styles.sigLine} />

@@ -54,11 +54,12 @@ export default function CameraController({ playerPosRef, gravityInverted }) {
 
     const onPointerMove = (e) => {
       if (!isDraggingRef.current) return;
+      if (GameState.screen !== 'GAME' || GameState.activeStoryModal) return;
       const dx = e.clientX - prevMouseRef.current.x;
       const dy = e.clientY - prevMouseRef.current.y;
       prevMouseRef.current = { x: e.clientX, y: e.clientY };
 
-      const rotSpeed = 0.0055;
+      const rotSpeed = 0.0055 * (GameState.mouseSensitivity || 1.0);
       sphericalRef.current.theta -= dx * rotSpeed;
       sphericalRef.current.phi = Math.max(
         0.15,

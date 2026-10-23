@@ -25,6 +25,7 @@ export default function GameCanvas() {
   const [currentLevel, setCurrentLevel] = useState(GameState.currentLevel);
   const [gravityInverted, setGravityInverted] = useState(GameState.gravityInverted);
   const [activeDimension, setActiveDimension] = useState(GameState.activeDimension);
+  const [isPaused, setIsPaused] = useState(GameState.screen === 'PAUSE' || Boolean(GameState.activeStoryModal));
   const playerPosRef = useRef({ x: 0, y: 2, z: 8 });
   const ghostPosRef = useRef(null);
 
@@ -33,6 +34,7 @@ export default function GameCanvas() {
       setCurrentLevel(state.currentLevel);
       setGravityInverted(state.gravityInverted);
       setActiveDimension(state.activeDimension);
+      setIsPaused(state.screen === 'PAUSE' || Boolean(state.activeStoryModal));
       if (state.timeEchoActive && state.timeEchoPos) {
         ghostPosRef.current = state.timeEchoPos;
       } else {
@@ -61,7 +63,7 @@ export default function GameCanvas() {
         <CameraController playerPosRef={playerPosRef} gravityInverted={gravityInverted} />
 
         {/* Rapier Physics World */}
-        <Physics gravity={gravityVector}>
+        <Physics gravity={gravityVector} paused={isPaused}>
           <LevelComponent playerPosRef={playerPosRef} ghostPosRef={ghostPosRef} activeDimension={activeDimension} />
           <Player playerPosRef={playerPosRef} ghostPosRef={ghostPosRef} gravityInverted={gravityInverted} />
         </Physics>

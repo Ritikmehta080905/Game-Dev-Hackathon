@@ -37,39 +37,39 @@ export default function BootScreen() {
 
         <div style={styles.heroSection}>
           <div style={styles.titleGlitch}>ATHARVA.EXE</div>
-          <div style={styles.campusTag}>CAMPUS ZERO: THE WORLD IS BROKEN</div>
+          <div style={styles.campusTag}>THE LAST ATTENDANCE</div>
           <div style={styles.eventQuote}>
-            “A bug has corrupted the simulation rules. Reality floats, gravity is inverted, and time runs backwards. Reach the Server Room to reboot the system before the countdown ends!”
+            “At 7:42 PM, after classes end, the main gate locks. Security logs claim every student has exited, yet campus systems continue marking you present. An erased student's experiment has trapped the university in a repeating loop. Solve the campus backdoors and execute the Master Reboot before the final shutdown.”
           </div>
         </div>
 
         {/* Live Debugger Kiosk Terminal Box */}
         <div style={styles.terminalBox}>
           <div style={styles.terminalHeader}>
-            <span>⚡ DEBUGGER TERMINAL v4.2 // ARCADE INTERFACE</span>
-            <span style={{ color: '#4ADE80' }}>● SERVER FAULT ACTIVE</span>
+            <span>⚡ CAMPUS SECURITY BIOMETRICS // CURFEW OVERRIDE</span>
+            <span style={{ color: '#EF4444' }}>● 19:42 PM LOCKDOWN ACTIVE</span>
           </div>
           <div style={styles.terminalLine}>
-            <span style={{ color: '#00E5FF' }}>&gt; CADET:</span> Cadet Debugger (Unit ID: CADET-0809 | Level 4 Clearance)
+            <span style={{ color: '#00E5FF' }}>&gt; STUDENT:</span> Karan Rao (Roll No: CS-2024-884 | CSE Dept)
           </div>
           <div style={styles.terminalLine}>
-            <span style={{ color: '#FFE14D' }}>&gt; INTEGRITY:</span> 100% [REALITY OVERRIDE INTERFACE INITIALIZED]
+            <span style={{ color: '#FFE14D' }}>&gt; CURFEW STATUS:</span> MAIN GATE LOCKED // 0 REMAINING RECORDED
           </div>
           <div style={styles.terminalLine}>
-            <span style={{ color: '#FF2E93' }}>&gt; ALERT:</span> 4 Simulation Sectors Damaged (Gate, Archives, Corridors, Core)
+            <span style={{ color: '#FF2E93' }}>&gt; INCIDENT LOG:</span> Duplicate exit records detected from Oct 14, 2021
           </div>
           <div style={styles.terminalLine}>
-            <span style={{ color: '#38BDF8' }}>&gt; TOOLKIT:</span> Reality Debugger [G: Gravity, F: Time, Q: Dimension]
+            <span style={{ color: '#38BDF8' }}>&gt; MECHANICS:</span> Reality Override [G: Gravity Flip, F: Time Freeze, Q: Dimension Switch, E: Clone]
           </div>
         </div>
 
         {/* Call to Action Button */}
         <button style={styles.enterBtn} onClick={handleProceed}>
-          ENTER SIMULATION ARENA [SPACE / CLICK] ▶
+          START GAME // ENTER CAMPUS ZERO ▶
         </button>
 
         <div style={styles.footerNote}>
-          ARTIFICIAL ARCADE VI (24-HOUR BUILD) • PS01: THE WORLD IS BROKEN
+          ATHARVA.EXE: THE LAST ATTENDANCE • ARTIFICIAL ARCADE VI (PS01 GLITCHVERSE)
         </div>
       </div>
     </div>

@@ -48,6 +48,9 @@ class GameStateManager {
       3: { realTerminalSolved: false, glitchTerminalSolved: false, doorUnlocked: false },
       4: { pressurePlateHeld: false, liftStasis: false, coreFirewallPhased: false, masterRebootReady: false }
     };
+    this.finalChoice = null; // 'RESTORE_REALITY' or 'BECOME_ARCHITECT'
+    this.mouseSensitivity = 1.0;
+    this.cataloguesRecovered = new Set();
     this.studentInfo = {
       name: 'Karan Rao',
       role: 'Student Debugger',
@@ -57,6 +60,22 @@ class GameStateManager {
       semester: 'Year 3 (Trapped at 19:42 PM)',
       college: 'Campus Zero // Simulation Archive'
     };
+  }
+
+  setFinalChoice(choice) {
+    this.finalChoice = choice;
+    this.notify();
+  }
+
+  setMouseSensitivity(val) {
+    this.mouseSensitivity = Math.max(0.2, Math.min(3.0, val));
+    this.notify();
+  }
+
+  collectCatalogue(id) {
+    this.cataloguesRecovered.add(id);
+    this.score += 75;
+    this.notify();
   }
 
   subscribe(callback) {

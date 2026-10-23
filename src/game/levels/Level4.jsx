@@ -375,7 +375,7 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
         <pointLight color="#00e5ff" intensity={2.0} distance={12} />
       </group>
 
-      {/* Inverted Ceiling Terminal (Final System Reboot) */}
+      {/* Inverted Ceiling Terminal (Final System Reboot with Meaningful Final Choice) */}
       <Terminal
         position={[0, 16.8, -52]}
         rotation={[Math.PI, 0, 0]}
@@ -383,24 +383,44 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
         storyRevealData={{
           id: 'l4_story_reveal',
           type: 'story',
-          badge: 'ATTENDANCE RECONCILIATION // 08:00 AM SUNRISE',
+          badge: 'QUANTUM MAINFRAME // ROOT PROTOCOL',
           badgeColor: '#10B981',
-          title: 'ATTENDANCE: FINALLY CLOSED',
-          subtitle: 'CAMPUS GATE UNLOCKED // SIMULATION DECONSTRUCTED',
+          title: 'THE FINAL CHOICE: ATHARVA.EXE',
+          subtitle: 'CAMPUS REALITY OR DIGITAL ETERNITY',
           timestamp: '24-OCT 08:00:00 IST',
           attendanceData: [
-            { id: 'CS-2021-042', name: 'Anya Sharma', exitTime: '19:42:00 (Oct 14 2021)', status: 'DE-ARCHIVED // PRESENT', color: '#10B981' },
-            { id: 'CS-2024-884', name: 'Karan Rao', exitTime: '19:42:00 (Today)', status: 'RECONCILED // DISCHARGED', color: '#00E5FF' },
-            { id: 'SYS-DAEMON', name: 'Curfew Watchdog', exitTime: '08:00:00 (Sunrise)', status: 'OFFLINE // TERMINATED', color: '#94A3B8' }
+            { id: 'CS-2021-042', name: 'Anya Sharma', exitTime: '19:42:00 (Oct 14 2021)', status: 'WAITING IN CACHE', color: '#10B981' },
+            { id: 'CS-2024-884', name: 'Karan Rao', exitTime: '19:42:00 (Today)', status: 'RECOVERY DAEMON', color: '#00E5FF' },
+            { id: 'ROOT-CORE', name: 'Project ATHARVA', exitTime: 'CYCLE #884', status: 'AWAITING DIRECTIVE', color: '#FFE14D' }
           ],
           paragraphs: [
-            'CENTRAL MAINFRAME REBOOT SEQUENCE EXECUTED.',
-            'The blinding neon cyan grid fractures into crystalline dust as morning golden sunlight pours through the atrium glass skylights.',
-            'At the campus main gate, the heavy iron turnstiles release with a resonant mechanical chime. The attendance log updates to 100% reconciled: zero students trapped, zero missing persons.',
-            'Anya Sharma steps out onto the library quad, holding her project notebook. Beside her, student ID badge CS-2024-884 shines with full clearance in the morning breeze.',
-            'The simulation has ended. Reality has been restored.'
+            'YOU HAVE REACHED THE SUSPENDED QUANTUM CORE.',
+            'Karan Rao... your student profile was compiled from Anya Sharma\'s final memory before the security lockdown quarantined her three years ago. You are the autonomous recovery daemon.',
+            'By coordinating the gravity vector, temporal stasis, and dimensional phase bridges, you have defeated the corrupted watchdog and unlocked the root console.',
+            'Now, you hold the definitive power over the university campus fate. Choose your resolution:'
           ],
-          actionLabel: 'PROCEED TO CONVOCATION CEREMONY [E]'
+          choices: [
+            {
+              label: '1. RESTORE REALITY (MASTER REBOOT) [1]',
+              color: '#10B981',
+              primary: true,
+              onSelect: () => {
+                GameState.setFinalChoice('RESTORE_REALITY');
+                Sound.playLevelComplete();
+                GameState.completeLevel();
+              }
+            },
+            {
+              label: '2. DIGITAL ARCHITECT (ASSIMILATE) [2]',
+              color: '#FF2E93',
+              primary: false,
+              onSelect: () => {
+                GameState.setFinalChoice('BECOME_ARCHITECT');
+                Sound.playLevelComplete();
+                GameState.completeLevel();
+              }
+            }
+          ]
         }}
       />
 
