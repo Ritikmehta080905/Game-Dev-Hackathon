@@ -3,7 +3,7 @@
 
 import React, { useRef, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { RigidBody, CapsuleCollider } from '@react-three/rapier';
+import { RigidBody, CapsuleCollider, useRapier } from '@react-three/rapier';
 import * as THREE from 'three';
 import { useKeyboard } from '../../hooks/useKeyboard';
 import { GameState } from '../../systems/GameState';
@@ -13,8 +13,11 @@ export default function Player({ playerPosRef, ghostPosRef, gravityInverted }) {
   const rbRef = useRef();
   const visualRef = useRef();
   const keys = useKeyboard();
+  const { rapier, world } = useRapier();
 
-  const canJumpRef = useRef(true);
+  const jumpKeyHeldRef = useRef(false);
+  const jumpCooldownRef = useRef(false);
+  const lastGroundedTimeRef = useRef(0);
   const flipPressedRef = useRef(false);
   const freezePressedRef = useRef(false);
   const dimensionPressedRef = useRef(false);
@@ -191,28 +194,88 @@ export default function Player({ playerPosRef, ghostPosRef, gravityInverted }) {
       );
     }
 
-    // Ground / Ceiling Contact & Jump
-    const isGrounded = Math.abs(linvel.y) < 0.25;
+    // Precise Multi-Ray Ground & Ceiling Detection
+    let isGrounded = false;
+    if (world && rapier && rbRef.current) {
+      const dir = gravityInverted ? { x: 0, y: 1, z: 0 } : { x: 0, y: -1, z: 0 };
+      const maxDistance = 1.18; // Capsule radius(0.45) + halfHeight(0.55) = 1.0; 1.18 gives 0.18m threshold
 
-    // Refill Glitch Energy when student is safely on solid ground!
-    if (isGrounded) {
-      GameState.refillEnergy(delta * 16);
+      // Sample points: Center + 4 perimeter offsets for stable ledge standing
+      const sampleOffsets = [
+        [0, 0],
+        [0.22, 0],
+        [-0.22, 0],
+        [0, 0.22],
+        [0, -0.22]
+      ];
+
+      for (let i = 0; i < sampleOffsets.length; i++) {
+        const [ox, oz] = sampleOffsets[i];
+        const rayOrigin = {
+          x: translation.x + ox,
+          y: translation.y,
+          z: translation.z + oz
+        };
+        const ray = new rapier.Ray(rayOrigin, dir);
+        const hit = world.castRay(
+          ray,
+          maxDistance,
+          true,
+          undefined,
+          undefined,
+          undefined,
+          rbRef.current,
+          (collider) => !collider.isSensor()
+        );
+
+        if (hit && hit.timeOfImpact <= maxDistance) {
+          isGrounded = true;
+          break;
+        }
+      }
     }
 
-    if (isGrounded && !wasGroundedRef.current) {
-      Sound.playLand();
+    // High vertical velocity means player is actively airborne
+    const vy = linvel.y;
+    if (!gravityInverted && vy > 1.2) isGrounded = false;
+    if (gravityInverted && vy < -1.2) isGrounded = false;
+
+    const now = performance.now();
+    if (isGrounded) {
+      lastGroundedTimeRef.current = now;
+      GameState.refillEnergy(delta * 16);
+      if (!wasGroundedRef.current) {
+        Sound.playLand();
+      }
     }
     wasGroundedRef.current = isGrounded;
 
-    if (keys.jump && canJumpRef.current && isGrounded) {
-      canJumpRef.current = false;
-      Sound.playJump();
-      const jumpImpulse = gravityInverted ? -8.5 : 8.5;
-      rbRef.current.applyImpulse({ x: 0, y: jumpImpulse, z: 0 }, true);
+    // Coyote time allowance (100ms)
+    const canCoyoteJump = (now - lastGroundedTimeRef.current) < 100;
 
-      setTimeout(() => {
-        canJumpRef.current = true;
-      }, 320);
+    // Jump Input: Strictly ONCE per Space keydown (holding Space cannot bunny hop)
+    if (keys.jump) {
+      if (!jumpKeyHeldRef.current) {
+        jumpKeyHeldRef.current = true;
+
+        if (canCoyoteJump && !jumpCooldownRef.current) {
+          jumpCooldownRef.current = true;
+          lastGroundedTimeRef.current = 0; // Consume jump immediately
+          Sound.playJump();
+
+          // Reset vertical velocity before impulse for deterministic, consistent jump height
+          rbRef.current.setLinvel({ x: linvel.x, y: 0, z: linvel.z }, true);
+          const jumpImpulse = gravityInverted ? -8.5 : 8.5;
+          rbRef.current.applyImpulse({ x: 0, y: jumpImpulse, z: 0 }, true);
+
+          setTimeout(() => {
+            jumpCooldownRef.current = false;
+          }, 240);
+        }
+      }
+    } else {
+      // Release space to allow next jump
+      jumpKeyHeldRef.current = false;
     }
 
     // Smooth Inverted Rotation
