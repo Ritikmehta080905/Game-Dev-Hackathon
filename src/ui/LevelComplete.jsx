@@ -1,4 +1,4 @@
-// ATHARVA.EXE — LevelComplete: Atharva University Semester Marksheet & Grade Card
+// ATHARVA.EXE — LevelComplete: Semester Marksheet & Grade Card
 // Official university grade report with CGPA, attendance score, and semester progression!
 
 import React from 'react';

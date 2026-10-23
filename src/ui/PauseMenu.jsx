@@ -1,4 +1,4 @@
-// ATHARVA.EXE — PauseMenu: Atharva Examination Break & Campus Controls
+// ATHARVA.EXE — PauseMenu: Campus Examination Break & Controls
 // Styled as a college exam recess ticket with quick restart & portal navigation!
 
 import React, { useState } from 'react';

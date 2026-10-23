@@ -1,4 +1,4 @@
-// ATHARVA.EXE — Level 1: The Broken Gate (Atharva Main Gate & Campus Courtyard)
+// ATHARVA.EXE — Level 1: The Broken Gate (Campus Main Gate & Courtyard)
 // Designed for crystal-clear path visibility, campus architecture, and Gravity Flip [G] puzzle!
 
 import React from 'react';
@@ -14,7 +14,7 @@ export default function Level1({ playerPosRef }) {
   return (
     <group>
       {/* ========================================================
-          1. ATHARVA CAMPUS ENTRANCE GATE & ARCHITECTURE
+          1. CAMPUS ZERO ENTRANCE GATE & ARCHITECTURE
           ======================================================== */}
       {/* Left Grand Monument Pillar (at z = 14.5, framing the courtyard entrance) */}
       <mesh position={[-7.5, 4.5, 14.5]} castShadow receiveShadow>

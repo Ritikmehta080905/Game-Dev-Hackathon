@@ -1,4 +1,4 @@
-// ATHARVA.EXE — MainMenu: Atharva University Campus Hub & Sector Gateway
+// ATHARVA.EXE — MainMenu: Campus Hub & Sector Gateway
 // Features authentic College Student ID Card, Campus Notice Board, and Hall Ticket Sector Cards!
 
 import React, { useState, useEffect } from 'react';

@@ -54,7 +54,7 @@ const LEVEL_THEMES = {
     deptTag: '☕ NEON CORRIDORS // DIMENSION SHIFT',
     docRole: 'STUDENT CAFETERIA RECEIPT & LAB 301 PASS',
     anomaly: 'Campus reality split into two layers! Solid concrete wall blocks the Real layer, and the cyber-bridge only exists in Glitch layer.',
-    howToPlay: 'Press [Q] to Switch Dimensions (Costs 15 Energy) — phase through walls and walk across the glowing cyber-bridge over the abyss!',
+    howToPlay: 'Press [Q] to phase through the wall -> Jump across Glitch cyber-bridges -> Press [Q] at checkpoint to deactivate laser!',
     keyPrompt: '[Q] DIMENSION SWITCH',
     accent: '#FF2E93',
     secondaryAccent: '#FF9E3D',
@@ -62,7 +62,7 @@ const LEVEL_THEMES = {
     bgTint: 'rgba(255, 46, 147, 0.08)',
     borderStyle: '2px solid #FF2E93',
     badgeBg: 'rgba(255, 46, 147, 0.15)',
-    monitorText: 'DIMENSIONAL PHASE RIFT: USE [Q] TO TOGGLE REAL CAMPUS & GLITCH AURA',
+    monitorText: 'CORRIDOR BLOCKED: PRESS [Q] TO TURN WALL HOLOGRAPHIC & PASS THROUGH',
     activeRule: 'layer'
   },
   4: {
@@ -72,16 +72,16 @@ const LEVEL_THEMES = {
     environment: 'Mainframe Array • Security Firewall Blast Door • Floor Pressure Plate • Quantum Root Core',
     deptTag: '⚡ CENTRAL MAINFRAME // ROOT TERMINAL',
     docRole: 'SYSADMIN ROOT ACCESS TERMINAL // REBOOT',
-    anomaly: 'Corrupted Admin System Override! Blast door locked, moving server lifts active, and laser abyss guarding the root terminal.',
-    howToPlay: 'Master ALL Mechanics! Press [E] on Pressure Plate to spawn Ghost -> Use [F] on lift -> [Q] on cyber-bridge -> [G] to reach gantry & press REBOOT!',
-    keyPrompt: '[E] + [G] + [F] + [Q] ALL RULES',
+    anomaly: 'Firewall blast door locked by pressure plate! Corrupted Admin System Override guarding root mainframe terminal.',
+    howToPlay: 'Stand on Pink Plate & Press [E] to spawn Ghost Clone to hold it down -> Use [F] on lift -> [Q] on cyber-bridge -> [G] to reach gantry & press REBOOT!',
+    keyPrompt: '[E] CLONE + [F] + [Q] + [G]',
     accent: '#7B4BFF',
     secondaryAccent: '#00E5FF',
     accentGlow: 'rgba(123, 75, 255, 0.35)',
     bgTint: 'rgba(123, 75, 255, 0.08)',
     borderStyle: '2px solid #7B4BFF',
     badgeBg: 'rgba(123, 75, 255, 0.15)',
-    monitorText: 'CORRUPTED ADMIN LOCKDOWN: COMBINE [E] ECHO + [G] + [F] + [Q] TO REBOOT SYSTEM',
+    monitorText: 'FIREWALL LOCKED: STAND ON PINK PLATE & PRESS [E] TO SPAWN GHOST CLONE',
     activeRule: 'all'
   }
 };
@@ -318,25 +318,24 @@ export default function HUD() {
               )}
             </div>
 
-            {(theme.activeRule === 'all' || state.timeEchoRecording || state.timeEchoActive) && (
-              <div style={styles.codeLine}>
-                <span style={styles.varName}>echo</span> ={' '}
-                <button
-                  style={{
-                    ...styles.ruleTagBtn,
-                    borderColor: state.timeEchoRecording ? '#EF4444' : (state.timeEchoActive ? '#00E5FF' : '#7B4BFF'),
-                    color: state.timeEchoRecording ? '#EF4444' : (state.timeEchoActive ? '#00E5FF' : '#7B4BFF')
-                  }}
-                  onClick={() => {
-                    const res = GameState.triggerTimeEcho();
-                    if (res) Sound.playTimeEcho();
-                  }}
-                >
-                  {state.timeEchoRecording ? 'RECORDING (5s) [E]' : (state.timeEchoActive ? 'GHOST_REPLAY [E]' : 'STANDBY [E]')}
-                </button>
-                <span style={{ ...styles.activeRuleTag, color: theme.accent }}>● TARGET RULE</span>
-              </div>
-            )}
+            <div style={{ ...styles.codeLine, ...(state.currentLevel === 4 ? styles.activeCodeLine : {}) }}>
+              <span style={styles.varName}>time_echo</span> ={' '}
+              <button
+                style={{
+                  ...styles.ruleTagBtn,
+                  borderColor: state.timeEchoActive ? '#00E5FF' : '#FF2E93',
+                  color: state.timeEchoActive ? '#00E5FF' : '#FF2E93'
+                }}
+                onClick={() => {
+                  window.dispatchEvent(new CustomEvent('trigger-time-echo'));
+                }}
+              >
+                {state.timeEchoActive ? 'CLONE ACTIVE [E]' : 'SPAWN CLONE [E]'}
+              </button>
+              {state.currentLevel === 4 && (
+                <span style={{ ...styles.activeRuleTag, color: '#00E5FF' }}>● PUZZLE 1 RULE</span>
+              )}
+            </div>
 
             <div style={styles.codeLine}>
               <span style={styles.varName}>attendance</span> ={' '}
@@ -392,18 +391,15 @@ export default function HUD() {
             <button
               style={{
                 ...styles.keyBtn,
-                borderColor: state.timeEchoRecording ? '#EF4444' : (state.timeEchoActive ? '#00E5FF' : (state.currentLevel === 4 ? '#7B4BFF' : 'rgba(255,255,255,0.2)')),
-                color: state.timeEchoRecording ? '#EF4444' : (state.timeEchoActive ? '#00E5FF' : '#F8FAFC'),
-                background: state.timeEchoRecording ? 'rgba(239, 68, 68, 0.2)' : (state.timeEchoActive ? 'rgba(0, 229, 255, 0.2)' : 'transparent')
+                borderColor: state.currentLevel === 4 || state.timeEchoActive ? '#00E5FF' : 'rgba(255,255,255,0.2)',
+                background: state.timeEchoActive ? 'rgba(0, 229, 255, 0.25)' : 'rgba(15, 23, 42, 0.75)'
               }}
               onClick={() => {
-                const res = GameState.triggerTimeEcho();
-                if (res) Sound.playTimeEcho();
+                window.dispatchEvent(new CustomEvent('trigger-time-echo'));
               }}
-              title="Record & Replay Ghost Clone to Hold Pressure Plates (E)"
+              title="Spawn Student Ghost Clone on Pressure Plate (Key E)"
             >
-              <kbd style={styles.kbd}>E</kbd>{' '}
-              {state.timeEchoRecording ? '● STOP (REC)' : (state.timeEchoActive ? 'GHOST ACTIVE' : 'Echo (40)')}
+              <kbd style={styles.kbd}>E</kbd> Clone (40)
             </button>
           </div>
           <div style={styles.hotkeyItem}>

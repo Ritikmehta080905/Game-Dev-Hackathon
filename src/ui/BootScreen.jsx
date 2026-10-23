@@ -1,4 +1,4 @@
-// ATHARVA.EXE — BootScreen: Atharva University Campus Terminal Initialization
+// ATHARVA.EXE — BootScreen: Campus Terminal Initialization
 // Authentic college portal login, university seal & exam emergency bulletin!
 
 import React, { useEffect } from 'react';

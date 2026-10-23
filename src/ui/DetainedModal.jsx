@@ -1,4 +1,4 @@
-// ATHARVA.EXE — DetainedModal: Atharva University Detention & Exam Timeout Screen
+// ATHARVA.EXE — DetainedModal: Detention & Exam Timeout Screen
 // Authentic college detention notice when attendance drops to 0% or exam bell rings!
 
 import React from 'react';

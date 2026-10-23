@@ -1,4 +1,4 @@
-// ATHARVA.EXE — Level 2: The Infinite Library (Atharva Central Library & Reading Hall)
+// ATHARVA.EXE — Level 2: The Infinite Library (Central Library & Reading Hall)
 // Features crystal-clear parquet walkways, student study carrels, and Time Freeze [F] puzzle!
 
 import React from 'react';

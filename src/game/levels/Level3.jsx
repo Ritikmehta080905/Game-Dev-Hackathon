@@ -1,9 +1,11 @@
-// ATHARVA.EXE — Level 3: The Fractured Lab & Canteen (Atharva Canteen & Corridors)
+// ATHARVA.EXE — Level 3: The Fractured Lab & Canteen (Campus Canteen & Corridors)
 // Features cafeteria stalls, college corridor checkered walkways, and Dimension Switch [Q] puzzle!
 
 import React from 'react';
+import { Text } from '@react-three/drei';
 import CampusPlatform from '../entities/CampusPlatform';
 import DimensionPlatform from '../entities/DimensionPlatform';
+import DimensionWall from '../entities/DimensionWall';
 import Hazard from '../entities/Hazard';
 import Collectible from '../entities/Collectible';
 import CoffeeCup from '../entities/CoffeeCup';
@@ -11,7 +13,7 @@ import ExamNote from '../entities/ExamNote';
 import Checkpoint from '../entities/Checkpoint';
 import Terminal from '../entities/Terminal';
 
-export default function Level3({ playerPosRef }) {
+export default function Level3({ playerPosRef, activeDimension }) {
   return (
     <group>
       {/* ========================================================
@@ -28,7 +30,7 @@ export default function Level3({ playerPosRef }) {
         hasGuideArrows={true}
       />
 
-      {/* Atharva Canteen Chai & Snack Counter on Left */}
+      {/* Campus Canteen Chai & Snack Counter on Left */}
       <group position={[-7.5, 2.2, 6]}>
         {/* Counter Base */}
         <mesh receiveShadow castShadow>
@@ -68,11 +70,11 @@ export default function Level3({ playerPosRef }) {
       {/* ========================================================
           2. PUZZLE 1: REAL-DIMENSION SOLID WALL (PHASES OPEN IN GLITCH [Q])
           ======================================================== */}
-      {/* Exists only in REAL dimension. When player presses [Q], it phases open allowing passage! */}
-      <DimensionPlatform
+      {/* Exists as solid concrete in REAL dimension. When player presses [Q], it turns holographic allowing passage! */}
+      <DimensionWall
         position={[0, 3.6, -4]}
         size={[12, 6, 1]}
-        dimension="REAL"
+        activeDimension={activeDimension}
       />
 
       {/* Walkway floor underneath Puzzle 1 */}
@@ -89,16 +91,18 @@ export default function Level3({ playerPosRef }) {
       {/* ========================================================
           3. PUZZLE 2: THE GLITCH BRIDGE (BRIDGES OVER THE VOID)
           ======================================================== */}
-      {/* Glitch-only neon cyber-bridges! Distinctly visible so player can plan jumps */}
+      {/* Glitch-only neon cyber-bridges! Fully solid in GLITCH dimension, visible in REAL dimension */}
       <DimensionPlatform
         position={[-3.5, 2.6, -14]}
         size={[6, 0.8, 6]}
         dimension="GLITCH"
+        activeDimension={activeDimension}
       />
       <DimensionPlatform
         position={[3.5, 4.2, -22]}
         size={[6, 0.8, 6]}
         dimension="GLITCH"
+        activeDimension={activeDimension}
       />
 
       {/* ========================================================
@@ -115,6 +119,34 @@ export default function Level3({ playerPosRef }) {
       />
       <Checkpoint position={[0, 5.7, -31]} playerPosRef={playerPosRef} />
 
+      {/* Midway Checkpoint Puzzle 3 Hint Guide */}
+      <group position={[0, 8.2, -31]}>
+        <mesh>
+          <planeGeometry args={[6.5, 0.95]} />
+          <meshBasicMaterial color="#090E21" transparent opacity={0.9} />
+        </mesh>
+        <Text
+          position={[0, 0.18, 0.02]}
+          fontSize={0.2}
+          color="#FFE14D"
+          fontWeight="bold"
+          anchorX="center"
+          anchorY="middle"
+        >
+          ⚡ PUZZLE 3: GLITCH LASER CORRIDOR
+        </Text>
+        <Text
+          position={[0, -0.18, 0.02]}
+          fontSize={0.16}
+          color="#00E5FF"
+          fontWeight="bold"
+          anchorX="center"
+          anchorY="middle"
+        >
+          PRESS [Q] TO SWITCH TO REAL &amp; DEACTIVATE LASER
+        </Text>
+      </group>
+
       {/* ========================================================
           5. PUZZLE 3: GLITCH-ONLY SECURITY SCANNER LASER
           ======================================================== */}
@@ -128,11 +160,15 @@ export default function Level3({ playerPosRef }) {
         playerPosRef={playerPosRef}
       />
 
-      {/* Final Corridor Exit Balcony (Solid in REAL dimension) */}
-      <DimensionPlatform
+      {/* Final Corridor Exit Balcony (Solid, safe landing pad for terminal) */}
+      <CampusPlatform
         position={[0, 6.2, -44]}
         size={[13, 0.8, 9]}
-        dimension="REAL"
+        pavementColor="#334155"
+        curbColor="#FFE14D"
+        accentColor="#00E5FF"
+        hasLamps={true}
+        hasGuideArrows={true}
       />
 
       {/* ========================================================

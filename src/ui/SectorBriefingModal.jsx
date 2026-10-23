@@ -61,18 +61,18 @@ const SECTOR_BRIEFINGS = {
     badge: '☕ CAMPUS CANTEEN & LABS',
     spots: 'Chai & Samosa Counter • Classroom 301 Doors • Phased Concrete Walls • Neon Glitch Cyber-Bridges',
     anomalyTitle: '⚠️ ANOMALY: MULTI-DIMENSIONAL RIFT',
-    anomalyDesc: 'Reality has split into two co-existing layers: the Real Campus and the Glitch Campus. A solid wall blocks the hallway in the Real layer, while the void bridge only exists in the Glitch layer.',
+    anomalyDesc: 'Reality has split into two co-existing layers: REAL CAMPUS and GLITCH LAYER. A solid concrete wall blocks the corridor in the Real layer, and the cyber-bridges over the void only materialize in the Glitch layer!',
     objectiveTitle: '🎯 YOUR OBJECTIVE & HOW TO PLAY:',
     steps: [
-      'Press [Q] to Switch Dimensions (Costs 15 Energy) — the solid wall phases into a ghost outline so you can walk through.',
-      'While in the Glitch dimension (magenta world), the glowing cyber-bridge becomes solid to walk on.',
-      'Switch back to the Real dimension before the Glitch laser strikes to safely reach the final canteen balcony.'
+      '1. PUZZLE 1 (WALL): Walk up to the security wall. Press [Q] to switch to GLITCH layer — the wall turns into a glowing magenta hologram with collider disabled so you can walk right through it!',
+      '2. PUZZLE 2 (BRIDGES): Keep GLITCH mode active — the two glowing cyber-bridges across the void become solid to jump across.',
+      '3. PUZZLE 3 (LASER): At the midway checkpoint, press [Q] to switch back to REAL layer to deactivate the sweeping Glitch laser, then step onto the final balcony and access the exit terminal!'
     ],
     unlockedKey: {
       key: 'Q',
       action: 'DIMENSION SWITCH',
       cost: '15 ENERGY',
-      desc: 'Instantly swaps active reality between REAL and GLITCH layers, altering which platforms are solid.'
+      desc: 'Swaps reality between REAL and GLITCH layers: phases the blocking wall open & solidifies cyber-bridges over the void.'
     }
   },
   4: {
@@ -87,17 +87,16 @@ const SECTOR_BRIEFINGS = {
     anomalyDesc: 'The final mainframe is completely locked down! Heavy security blast doors guard the chamber, moving server lifts oscillate rapidly, and the Root Reboot Terminal is suspended at the highest ceiling point.',
     objectiveTitle: '🎯 YOUR OBJECTIVE & HOW TO PLAY:',
     steps: [
-      'Press [E] to Record Time Echo (Costs 40 Energy), walk onto the floor Pressure Plate, then press [E] again to spawn a cyan ghost clone that holds the plate down.',
-      'Walk through the open firewall blast door while the ghost holds the plate.',
-      'Use Time Freeze [F] to safely board the fast moving server lift.',
+      'Step onto the glowing pink Pressure Plate and press [E] (Time Echo) to spawn your cyan Student Ghost Clone — the clone holds the plate down to keep the firewall blast door open!',
+      'Use Time Freeze [F] to safely board the fast moving server lift across the void.',
       'Use Dimension Switch [Q] to navigate the phased cyber-bridge across the mainframe abyss.',
       'Press [G] to Flip Gravity up to the ceiling gantry and press the REBOOT BUTTON to save the simulation!'
     ],
     unlockedKey: {
-      key: 'E + G + F + Q',
-      action: 'TIME ECHO & MASTER ALL MECHANICS',
-      cost: 'MANAGE ENERGY WISELY',
-      desc: 'Use Time Echo ghost clone on pressure plate, and combine Gravity Inversion, Time Freeze, and Dimension Switch.'
+      key: 'E (CLONE) + G + F + Q',
+      action: 'SPAWN CLONE & ALL RULES',
+      cost: 'E=40 | G=20 | F=35 | Q=15',
+      desc: 'Stand on the pink pressure plate and press [E] to spawn your ghost clone to hold it down, then combine all mechanics!'
     }
   }
 };

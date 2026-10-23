@@ -1,13 +1,15 @@
-// ATHARVA.EXE — Level 4: The Core Reboot (Atharva Central Server Room & Data Center)
+// ATHARVA.EXE — Level 4: The Core Reboot (Central Server Room & Data Center)
 // Combines Gravity Flip [G], Time Freeze [F], Dimension Switch [Q] & Pressure Plate for the finale!
 
 import React, { useEffect } from 'react';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
+import { Text } from '@react-three/drei';
 import CampusPlatform from '../entities/CampusPlatform';
 import MovingPlatform from '../entities/MovingPlatform';
 import DimensionPlatform from '../entities/DimensionPlatform';
 import Hazard from '../entities/Hazard';
 import PressurePlate from '../entities/PressurePlate';
+import GhostClone from '../entities/GhostClone';
 import Collectible from '../entities/Collectible';
 import CoffeeCup from '../entities/CoffeeCup';
 import ExamNote from '../entities/ExamNote';
@@ -16,7 +18,7 @@ import Terminal from '../entities/Terminal';
 import { GameState } from '../../systems/GameState';
 import { Sound } from '../../systems/AudioSystem';
 
-export default function Level4({ playerPosRef, ghostPosRef }) {
+export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
   // Corrupted Admin Boss Glitch Twist (Doc §9):
   // Every 28 seconds, the Corrupted Admin attempts to override reality!
   useEffect(() => {
@@ -110,6 +112,35 @@ export default function Level4({ playerPosRef, ghostPosRef }) {
         doorSize={[10, 4.2, 0.5]}
       />
 
+      {/* 3D Holographic Guide Floating Above Pink Pressure Plate */}
+      <group position={[4, 2.2, 4]}>
+        <mesh>
+          <planeGeometry args={[3.4, 0.7]} />
+          <meshBasicMaterial color="#090E21" transparent opacity={0.88} />
+        </mesh>
+        <Text
+          position={[0, 0.12, 0.02]}
+          fontSize={0.16}
+          color="#FF2E93"
+          anchorX="center"
+          anchorY="middle"
+        >
+          ▼ PINK PRESSURE PLATE ▼
+        </Text>
+        <Text
+          position={[0, -0.12, 0.02]}
+          fontSize={0.13}
+          color="#00E5FF"
+          anchorX="center"
+          anchorY="middle"
+        >
+          STAND HERE &amp; PRESS [E] TO CLONE
+        </Text>
+      </group>
+
+      {/* 3D Visual Ghost Clone standing on plate */}
+      <GhostClone ghostPosRef={ghostPosRef} />
+
       {/* ========================================================
           3. PUZZLE 2: RAPID SERVER LIFT PLATFORM (TIME FREEZE [F])
           ======================================================== */}
@@ -143,11 +174,13 @@ export default function Level4({ playerPosRef, ghostPosRef }) {
         position={[-4, 6.2, -31]}
         size={[6, 0.8, 6]}
         dimension="GLITCH"
+        activeDimension={activeDimension}
       />
       <DimensionPlatform
         position={[4, 7.8, -39]}
         size={[6, 0.8, 6]}
         dimension="GLITCH"
+        activeDimension={activeDimension}
       />
 
       {/* ========================================================

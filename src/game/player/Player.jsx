@@ -9,7 +9,7 @@ import { useKeyboard } from '../../hooks/useKeyboard';
 import { GameState } from '../../systems/GameState';
 import { Sound } from '../../systems/AudioSystem';
 
-export default function Player({ playerPosRef, gravityInverted }) {
+export default function Player({ playerPosRef, ghostPosRef, gravityInverted }) {
   const rbRef = useRef();
   const visualRef = useRef();
   const keys = useKeyboard();
@@ -69,22 +69,36 @@ export default function Player({ playerPosRef, gravityInverted }) {
     }
   }, [keys.dimension]);
 
-  // 4. Listen for Time Echo [E]
+  // 4. Listen for Time Echo / Ghost Clone [E]
+  const triggerEcho = () => {
+    const pos = playerPosRef && playerPosRef.current ? playerPosRef.current : null;
+    const res = GameState.triggerTimeEcho(pos);
+    if (res && res.active) {
+      Sound.playTone(580, 'sine', 0.15, 0.2);
+      setTimeout(() => Sound.playTone(880, 'sine', 0.25, 0.2), 120);
+    } else if (res && !res.active) {
+      Sound.playTone(320, 'sine', 0.15, 0.15);
+    } else {
+      Sound.playTone(180, 'sawtooth', 0.1, 0.1);
+    }
+  };
+
   useEffect(() => {
-    if (keys.interact && !echoPressedRef.current) {
+    const handleEchoEvent = () => triggerEcho();
+    window.addEventListener('trigger-time-echo', handleEchoEvent);
+    return () => window.removeEventListener('trigger-time-echo', handleEchoEvent);
+  }, []);
+
+  useEffect(() => {
+    if ((keys.echo || keys.interact) && !echoPressedRef.current) {
       echoPressedRef.current = true;
-      const res = GameState.triggerTimeEcho();
-      if (res) {
-        Sound.playTimeEcho();
-      } else {
-        Sound.playTone(180, 'sawtooth', 0.1, 0.1); // Not enough energy
-      }
-    } else if (!keys.interact) {
+      triggerEcho();
+    } else if (!keys.echo && !keys.interact) {
       echoPressedRef.current = false;
     }
-  }, [keys.interact]);
+  }, [keys.echo, keys.interact]);
 
-  // 4. Listen for Manual Reset [R] and Hazard Hit Events
+  // 5. Listen for Manual Reset [R] and Hazard Hit Events
   useEffect(() => {
     if (keys.reset) {
       respawnPlayer();

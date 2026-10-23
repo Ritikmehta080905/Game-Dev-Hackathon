@@ -1,4 +1,4 @@
-// ATHARVA.EXE — FinalConvocation: Atharva University Graduation & GlitchVerse Degree
+// ATHARVA.EXE — FinalConvocation: GlitchVerse Graduation & Degree Ceremony
 // Awarded upon clearing all 4 campus sectors and rebooting the Central Mainframe!
 
 import React from 'react';
