@@ -8,16 +8,16 @@ import { Sound } from '../systems/AudioSystem';
 const SECTORS = [
   {
     id: 1,
-    name: 'ATHARVA MAIN GATE & COURTYARD',
+    name: 'SECTOR 01: THE BROKEN GATE',
     code: 'SECTOR 01',
     mechanic: 'GRAVITY FLIP [G]',
     objective: 'Reach the security ID scanner via the overhead ceiling skywalk',
-    spots: 'Iconic Atharva Pillars, Security Cabin, Courtyard Pavement, Inverted ID Gate',
+    spots: 'Monumental Pylons, Security Cabin, Courtyard Pavement, Inverted ID Gate',
     accent: '#00E5FF'
   },
   {
     id: 2,
-    name: 'ATHARVA CENTRAL LIBRARY',
+    name: 'SECTOR 02: THE INFINITE ARCHIVES',
     code: 'SECTOR 02',
     mechanic: 'TIME FREEZE [F]',
     objective: 'Freeze the rapidly moving book stack and dodge RFID lasers to reach upper deck',
@@ -26,16 +26,16 @@ const SECTORS = [
   },
   {
     id: 3,
-    name: 'COLLEGE CANTEEN & CORRIDORS',
+    name: 'SECTOR 03: THE NEON CORRIDORS',
     code: 'SECTOR 03',
     mechanic: 'DIMENSION SWITCH [Q]',
     objective: 'Phase through blocked walls & cross glitch cyber-bridges over the void',
-    spots: 'Atharva Canteen Counter, Chai & Samosa Stall, Room 301 Lab, Phased Bridges',
+    spots: 'Neon Cafeteria Counter, Chai & Samosa Stall, Room 301 Lab, Phased Bridges',
     accent: '#FF2E93'
   },
   {
     id: 4,
-    name: 'CAMPUS SERVER ROOM & DATA CENTER',
+    name: 'SECTOR 04: THE CORE REBOOT',
     code: 'SECTOR 04',
     mechanic: 'MASTER ALL MECHANICS',
     objective: 'Step on the security pressure plate, scale server lifts, and reboot the root core',
@@ -70,20 +70,20 @@ export default function MainMenu() {
 
   return (
     <div style={styles.overlay}>
-      {/* 1. TOP ATHARVA CAMPUS NAVIGATION BAR */}
+      {/* 1. TOP SYSTEM NAVIGATION BAR */}
       <header style={styles.topNav}>
         <div style={styles.navLeft}>
-          <div style={styles.crestCircle}>🏛️</div>
+          <div style={styles.crestCircle}>⚡</div>
           <div>
-            <div style={styles.navUnivTitle}>ATHARVA UNIVERSITY, MUMBAI</div>
-            <div style={styles.navSub}>STUDENT ERP &amp; CAMPUS REALITY DEBUGGER • PS01 GLITCHVERSE</div>
+            <div style={styles.navUnivTitle}>CAMPUS ZERO // GLITCHVERSE</div>
+            <div style={styles.navSub}>ARCADE PORTAL &amp; REALITY DEBUGGER • ARTIFICIAL ARCADE VI</div>
           </div>
         </div>
 
         <div style={styles.navRight}>
           <div style={styles.campusStatusPill}>
-            <span>📍 ATHARVA CAMPUS, MALAD WEST</span>
-            <span style={{ color: '#4ADE80' }}>● EXAM BELL IN: 90s</span>
+            <span>⚡ ARTIFICIAL ARCADE VI</span>
+            <span style={{ color: '#4ADE80' }}>● TIMER: 90s</span>
           </div>
           <button
             style={{
@@ -115,26 +115,26 @@ export default function MainMenu() {
       <div style={styles.workspace}>
         {/* LEFT COLUMN: OFFICIAL STUDENT ID BADGE & CAMPUS NOTICE */}
         <div style={styles.leftCol}>
-          {/* Authentic College Student ID Card */}
+          {/* Debugger Cadet ID Card */}
           <div style={styles.idCard}>
             <div style={styles.idHeader}>
-              <div style={styles.idUnivTitle}>ATHARVA COLLEGE OF ENGINEERING</div>
-              <div style={styles.idUnivSub}>AFFILIATED TO UNIVERSITY OF MUMBAI</div>
+              <div style={styles.idUnivTitle}>GLITCHVERSE VIRTUAL REALITY</div>
+              <div style={styles.idUnivSub}>OPERATIONAL DEBUGGER UNIT // PS01</div>
             </div>
 
             <div style={styles.idBody}>
-              {/* Student Photo Avatar */}
+              {/* Cadet Avatar */}
               <div style={styles.avatarBox}>
                 <div style={styles.avatarEmoji}>👨‍💻</div>
-                <div style={styles.avatarLabel}>STUDENT</div>
+                <div style={styles.avatarLabel}>DEBUGGER</div>
               </div>
 
-              {/* Student Metadata */}
+              {/* Cadet Metadata */}
               <div style={styles.idFields}>
-                <div style={styles.idName}>ADITYA SHARMA</div>
-                <div style={styles.idDept}>B.TECH COMPUTER ENGG • SEM VI</div>
-                <div style={styles.idRoll}>ROLL NO: <span style={styles.highlightCyan}>ATH-2026-CS42</span></div>
-                <div style={styles.idRoll}>PRN: <span style={styles.highlightGold}>202301640098</span></div>
+                <div style={styles.idName}>CADET DEBUGGER</div>
+                <div style={styles.idDept}>REALITY ARCHITECT • LEVEL 4</div>
+                <div style={styles.idRoll}>CADET ID: <span style={styles.highlightCyan}>CADET-0809</span></div>
+                <div style={styles.idRoll}>CLEARANCE: <span style={styles.highlightGold}>ALPHA-ACTIVE</span></div>
               </div>
             </div>
 
@@ -160,23 +160,23 @@ export default function MainMenu() {
             </div>
           </div>
 
-          {/* Official College Glitch Notice Board Widget */}
+          {/* System Glitch Notice Board Widget */}
           <div style={styles.noticeCard}>
             <div style={styles.noticeHeader}>
-              <span>📌 ATHARVA EXAMINATION NOTICE #404</span>
+              <span>📌 CRITICAL SYSTEM ANOMALY #404</span>
               <span style={styles.urgentBadge}>URGENT</span>
             </div>
             <div style={styles.noticeText}>
-              <strong>Attention All Students:</strong> Central mainframe malfunction detected during Artificial Arcade VI. Physics rules across 4 campus departments are inverted.
+              <strong>Attention Cadet:</strong> Central mainframe malfunction detected during Artificial Arcade VI. Physics rules across 4 simulation sectors are broken.
             </div>
             <div style={styles.noticeBullet}>
               • <strong>Main Gate:</strong> Gravity inverted. Use <span style={styles.keyTag}>[G]</span> on ceiling skywalk.
             </div>
             <div style={styles.noticeBullet}>
-              • <strong>Central Library:</strong> Archive shelves moving. Use <span style={styles.keyTag}>[F]</span> to freeze.
+              • <strong>Central Archives:</strong> High-speed shelves active. Use <span style={styles.keyTag}>[F]</span> to freeze.
             </div>
             <div style={styles.noticeBullet}>
-              • <strong>Canteen:</strong> Phased walls active. Use <span style={styles.keyTag}>[Q]</span> to shift layers.
+              • <strong>Neon Corridors:</strong> Phased walls active. Use <span style={styles.keyTag}>[Q]</span> to shift layers.
             </div>
           </div>
         </div>
@@ -256,7 +256,7 @@ export default function MainMenu() {
         <div style={styles.modalBackdrop} onClick={() => setShowHandbook(false)}>
           <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <div style={styles.modalHeader}>
-              <h2 style={styles.modalTitle}>📖 ATHARVA STUDENT DEBUGGER HANDBOOK</h2>
+              <h2 style={styles.modalTitle}>📖 GLITCHVERSE SURVIVAL &amp; CONTROLS GUIDE</h2>
               <button style={styles.modalCloseX} onClick={() => setShowHandbook(false)}>✕</button>
             </div>
 

@@ -25,12 +25,12 @@ export default function BootScreen() {
   return (
     <div style={styles.overlay} onClick={handleProceed}>
       <div style={styles.card}>
-        {/* Atharva University Crest Header */}
+        {/* System Header */}
         <div style={styles.crestRow}>
-          <div style={styles.crestIcon}>🏛️</div>
+          <div style={styles.crestIcon}>⚡</div>
           <div style={styles.univText}>
-            <div style={styles.univName}>ATHARVA UNIVERSITY, MUMBAI</div>
-            <div style={styles.univSub}>COLLEGE OF ENGINEERING & TECHNOLOGY • ESTD 1999</div>
+            <div style={styles.univName}>CAMPUS ZERO // GLITCHVERSE</div>
+            <div style={styles.univSub}>VIRTUAL SIMULATION ARENA • ARTIFICIAL ARCADE VI</div>
           </div>
           <div style={styles.eventBadge}>PS01: GLITCHVERSE</div>
         </div>
@@ -39,24 +39,24 @@ export default function BootScreen() {
           <div style={styles.titleGlitch}>ATHARVA.EXE</div>
           <div style={styles.campusTag}>CAMPUS ZERO: THE WORLD IS BROKEN</div>
           <div style={styles.eventQuote}>
-            “A bug has corrupted the campus rules. Classrooms float, gravity is inverted, and clocks run backwards. Reach the Server Room to reboot the system before the exam bell rings!”
+            “A bug has corrupted the simulation rules. Reality floats, gravity is inverted, and time runs backwards. Reach the Server Room to reboot the system before the countdown ends!”
           </div>
         </div>
 
-        {/* Live Student Kiosk Terminal Box */}
+        {/* Live Debugger Kiosk Terminal Box */}
         <div style={styles.terminalBox}>
           <div style={styles.terminalHeader}>
-            <span>⚡ ATHARVA STUDENT ERP v4.2 // EMERGENCY DEBUGGER</span>
+            <span>⚡ DEBUGGER TERMINAL v4.2 // ARCADE INTERFACE</span>
             <span style={{ color: '#4ADE80' }}>● SERVER FAULT ACTIVE</span>
           </div>
           <div style={styles.terminalLine}>
-            <span style={{ color: '#00E5FF' }}>&gt; CANDIDATE:</span> Aditya Sharma (Roll No: ATH-2026-CS42 | Sem VI)
+            <span style={{ color: '#00E5FF' }}>&gt; CADET:</span> Cadet Debugger (Unit ID: CADET-0809 | Level 4 Clearance)
           </div>
           <div style={styles.terminalLine}>
-            <span style={{ color: '#FFE14D' }}>&gt; ATTENDANCE:</span> 100% [EXAM HALL TICKET ISSUED]
+            <span style={{ color: '#FFE14D' }}>&gt; INTEGRITY:</span> 100% [REALITY OVERRIDE INTERFACE INITIALIZED]
           </div>
           <div style={styles.terminalLine}>
-            <span style={{ color: '#FF2E93' }}>&gt; ALERT:</span> 4 Campus Sectors Damaged (Main Gate, Library, Canteen, Core)
+            <span style={{ color: '#FF2E93' }}>&gt; ALERT:</span> 4 Simulation Sectors Damaged (Gate, Archives, Corridors, Core)
           </div>
           <div style={styles.terminalLine}>
             <span style={{ color: '#38BDF8' }}>&gt; TOOLKIT:</span> Reality Debugger [G: Gravity, F: Time, Q: Dimension]
@@ -65,11 +65,11 @@ export default function BootScreen() {
 
         {/* Call to Action Button */}
         <button style={styles.enterBtn} onClick={handleProceed}>
-          ENTER CAMPUS PORTAL [SPACE / CLICK] ▶
+          ENTER SIMULATION ARENA [SPACE / CLICK] ▶
         </button>
 
         <div style={styles.footerNote}>
-          ARTIFICIAL ARCADE VI (24-HOUR BUILD) • ATHARVA UNIVERSITY CAMPUS, MALAD WEST
+          ARTIFICIAL ARCADE VI (24-HOUR BUILD) • PS01: THE WORLD IS BROKEN
         </div>
       </div>
     </div>

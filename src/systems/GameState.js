@@ -35,13 +35,13 @@ class GameStateManager {
     this.adminGlitchWarning = null;
     this.adminGlitchActive = false;
     this.studentInfo = {
-      name: 'Aditya Sharma',
-      role: 'Student Debugger',
-      rollNo: 'ATH-2026-CS42',
-      prn: '202301640098',
-      department: 'Computer Engineering',
-      semester: 'Semester VI',
-      college: 'Atharva College of Engineering, Mumbai'
+      name: 'Cadet Debugger',
+      role: 'Reality Architect',
+      rollNo: 'CADET-0809',
+      prn: 'GLITCH-SYS-42',
+      department: 'Reality Architecture & Systems',
+      semester: 'Clearance Level 4',
+      college: 'Campus Zero // GlitchVerse'
     };
   }
 

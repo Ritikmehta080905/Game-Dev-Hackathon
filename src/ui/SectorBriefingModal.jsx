@@ -12,7 +12,7 @@ const SECTOR_BRIEFINGS = {
     department: 'CAMPUS ENTRANCE & MAIN GATE COURTYARD',
     faculty: 'Department of Campus Security & Applied Physics',
     accent: '#00E5FF',
-    badge: '🏛️ ATHARVA MAIN ENTRANCE',
+    badge: '🏛️ SECTOR 01 ENTRANCE',
     spots: 'Monument Pillars • Security Cabin • Paved Courtyard • Broken Ground Fissure • Ceiling Skywalk',
     anomalyTitle: '⚠️ ANOMALY: UNIVERSAL GRAVITY INVERTED',
     anomalyDesc: 'A system crash has corrupted the physics engine! The ground walkway fissure is completely impassable, and the campus gate ID scanner is mounted upside down on the ceiling.',
@@ -32,7 +32,7 @@ const SECTOR_BRIEFINGS = {
   2: {
     sector: 'SECTOR 02',
     code: 'LIB-202',
-    department: 'ATHARVA CENTRAL UNIVERSITY LIBRARY',
+    department: 'THE INFINITE ARCHIVES',
     faculty: 'Department of Knowledge & Digital Archives',
     accent: '#10B981',
     badge: '📚 CENTRAL READING HALL',
@@ -55,7 +55,7 @@ const SECTOR_BRIEFINGS = {
   3: {
     sector: 'SECTOR 03',
     code: 'CAN-303',
-    department: 'COLLEGE CANTEEN & DEPT OF COMPUTER ENGG',
+    department: 'THE NEON CORRIDORS & LABS',
     faculty: 'Cafeteria Wing & Computer Lab 301 Corridors',
     accent: '#FF2E93',
     badge: '☕ CAMPUS CANTEEN & LABS',
@@ -78,7 +78,7 @@ const SECTOR_BRIEFINGS = {
   4: {
     sector: 'SECTOR 04',
     code: 'DAT-404',
-    department: 'ATHARVA CENTRAL SERVER ROOM & DATA CENTER',
+    department: 'CENTRAL MAINFRAME & SERVER CORE',
     faculty: 'Campus Mainframe & Root Security Chamber',
     accent: '#7B4BFF',
     badge: '⚡ CENTRAL DATA CENTER',
@@ -96,7 +96,7 @@ const SECTOR_BRIEFINGS = {
       key: 'G + F + Q',
       action: 'MASTER ALL MECHANICS',
       cost: 'MANAGE ENERGY WISELY',
-      desc: 'Combine Gravity Inversion, Time Freeze, and Dimensional Phase Shift to complete the final exam.'
+      desc: 'Combine Gravity Inversion, Time Freeze, and Dimensional Phase Shift to reboot the central mainframe.'
     }
   }
 };
@@ -133,7 +133,7 @@ export default function SectorBriefingModal({ levelId = 1, onStart }) {
             <span style={{ ...styles.badge, borderColor: briefing.accent, color: briefing.accent }}>
               {briefing.badge}
             </span>
-            <div style={styles.univText}>ATHARVA UNIVERSITY • {briefing.faculty}</div>
+            <div style={styles.univText}>CAMPUS ZERO // {briefing.faculty}</div>
           </div>
           <div style={styles.headerRight}>
             <div style={styles.codeTag}>{briefing.code}</div>
@@ -195,7 +195,7 @@ export default function SectorBriefingModal({ levelId = 1, onStart }) {
               style={styles.portalBtn}
               onClick={handleReturnToPortal}
             >
-              🏛️ RETURN TO CAMPUS PORTAL
+              🏛️ RETURN TO MAIN MENU
             </button>
           </div>
           <div style={styles.tipText}>

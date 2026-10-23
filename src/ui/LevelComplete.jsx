@@ -54,34 +54,34 @@ export default function LevelComplete() {
   return (
     <div style={styles.overlay}>
       <div style={styles.marksheetCard}>
-        {/* Official Atharva University Letterhead */}
+        {/* Official GlitchVerse Letterhead */}
         <div style={styles.letterhead}>
           <div style={styles.letterheadLeft}>
-            <div style={styles.univEmblem}>🏛️</div>
+            <div style={styles.univEmblem}>⚡</div>
             <div>
-              <div style={styles.univTitle}>ATHARVA UNIVERSITY, MUMBAI</div>
-              <div style={styles.univSub}>OFFICIAL EXAMINATION CELL • PROVISIONAL GRADE CARD</div>
+              <div style={styles.univTitle}>CAMPUS ZERO // SYSTEM RESTORED</div>
+              <div style={styles.univSub}>SECTOR DIAGNOSTIC CLEARANCE • PERFORMANCE REPORT</div>
             </div>
           </div>
-          <div style={styles.accreditation}>NAAC 'A+' GRADE ACCREDITED</div>
+          <div style={styles.accreditation}>SECURITY CLEARANCE: VERIFIED</div>
         </div>
 
         {/* Candidate & Subject Info */}
         <div style={styles.candidateGrid}>
           <div style={styles.candItem}>
-            <span style={styles.candLabel}>CANDIDATE:</span>
-            <span style={styles.candVal}>Aditya Sharma</span>
+            <span style={styles.candLabel}>OPERATOR:</span>
+            <span style={styles.candVal}>{GameState.studentInfo?.name || 'Cadet Debugger'}</span>
           </div>
           <div style={styles.candItem}>
-            <span style={styles.candLabel}>ROLL NO:</span>
-            <span style={styles.candVal}>ATH-2026-CS42</span>
+            <span style={styles.candLabel}>UNIT ID:</span>
+            <span style={styles.candVal}>{GameState.studentInfo?.rollNo || 'CADET-0809'}</span>
           </div>
           <div style={styles.candItem}>
-            <span style={styles.candLabel}>EXAMINATION:</span>
-            <span style={styles.candVal}>PS01 GlitchVerse (Sem VI)</span>
+            <span style={styles.candLabel}>SIMULATION:</span>
+            <span style={styles.candVal}>PS01 GlitchVerse (Terminal Mode)</span>
           </div>
           <div style={styles.candItem}>
-            <span style={styles.candLabel}>COURSE:</span>
+            <span style={styles.candLabel}>PROTOCOL:</span>
             <span style={styles.candVal}>{subject.code}: {subject.title}</span>
           </div>
         </div>
@@ -90,7 +90,7 @@ export default function LevelComplete() {
         <div style={styles.gradeBanner}>
           <div style={styles.stars}>{starDisplay}</div>
           <div style={styles.gradeResult}>
-            SECTOR 0{data.levelId} CLEARED WITH DISTINCTION!
+            SECTOR 0{data.levelId} RESTORED &amp; CLEARED!
           </div>
         </div>
 
@@ -105,23 +105,23 @@ export default function LevelComplete() {
           </thead>
           <tbody>
             <tr>
-              <td style={styles.td}>Pen Drives (Data Bits) Recovered</td>
+              <td style={styles.td}>Data Fragments Recovered</td>
               <td style={styles.td}>{data.fragments} of {data.totalFragments} Disks</td>
               <td style={styles.tdHighlight}>+{data.fragments * 100} PTS</td>
             </tr>
             <tr>
-              <td style={styles.td}>Exam Bell Speed Bonus</td>
+              <td style={styles.td}>Speed Clearance Bonus</td>
               <td style={styles.td}>Completed Ahead of Bell</td>
               <td style={styles.tdGold}>+{data.timeBonus} PTS</td>
             </tr>
             <tr>
-              <td style={styles.td}>Attendance Retained</td>
-              <td style={styles.td}>{data.attendance}% (Eligible)</td>
+              <td style={styles.td}>System Shield Retained</td>
+              <td style={styles.td}>{data.attendance}% (Optimal)</td>
               <td style={{ ...styles.td, color: '#10B981', fontWeight: 'bold' }}>GRADE: O (OUTSTANDING)</td>
             </tr>
             <tr>
-              <td style={styles.td}>Detentions / Resets</td>
-              <td style={styles.td}>{data.respawns} Disciplinary Resets</td>
+              <td style={styles.td}>Glitch Respawns / Resets</td>
+              <td style={styles.td}>{data.respawns} System Resets</td>
               <td style={{ ...styles.td, color: data.respawns > 0 ? '#EF4444' : '#10B981' }}>
                 {data.respawns > 0 ? `-${data.respawns * 20} PTS` : 'CLEAN RECORD'}
               </td>
@@ -129,29 +129,29 @@ export default function LevelComplete() {
           </tbody>
           <tfoot>
             <tr>
-              <td colSpan={2} style={styles.tfootLabel}>CUMULATIVE SECTOR SCORE &amp; SGPA:</td>
-              <td style={styles.tfootScore}>{data.score} PTS (SGPA: {data.cgpa})</td>
+              <td colSpan={2} style={styles.tfootLabel}>CUMULATIVE SECTOR SCORE &amp; RATING:</td>
+              <td style={styles.tfootScore}>{data.score} PTS (RATING: {data.cgpa} / 10.0)</td>
             </tr>
           </tfoot>
         </table>
 
         {/* Faculty Remarks */}
         <div style={styles.remarksBox}>
-          <strong>Dean's Evaluation:</strong> Exceptional problem solving and reality rule manipulation demonstrated in {subject.title}. Cleared for advancement!
+          <strong>System Evaluation:</strong> Exceptional reality rule manipulation and platforming demonstrated in {subject.title}. Clearance granted!
         </div>
 
         {/* Action Buttons */}
         <div style={styles.btnGroup}>
           <button style={styles.primaryBtn} onClick={handleNext}>
-            {isFinalLevel ? '🎓 PROCEED TO FINAL CONVOCATION' : `▶ ADVANCE TO SECTOR 0${data.levelId + 1}`}
+            {isFinalLevel ? '🏆 PROCEED TO MISSION DEBRIEF' : `▶ ADVANCE TO SECTOR 0${data.levelId + 1}`}
           </button>
           {!isFinalLevel && (
             <button style={styles.secondaryBtn} onClick={handleReplay}>
-              ↺ RE-TAKE EXAM (AIM FOR 3 STARS)
+              ↺ RETRY SECTOR (AIM FOR 3 STARS)
             </button>
           )}
           <button style={styles.secondaryBtn} onClick={handleMenu}>
-            🏛️ RETURN TO CAMPUS PORTAL
+            🏛️ RETURN TO MAIN MENU
           </button>
         </div>
       </div>

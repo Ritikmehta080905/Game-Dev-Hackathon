@@ -24,7 +24,7 @@ export const ENV_SETTINGS = {
     gridColor2: '#94a3b8',
     buildingBody: '#f8fafc',
     buildingTrim: '#0284c7',
-    centerBuilding: 'ATHARVA CENTRAL CAMPUS AUDITORIUM'
+    centerBuilding: 'CENTRAL CAMPUS AUDITORIUM'
   },
   2: {
     skyColor: '#67e8f9', // Crisp morning library daylight
@@ -46,7 +46,7 @@ export const ENV_SETTINGS = {
     gridColor2: '#cbd5e1',
     buildingBody: '#f8fafc',
     buildingTrim: '#0d9488',
-    centerBuilding: 'CENTRAL UNIVERSITY ARCHIVES & REPOSITORY'
+    centerBuilding: 'CENTRAL ARCHIVES & REPOSITORY'
   },
   3: {
     skyColor: '#fed7aa', // Warm sunny afternoon / golden campus courtyard
@@ -68,7 +68,7 @@ export const ENV_SETTINGS = {
     gridColor2: '#fed7aa',
     buildingBody: '#fffbeb',
     buildingTrim: '#ea580c',
-    centerBuilding: 'ATHARVA STUDENT ACTIVITY CENTER & CANTEEN'
+    centerBuilding: 'STUDENT ACTIVITY CENTER & CANTEEN'
   },
   4: {
     skyColor: '#c7d2fe', // Luminous daylight glass atrium
@@ -90,7 +90,7 @@ export const ENV_SETTINGS = {
     gridColor2: '#cbd5e1',
     buildingBody: '#ffffff',
     buildingTrim: '#7c3aed',
-    centerBuilding: 'ATHARVA HIGH-PERFORMANCE DATA CENTER'
+    centerBuilding: 'HIGH-PERFORMANCE DATA CENTER'
   }
 };
 

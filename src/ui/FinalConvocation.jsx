@@ -23,31 +23,31 @@ export default function FinalConvocation() {
       <div style={styles.degreeCard}>
         {/* Certificate Golden Border Frame */}
         <div style={styles.innerBorder}>
-          {/* University Seal & Convocation Ribbon */}
+          {/* Victory Seal & Ribbon */}
           <div style={styles.sealRow}>
             <div style={styles.sealBadge}>🏅</div>
             <div>
-              <div style={styles.univTitle}>ATHARVA UNIVERSITY, MUMBAI</div>
-              <div style={styles.convocationHeader}>ANNUAL CONVOCATION 2026 • DEGREE OF MERIT</div>
+              <div style={styles.univTitle}>CAMPUS ZERO // GLITCHVERSE VICTORY</div>
+              <div style={styles.convocationHeader}>SECTOR DIAGNOSTIC CLEARANCE • GRAND FINALE</div>
             </div>
-            <div style={styles.goldMedalPill}>GOLD MEDALIST</div>
+            <div style={styles.goldMedalPill}>TOP OPERATOR</div>
           </div>
 
-          <h1 style={styles.certHeading}>CERTIFICATE OF SPECIAL HONOUR</h1>
-          <div style={styles.certSub}>PRESENTED BY THE ACADEMIC COUNCIL &amp; EXAMINATION BOARD</div>
+          <h1 style={styles.certHeading}>CERTIFICATE OF REALITY RESTORATION</h1>
+          <div style={styles.certSub}>CONFERRED BY THE GLITCHVERSE ARCHITECT &amp; SECURITY COUNCIL</div>
 
           <p style={styles.certBody}>
-            This is to officially certify that student debugger <strong>ADITYA SHARMA (ATH-2026-CS42)</strong> has successfully overcome all 4 corrupted sectors of <strong>CAMPUS ZERO</strong>, restored universal gravity, unfrozen library time, bridged dimensional rifts, and rebooted the central mainframe before the exam bell rang.
+            This is to officially certify that operator <strong>CADET DEBUGGER (CADET-0809)</strong> has successfully overcome all 4 corrupted sectors of <strong>CAMPUS ZERO</strong>, restored universal gravity, unfrozen archive time, bridged dimensional rifts, and rebooted the central mainframe before system collapse.
           </p>
 
           {/* Academic Rank & Honors Box */}
           <div style={styles.honorsGrid}>
             <div style={styles.honorCard}>
-              <div style={styles.honorLabel}>FINAL CUMULATIVE CGPA</div>
+              <div style={styles.honorLabel}>FINAL CUMULATIVE SCORE</div>
               <div style={styles.honorValGold}>{cgpa} / 10.0</div>
             </div>
             <div style={styles.honorCard}>
-              <div style={styles.honorLabel}>OFFICIAL CAMPUS RANK</div>
+              <div style={styles.honorLabel}>SIMULATION RATING</div>
               <div style={styles.honorValCyan}>{rank}</div>
             </div>
             <div style={styles.honorCard}>
@@ -60,15 +60,15 @@ export default function FinalConvocation() {
           <div style={styles.signaturesRow}>
             <div style={styles.sigCol}>
               <div style={styles.sigLine} />
-              <div style={styles.sigTitle}>DIRECTOR / PRINCIPAL</div>
-              <div style={styles.sigSub}>Atharva College of Engineering</div>
+              <div style={styles.sigTitle}>LEAD REALITY ARCHITECT</div>
+              <div style={styles.sigSub}>Academy of Reality Systems</div>
             </div>
             <div style={styles.sigCol}>
               <div style={styles.goldStamp}>★ SEAL OF EXCELLENCE ★</div>
             </div>
             <div style={styles.sigCol}>
               <div style={styles.sigLine} />
-              <div style={styles.sigTitle}>CONTROLLER OF EXAMINATIONS</div>
+              <div style={styles.sigTitle}>SYSTEM SECURITY CHIEF</div>
               <div style={styles.sigSub}>Artificial Arcade VI (PS01)</div>
             </div>
           </div>
@@ -76,10 +76,10 @@ export default function FinalConvocation() {
           {/* Action Buttons */}
           <div style={styles.btnGroup}>
             <button style={styles.primaryBtn} onClick={handleRestart}>
-              ↺ PLAY AGAIN (FRESH SEMESTER RUN)
+              ↺ PLAY AGAIN (NEW SIMULATION RUN)
             </button>
             <button style={styles.secondaryBtn} onClick={handleMenu}>
-              🏛️ RETURN TO CAMPUS PORTAL
+              🏛️ RETURN TO MAIN MENU
             </button>
           </div>
         </div>

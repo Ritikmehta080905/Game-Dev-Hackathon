@@ -118,8 +118,8 @@ export default class GameScene extends Phaser.Scene {
       this.add.line(0, 0, 0, y, w, y, 0x1E293B, 0.4).setOrigin(0).setDepth(-9);
     }
 
-    // Atharva Campus Watermark Silhouettes
-    const campusBanner = this.add.text(400, 100, 'ATHARVA UNIVERSITY // MAINFRAME SECTOR', {
+    // Campus Zero Watermark Silhouettes
+    const campusBanner = this.add.text(400, 100, 'CAMPUS ZERO // MAINFRAME SECTOR', {
       fontFamily: '"Fira Code", monospace',
       fontSize: '28px',
       color: '#1E293B',

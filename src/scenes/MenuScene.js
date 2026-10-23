@@ -24,7 +24,7 @@ export default class MenuScene extends Phaser.Scene {
     }
 
     // Event Subheading
-    this.add.text(width / 2, 90, 'ARTIFICIAL ARCADE VI  •  ATHARVA UNIVERSITY, MUMBAI', {
+    this.add.text(width / 2, 90, 'ARTIFICIAL ARCADE VI  •  CAMPUS ZERO // GLITCHVERSE', {
       fontFamily: '"Fira Code", monospace',
       fontSize: '14px',
       color: COLORS.MAGENTA_HEX,

@@ -29,56 +29,56 @@ export default function DetainedModal({ isTimeout = false, reason = '' }) {
       <div style={styles.card} onClick={(e) => e.stopPropagation()}>
         {/* Red Stamp Badge */}
         <div style={styles.stampBadge}>
-          {isTimeout ? '⏰ EXAM OVER' : '⚠️ OFFICIAL UNIVERSITY NOTICE'}
+          {isTimeout ? '⏰ TIME DEPLETED' : '⚠️ SYSTEM LOCKOUT NOTICE'}
         </div>
 
         <h1 style={styles.mainTitle}>
-          {isTimeout ? 'EXAM BELL HAS RUNG!' : 'STUDENT DETAINED!'}
+          {isTimeout ? 'MISSION TIME EXPIRED!' : 'SYSTEM COMPROMISED!'}
         </h1>
 
         <div style={styles.subTitle}>
           {isTimeout
-            ? 'SUPERVISOR HAS COLLECTED ALL EXAM ANSWER SHEETS'
-            : '0% ATTENDANCE VIOLATION • CRITERIA NOT MET'}
+            ? 'COUNTDOWN REACHED ZERO • MAINFRAME LOCKDOWN'
+            : '0% SHIELD INTEGRITY • EMERGENCY EVACUATION'}
         </div>
 
         {/* Official Memo Box */}
         <div style={styles.memoBox}>
           <div style={styles.memoRow}>
-            <strong>CANDIDATE:</strong> Aditya Sharma (ATH-2026-CS42)
+            <strong>OPERATOR:</strong> {GameState.studentInfo?.name || 'Cadet Debugger'} ({GameState.studentInfo?.rollNo || 'CADET-0809'})
           </div>
           <div style={styles.memoRow}>
-            <strong>DEPARTMENT:</strong> Atharva Dept of Computer Engineering
+            <strong>UNIT:</strong> Reality Defense &amp; Systems Architecture
           </div>
           <div style={styles.memoRow}>
             <strong>SECTOR:</strong> Sector 0{GameState.currentLevel}
           </div>
           <div style={styles.memoRow}>
-            <strong>INCIDENT:</strong> {reason || (isTimeout ? 'Exam countdown timer reached 00:00 before the central mainframe was rebooted.' : 'Attendance dropped below the mandatory 75% university rule due to repeated hazard contact.')}
+            <strong>INCIDENT:</strong> {reason || (isTimeout ? 'Mission countdown reached 00:00 before the central mainframe reboot.' : 'System shield dropped to 0% due to repeated hazard contact.')}
           </div>
         </div>
 
-        {/* Campus Humor Tip */}
+        {/* Cyberpunk Status Quote */}
         <div style={styles.humorQuote}>
           {isTimeout
-            ? '“Sir please just 2 more minutes to fill the circles!” — Submission closed.'
-            : '“HOD Office circular: Proxy attendance caught on CCTV. Submit medical certificate to re-enter exam hall.”'}
+            ? '“Firewall Alert: Time expired before root terminal access. Resetting grid.”'
+            : '“Emergency backup generator online. Rerouting power to last stable checkpoint.”'}
         </div>
 
         {/* Action Buttons */}
         <div style={styles.btnGroup}>
           {isTimeout ? (
             <button style={styles.primaryBtn} onClick={handleRetakeExam}>
-              ↺ RETAKE EXAM CHALLENGE (RESTART SECTOR)
+              ↺ RETRY SECTOR CHALLENGE
             </button>
           ) : (
             <button style={styles.primaryBtn} onClick={handleCondonationRespawn}>
-              📋 SUBMIT MEDICAL CERTIFICATE (RESPAWN CHECKPOINT)
+              ⚡ EMERGENCY REBOOT (RESPAWN CHECKPOINT)
             </button>
           )}
 
           <button style={styles.secondaryBtn} onClick={handleReturnToPortal}>
-            🏛️ RETURN TO CAMPUS PORTAL
+            🏛️ RETURN TO MAIN MENU
           </button>
         </div>
       </div>

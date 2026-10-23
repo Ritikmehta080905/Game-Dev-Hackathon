@@ -43,20 +43,20 @@ export default function PauseMenu() {
     <div style={styles.overlay} onClick={(e) => e.stopPropagation()}>
       <div style={styles.card} onClick={(e) => e.stopPropagation()}>
         <div style={styles.header}>
-          <div style={styles.badge}>⏸️ RECESS / EXAM BREAK</div>
-          <h2 style={styles.title}>EXAMINATION PAUSED</h2>
-          <div style={styles.sub}>ATHARVA CAMPUS CLOCK TEMPORARILY HALTED</div>
+          <div style={styles.badge}>⏸️ SIMULATION PAUSED</div>
+          <h2 style={styles.title}>GAME PAUSED</h2>
+          <div style={styles.sub}>SIMULATION CLOCK TEMPORARILY HALTED</div>
         </div>
 
         <div style={styles.infoBox}>
           <div><strong>SECTOR:</strong> Sector 0{GameState.currentLevel}</div>
-          <div><strong>CANDIDATE:</strong> Aditya Sharma (ATH-2026-CS42)</div>
-          <div><strong>ATTENDANCE:</strong> {GameState.attendance}%</div>
+          <div><strong>OPERATOR:</strong> {GameState.studentInfo?.name || 'Cadet Debugger'} ({GameState.studentInfo?.rollNo || 'CADET-0809'})</div>
+          <div><strong>INTEGRITY:</strong> {GameState.attendance}%</div>
         </div>
 
         <div style={styles.btnGroup}>
           <button style={styles.primaryBtn} onClick={handleResume}>
-            ▶ RESUME EXAMINATION
+            ▶ RESUME SIMULATION
           </button>
           <button style={styles.secondaryBtn} onClick={handleBriefing}>
             📋 SECTOR BRIEFING &amp; HOW TO PLAY
@@ -68,7 +68,7 @@ export default function PauseMenu() {
             {isMuted ? '🔇 AUDIO: MUTED' : '🔊 AUDIO: ONLINE'}
           </button>
           <button style={styles.dangerBtn} onClick={handleQuit}>
-            🏛️ RETURN TO CAMPUS PORTAL
+            🏛️ RETURN TO MAIN MENU
           </button>
         </div>
       </div>

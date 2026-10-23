@@ -98,7 +98,7 @@ export default class ResultsScene extends Phaser.Scene {
       fontStyle: '900'
     }).setOrigin(0.5);
 
-    this.add.text(width / 2, 120, 'ATHARVA UNIVERSITY CENTRAL SERVER ONLINE', {
+    this.add.text(width / 2, 120, 'CAMPUS ZERO // CENTRAL MAINFRAME ONLINE', {
       fontFamily: '"Fira Code", monospace',
       fontSize: '15px',
       color: COLORS.MAGENTA_HEX
