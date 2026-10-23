@@ -52,8 +52,27 @@ export default function PauseMenu() {
         <div style={styles.infoBox}>
           <div><strong>SECTOR:</strong> Level 0{GameState.currentLevel}</div>
           <div><strong>STUDENT:</strong> {GameState.studentInfo?.name || 'Karan Rao'} ({GameState.studentInfo?.rollNo || 'CS-2024-884'})</div>
-          <div><strong>ATTENDANCE:</strong> {GameState.attendance}%</div>
-          <div><strong>CLUES FOUND:</strong> {GameState.discoveredLogs.size} AUDITED</div>
+          <div><strong>INTEGRITY:</strong> {GameState.attendance}%</div>
+          <div><strong>CLUES AUDITED:</strong> {GameState.discoveredLogs.size}</div>
+        </div>
+
+        {/* Quick Keyboard Keybind Reference */}
+        <div style={{
+          background: 'rgba(9, 14, 33, 0.75)',
+          border: '1px solid rgba(0, 229, 255, 0.25)',
+          borderRadius: '6px',
+          padding: '8px 12px',
+          marginBottom: '12px',
+          fontSize: '11px',
+          color: '#CBD5E1',
+          lineHeight: '1.6',
+          textAlign: 'left',
+          fontFamily: '"Fira Code", monospace'
+        }}>
+          <div style={{ color: '#00E5FF', fontWeight: 'bold', fontSize: '10px', marginBottom: '3px' }}>⌨️ KEYBOARD ASSIGNMENTS:</div>
+          <div><span style={{ color: '#FFE14D' }}>WASD</span> Move • <span style={{ color: '#FFE14D' }}>Space</span> Jump • <span style={{ color: '#FFE14D' }}>[E]</span> Interact</div>
+          <div><span style={{ color: '#00E5FF' }}>[G]</span> Gravity Flip (20) • <span style={{ color: '#10B981' }}>[F]</span> Time Freeze (35)</div>
+          <div><span style={{ color: '#FF2E93' }}>[Q]</span> Dimension Switch (15) • <span style={{ color: '#FFE14D' }}>[C]</span> Clone Ghost (40)</div>
         </div>
 
         {/* Sensitivity & Audio Settings */}

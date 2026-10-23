@@ -5,6 +5,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { GameState } from '../../systems/GameState';
 import { Sound } from '../../systems/AudioSystem';
+import { getMemoryFragment } from '../../systems/MemoryFragments';
 
 export default function Collectible({ position, id, playerPosRef }) {
   const meshRef = useRef();
@@ -26,7 +27,8 @@ export default function Collectible({ position, id, playerPosRef }) {
       if (distSq < 2.25) { // Radius 1.5m
         setCollected(true);
         Sound.playFragmentCollect();
-        GameState.collectFragment();
+        const mem = getMemoryFragment(id, GameState.currentLevel, GameState.fragmentsCollected + 1);
+        GameState.collectFragment(mem);
       }
     }
   });

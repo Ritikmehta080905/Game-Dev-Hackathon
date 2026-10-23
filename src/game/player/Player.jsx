@@ -92,13 +92,13 @@ export default function Player({ playerPosRef, ghostPosRef, gravityInverted }) {
   }, []);
 
   useEffect(() => {
-    if ((keys.echo || keys.interact) && !echoPressedRef.current) {
+    if (keys.echo && !echoPressedRef.current) {
       echoPressedRef.current = true;
       triggerEcho();
-    } else if (!keys.echo && !keys.interact) {
+    } else if (!keys.echo) {
       echoPressedRef.current = false;
     }
-  }, [keys.echo, keys.interact]);
+  }, [keys.echo]);
 
   // 5. Listen for Manual Reset [R] and Hazard Hit Events
   useEffect(() => {

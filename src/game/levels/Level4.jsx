@@ -153,7 +153,7 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
           timestamp: '19:43:55 IST',
           paragraphs: [
             'SYSADMIN EMERGENCY MANUAL // LEVEL 4 CHALLENGE:',
-            '1. Layer 1 (Interlock): Step on the pink Pressure Plate and press [E] to spawn your cyan Student Ghost Clone to hold the firewall blast door open.',
+            '1. Layer 1 (Interlock): Step on the pink Pressure Plate and press [C] to spawn your cyan Student Ghost Clone to hold the firewall blast door open.',
             '2. Layer 2 (Server Lift): Use Time Freeze [F] to board the rapid server lift across the abyss to the midway data balcony.',
             '3. Layer 3 (Glitch Bridge): Switch to GLITCH [Q] to traverse the phased cyber-bridges.',
             '4. Layer 4 (Quantum Core): Flip Gravity [G] to reach the suspended ceiling gantry and trigger the Master Reboot Terminal!'
@@ -195,7 +195,7 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
           anchorX="center"
           anchorY="middle"
         >
-          STAND HERE &amp; PRESS [E] TO CLONE
+          STAND HERE &amp; PRESS [C] TO CLONE
         </Text>
       </group>
 
@@ -454,7 +454,7 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
             '"1. Gate: The inverted breaker CB-01 bypasses the turnstile interlock."',
             '"2. Library: Stasis shutter overrides respond only to temporal freezing [F]."',
             '"3. Computer Lab: The glitch phase [Q] exposes Workstation Beta\'s hidden root shell."',
-            '"4. Core: A student ghost clone [E] on the pressure plate will prevent the firewall from collapsing while you cross."',
+            '"4. Core: A student ghost clone [C] on the pressure plate will prevent the firewall from collapsing while you cross."',
             '"Whoever finds this: don\'t give up. The college is worth saving."'
           ],
           actionLabel: 'COLLECT CHEATSHEET (+50 PTS) [E]'

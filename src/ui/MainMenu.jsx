@@ -37,8 +37,8 @@ const SECTORS = [
     id: 4,
     name: 'LEVEL 4: ATTENDANCE: NEVER CLOSED',
     code: 'DAT-404',
-    mechanic: 'MASTER ALL MECHANICS [E+F+Q+G]',
-    objective: 'Use Ghost Echo [E] to hold the safety interlock, cross the core, and execute Master Reboot',
+    mechanic: 'MASTER ALL MECHANICS [C+F+Q+G]',
+    objective: 'Use Ghost Echo [C] to hold the safety interlock, cross the core, and execute Master Reboot [E]',
     spots: 'Central Server Core, Interlock Pressure Plate, Ghost Clone, Quantum Mainframe',
     accent: '#7B4BFF'
   }
@@ -179,7 +179,7 @@ export default function MainMenu() {
               • <strong>Level 3 (Lab 301):</strong> Reality fractured. Use <span style={styles.keyTag}>[Q]</span> to investigate simulation experiment.
             </div>
             <div style={styles.noticeBullet}>
-              • <strong>Level 4 (Mainframe):</strong> Spawn clone with <span style={styles.keyTag}>[E]</span> &amp; execute Master Reboot.
+              • <strong>Level 4 (Mainframe):</strong> Spawn clone with <span style={styles.keyTag}>[C]</span> &amp; execute Master Reboot <span style={styles.keyTag}>[E]</span>.
             </div>
           </div>
         </div>

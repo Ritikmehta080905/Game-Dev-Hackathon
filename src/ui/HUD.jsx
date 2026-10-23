@@ -1,5 +1,5 @@
 // ATHARVA.EXE — HUD: Campus Reality Debugger & Examination Status System
-// Distinctive Department UI for each Level, Live Sector Briefing, and Authoritative Controls!
+// Upgraded for Campus Zero: Authentic Academic UI, Live Story Attendance, Dynamic Objectives & Compact Reality Status
 
 import React, { useState, useEffect } from 'react';
 import { GameState } from '../systems/GameState';
@@ -17,8 +17,6 @@ const LEVEL_THEMES = {
     deptTag: '🏛️ CAMPUS GATE // 19:42 PM LOCKDOWN',
     docRole: 'MAIN GATE ATTENDANCE SCANNER',
     anomaly: 'Entrance power grid offline! Scanner on ceiling skywalk requires emergency breaker activation.',
-    howToPlay: 'Cross to midway checkpoint -> Press [G] to Flip Gravity -> Activate Circuit Breaker [E] -> Audit Exit Terminal!',
-    keyPrompt: '[G] FLIP GRAVITY + [E] BREAKER',
     accent: '#00E5FF',
     secondaryAccent: '#38BDF8',
     accentGlow: 'rgba(0, 229, 255, 0.35)',
@@ -31,13 +29,11 @@ const LEVEL_THEMES = {
   2: {
     sector: 'LEVEL 02',
     code: 'LIB-202',
-    name: 'THE LIBRARY OF THINGS UNWRITTEN',
+    name: 'THE ATTENDANCE ARCHIVE',
     environment: 'Reading Hall • Multi-tier Stacks • Study Desks • Stasis Shutters',
     deptTag: '📚 CENTRAL ARCHIVES // TIME FREEZE',
-    docRole: 'RESTRICTED CATALOG // ANYA SHARMA',
+    docRole: 'RESTRICTED CATALOGUE // ANYA SHARMA',
     anomaly: 'Library stasis desynced! High-speed archive stacks and lasers block upper archive mezzanine.',
-    howToPlay: 'Dodge RFID lasers -> Press [F] to Freeze Time when shelves align -> Ride to Upper Archive Catalog!',
-    keyPrompt: '[F] FREEZE TIME (3s)',
     accent: '#10B981',
     secondaryAccent: '#FFE14D',
     accentGlow: 'rgba(16, 185, 129, 0.35)',
@@ -50,13 +46,11 @@ const LEVEL_THEMES = {
   3: {
     sector: 'LEVEL 03',
     code: 'CAN-303',
-    name: 'THE LAB THAT NEVER EXISTED',
+    name: 'PROJECT ZERO',
     environment: 'Canteen Stall • Room 301 Coding Lab • Phased Walls • Neon Glitch Bridges',
-    deptTag: '☕ LAB 301 // DIMENSION SWITCH',
+    deptTag: '💻 LAB 301 // DIMENSION SWITCH',
     docRole: 'PROJECT ATHARVA EXPERIMENT ARCHIVE',
     anomaly: 'Campus reality split into Real and Glitch dimensions! Lab 301 only accessible in Glitch mode.',
-    howToPlay: 'Press [Q] to phase into Glitch layer -> Cross cyber-bridges -> Deactivate laser & access Lab 301 terminal!',
-    keyPrompt: '[Q] DIMENSION SWITCH',
     accent: '#FF2E93',
     secondaryAccent: '#FF9E3D',
     accentGlow: 'rgba(255, 46, 147, 0.35)',
@@ -69,23 +63,94 @@ const LEVEL_THEMES = {
   4: {
     sector: 'LEVEL 04',
     code: 'DAT-404',
-    name: 'ATTENDANCE: NEVER CLOSED',
+    name: 'CAMPUS ZERO: CORE REBOOT',
     environment: 'Mainframe Array • Security Blast Door • Pressure Plate • Quantum Root Core',
     deptTag: '⚡ CENTRAL MAINFRAME // MASTER REBOOT',
     docRole: 'SIMULATION CORE DE-ARCHIVE PROTOCOL',
     anomaly: 'Quadruple physics interlock locking the root core. Coordinate all mechanics to save the campus.',
-    howToPlay: 'Spawn Ghost Clone [E] on pressure plate -> Use [F] on lift -> [Q] on cyber-bridge -> [G] to reach Quantum Core!',
-    keyPrompt: '[E] CLONE + [F] + [Q] + [G]',
     accent: '#7B4BFF',
     secondaryAccent: '#00E5FF',
     accentGlow: 'rgba(123, 75, 255, 0.35)',
     bgTint: 'rgba(123, 75, 255, 0.08)',
     borderStyle: '2px solid #7B4BFF',
     badgeBg: 'rgba(123, 75, 255, 0.15)',
-    monitorText: 'MASTER REBOOT READY // SPAWN CLONE [E] ON PLATE & EXECUTE LAST ATTENDANCE',
+    monitorText: 'MASTER REBOOT READY // SPAWN CLONE [C] ON PLATE & EXECUTE LAST ATTENDANCE',
     activeRule: 'all'
   }
 };
+
+const ATTENDANCE_STORY_STATUS = {
+  1: {
+    badge: '⚠️ 19:42 PM CONFLICT',
+    detail: 'DUPLICATE LOG DETECTED IN ATTENDANCE REGISTRAR',
+    color: '#FFE14D'
+  },
+  2: {
+    badge: '❌ ERASED RECORD',
+    detail: 'DEWEY WING B // BATCH 2021 ARCHIVED BY WATCHDOG',
+    color: '#EF4444'
+  },
+  3: {
+    badge: '🔒 QUARANTINED',
+    detail: 'LAB 301 // RECURSIVE RECOVERY DAEMON ACTIVE',
+    color: '#FF2E93'
+  },
+  4: {
+    badge: '⚡ ROOT INTERLOCK',
+    detail: 'CENTRAL MAINFRAME // AWAITING DIRECTIVE',
+    color: '#00E5FF'
+  }
+};
+
+function getDynamicObjective(state) {
+  const lvl = state.currentLevel;
+  const p1 = state.levelPuzzles?.[1] || {};
+  const p2 = state.levelPuzzles?.[2] || {};
+  const p3 = state.levelPuzzles?.[3] || {};
+  const catalogCount = state.cataloguesRecovered?.size || 0;
+
+  if (lvl === 1) {
+    if (!p1.powerRestored) {
+      return 'Cross courtyard -> Flip Gravity [G] onto ceiling skywalk -> Activate Breaker [E]';
+    }
+    return 'Power online! Audit the Gate Exit Terminal [E] to verify exit log.';
+  }
+
+  if (lvl === 2) {
+    if (catalogCount < 3) {
+      return `Recover 3 Library Catalogue Cards (${catalogCount}/3) -> Use Time Freeze [F] on moving bookstacks`;
+    }
+    if (!p2.archiveDoorUnlocked) {
+      return 'All 3 Cards audited! Access Upper Stasis Terminal [E] to disable lockdown shutters.';
+    }
+    return 'Archives unlocked! Reach Mezzanine Reading Exit Terminal [E] to complete sector.';
+  }
+
+  if (lvl === 3) {
+    if (!p3.realTerminalSolved) {
+      return 'Inspect Real Lab Console [E] in Computer Lab 301 to begin power sync.';
+    }
+    if (!p3.glitchTerminalSolved) {
+      return 'Press [Q] to enter Glitch Layer -> Cross cyber-bridge to Phased Console [E]';
+    }
+    if (!p3.doorUnlocked) {
+      return 'Consoles synchronized! Access Laser Security Firewall Terminal [E] to drop barrier.';
+    }
+    return 'Firewall disabled! Proceed across cyber-bridge to Lab Project Exit Terminal [E].';
+  }
+
+  if (lvl === 4) {
+    if (!state.timeEchoActive && (!state.checkpoint || state.checkpoint[2] > -20)) {
+      return 'Step onto Pink Pressure Plate & Press [C] to spawn Ghost Clone';
+    }
+    if (!state.checkpoint || state.checkpoint[2] > -20) {
+      return 'Pressure plate held! Freeze moving server lift [F] & reach Midway Balcony';
+    }
+    return 'Midway reached! Phase dimension [Q] across cyber-bridge & Flip Gravity [G] to Quantum Core Terminal [E]';
+  }
+
+  return 'Investigate campus anomaly and proceed to terminal.';
+}
 
 export default function HUD() {
   const [state, setState] = useState({ ...GameState });
@@ -105,7 +170,7 @@ export default function HUD() {
     return () => clearInterval(timer);
   }, []);
 
-  // Listen for 'V' key to recenter POV, 'H' key to open sector guide, 'O' key for dev rules
+  // Listen for hotkeys: 'V' POV center, 'H' guide, 'O' dev rules
   useEffect(() => {
     const handleKey = (e) => {
       if (e.code === 'KeyV') {
@@ -121,7 +186,9 @@ export default function HUD() {
   }, []);
 
   const theme = LEVEL_THEMES[state.currentLevel] || LEVEL_THEMES[1];
-  const { cgpa, rank } = GameState.getRankData();
+  const attendanceStory = ATTENDANCE_STORY_STATUS[state.currentLevel] || ATTENDANCE_STORY_STATUS[1];
+  const dynamicObjective = getDynamicObjective(state);
+  const { cgpa } = GameState.getRankData();
 
   // Format Exam Timer (MM:SS)
   const minutes = Math.floor(state.examTimer / 60);
@@ -129,57 +196,66 @@ export default function HUD() {
   const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
   const isTimeCritical = state.examTimer <= 25;
 
-  // Attendance bar color
-  let attendanceColor = '#10B981';
-  if (state.attendance < 75) attendanceColor = '#F59E0B';
-  if (state.attendance <= 25) attendanceColor = '#EF4444';
-
-  // Rules panel variables
-  const gravityStr = state.gravityInverted ? 'INVERTED (UP) [G]' : 'NORMAL (DOWN) [G]';
-  const timeStr = state.timeFrozen
-    ? 'FROZEN (3s) [F]'
-    : (state.freezeCooldown > 0 ? `COOLDOWN (${state.freezeCooldown}s)` : 'ACTIVE (1.0) [F]');
-  const layerStr = state.activeDimension === 'REAL' ? 'REAL CAMPUS [Q]' : 'GLITCH LAYER [Q]';
+  // Simulation integrity bar color
+  let integrityColor = '#10B981';
+  if (state.attendance < 75) integrityColor = '#F59E0B';
+  if (state.attendance <= 25) integrityColor = '#EF4444';
 
   return (
     <div style={styles.overlay}>
       {/* ========================================================
           1. TOP CAMPUS STATUS HEADER (DYNAMICALLY THEMED PER LEVEL)
           ======================================================== */}
-      <div style={{ ...styles.topBar, borderColor: theme.accent, background: `linear-gradient(135deg, rgba(15, 23, 42, 0.78) 0%, ${theme.bgTint} 100%)` }}>
+      <div style={{ ...styles.topBar, borderColor: theme.accent, background: `linear-gradient(135deg, rgba(15, 23, 42, 0.88) 0%, ${theme.bgTint} 100%)` }}>
         {/* Left: Department Seal & Sector Header */}
         <div style={styles.leftInfo}>
-          <div style={{ ...styles.deptBadge, borderColor: theme.accent, color: theme.accent }}>
-            {theme.deptTag}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ ...styles.deptBadge, borderColor: theme.accent, color: theme.accent }}>
+              {theme.deptTag}
+            </div>
+            <span style={styles.lockdownTag}>🔴 19:42 PM LOCKDOWN</span>
           </div>
           <div style={styles.sectorTitle}>
             <span style={{ color: theme.accent, fontWeight: '800' }}>{theme.sector}:</span> {theme.name}
           </div>
           <div style={styles.monitorTicker}>
-            <span style={{ color: '#FFE14D' }}>● STATUS:</span> {theme.monitorText}
+            <span style={{ color: '#FFE14D' }}>● STAGE:</span> {dynamicObjective}
           </div>
         </div>
 
-        {/* Center: Exam Bell Countdown & Campus Attendance Meter */}
+        {/* Center: Exam Bell Countdown & Authoritative Story Attendance Feedback */}
         <div style={styles.centerMeters}>
           {/* Exam Bell Timer */}
           <div style={{ ...styles.examTimerCard, borderColor: isTimeCritical ? '#EF4444' : theme.accent }}>
-            <span style={{ fontSize: '13px' }}>🔔 EXAM BELL:</span>
+            <span style={{ fontSize: '11px', color: '#94A3B8' }}>🔔 EXAM BELL</span>
             <span style={{ ...styles.timerDigits, color: isTimeCritical ? '#EF4444' : '#FFE14D' }}>
               {formattedTime}
             </span>
           </div>
 
-          {/* Attendance % Meter (Player Health) */}
+          {/* Genuine Story-State Attendance Record */}
+          <div style={styles.storyAttendanceCard}>
+            <div style={styles.meterHeader}>
+              <span style={{ color: '#94A3B8', fontSize: '9px', fontWeight: 'bold' }}>ATTENDANCE STATUS</span>
+              <span style={{ color: attendanceStory.color, fontWeight: 'bold', fontSize: '10px' }}>
+                {attendanceStory.badge}
+              </span>
+            </div>
+            <div style={styles.storyAttendanceDetail}>
+              {attendanceStory.detail}
+            </div>
+          </div>
+
+          {/* Player Simulation Integrity Meter (Health) */}
           <div style={styles.attendanceBox}>
             <div style={styles.meterHeader}>
-              <span>ATTENDANCE:</span>
-              <span style={{ color: attendanceColor, fontWeight: 'bold' }}>
-                {state.attendance}% {state.attendance < 75 ? '⚠️ <75%' : ''}
+              <span>INTEGRITY:</span>
+              <span style={{ color: integrityColor, fontWeight: 'bold' }}>
+                {state.attendance}% {state.attendance < 75 ? '⚠️ AT RISK' : ''}
               </span>
             </div>
             <div style={styles.meterTrack}>
-              <div style={{ ...styles.meterFill, width: `${state.attendance}%`, background: attendanceColor }} />
+              <div style={{ ...styles.meterFill, width: `${state.attendance}%`, background: integrityColor }} />
             </div>
           </div>
 
@@ -188,7 +264,7 @@ export default function HUD() {
             <div style={styles.meterHeader}>
               <span>GLITCH ENERGY:</span>
               <span style={{ color: theme.accent, fontWeight: 'bold' }}>
-                {Math.round(state.glitchEnergy)} / 100
+                {Math.round(state.glitchEnergy)}/100
               </span>
             </div>
             <div style={styles.meterTrack}>
@@ -209,7 +285,7 @@ export default function HUD() {
             <span>SCORE:</span>
             <span style={{ color: '#FFE14D', fontWeight: 'bold' }}>{state.score} PTS</span>
           </div>
-          <div style={styles.metricItem}>
+          <div style={styles.metricItem} title="CGPA based on puzzles solved, fragments archived & exam time remaining">
             <span>EST. CGPA:</span>
             <span style={{ color: '#10B981', fontWeight: 'bold' }}>{cgpa} / 10.0</span>
           </div>
@@ -226,6 +302,30 @@ export default function HUD() {
           </button>
         </div>
       </div>
+
+      {/* ========================================================
+          MEMORY FRAGMENT ARCHIVE BANNER (NARRATIVE STORY POPUP)
+          ======================================================== */}
+      {state.latestMemory && (
+        <div style={styles.memoryToast}>
+          <div style={styles.memoryToastCard}>
+            <div style={styles.memoryToastHeader}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '16px' }}>📁</span>
+                <span style={styles.memoryToastTitle}>{state.latestMemory.title}</span>
+              </div>
+              <span style={styles.memoryToastSource}>{state.latestMemory.source}</span>
+            </div>
+            <div style={styles.memoryToastSnippet}>
+              "{state.latestMemory.snippet}"
+            </div>
+            <div style={styles.memoryToastFooter}>
+              <span style={{ color: '#FFE14D', fontWeight: 'bold' }}>+100 BONUS POINTS</span>
+              <span style={{ color: '#94A3B8' }}>• DECRYPTED INTO CAMPUS ARCHIVE</span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ========================================================
           CORRUPTED ADMIN SYSTEM OVERRIDE WARNING BANNER (DOC §9)
@@ -246,49 +346,45 @@ export default function HUD() {
       {/* Speed Boost Badge */}
       {state.speedBoostActive && (
         <div style={styles.speedBoostBadge}>
-          ☕ CANTEEN COFFEE BOOST ACTIVE! SPRINT SPEED +50%
+          ☕ CANTEEN COFFEE BOOST ACTIVE! SPRINT SPEED +50% (ENERGY 100%)
         </div>
       )}
 
       {/* Time Echo Status Badges */}
-      {state.timeEchoRecording && (
-        <div style={{ ...styles.speedBoostBadge, background: 'rgba(239, 68, 68, 0.25)', borderColor: '#EF4444', color: '#EF4444' }}>
-          ⏺️ TIME ECHO RECORDING: WALK ONTO PRESSURE PLATE — PRESS [E] TO SPAWN GHOST!
-        </div>
-      )}
       {state.timeEchoActive && (
         <div style={{ ...styles.speedBoostBadge, background: 'rgba(0, 229, 255, 0.25)', borderColor: '#00E5FF', color: '#00E5FF' }}>
-          ⚡ TIME ECHO ACTIVE: CYAN GHOST CLONE REPLAYING MOVEMENTS &amp; HOLDING PRESSURE PLATE!
+          ⚡ TIME ECHO ACTIVE: CYAN GHOST CLONE HOLDING PRESSURE PLATE!
         </div>
       )}
 
       {/* ========================================================
-          2. BOTTOM WORKSPACE: VISIBLE RULES PANEL & HOTKEY CONTROLS
+          2. BOTTOM WORKSPACE: COMPACT REALITY STATUS & CONTROLS
           ======================================================== */}
       <div style={styles.bottomRow}>
-        {showDevRules ? (
-          /* Visible Rules Panel (Development Only) */
-          <div style={{ ...styles.rulesPanel, borderColor: theme.accent, boxShadow: `0 0 25px ${theme.accentGlow}` }}>
-            <div style={styles.rulesHeader}>
-              <span style={{ ...styles.rulesTitle, color: theme.accent }}>⚡ CAMPUS RULES PANEL</span>
-              <button
-                style={{
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  color: '#94A3B8',
-                  borderRadius: '4px',
-                  padding: '2px 8px',
-                  fontSize: '11px',
-                  cursor: 'pointer'
-                }}
-                onClick={() => setShowDevRules(false)}
-              >
-                ✕ HIDE [O]
-              </button>
+        {/* Compact Reality Status Panel (Replaces bulky dev panel) */}
+        <div style={{
+          ...styles.realityStatusPanel,
+          borderColor: theme.accent,
+          boxShadow: `0 0 20px ${theme.accentGlow}`
+        }}>
+          <div style={styles.realityHeader}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ fontSize: '13px' }}>⚙️</span>
+              <span style={{ ...styles.realityTitle, color: theme.accent }}>REALITY STATUS</span>
             </div>
+            <button
+              style={styles.devToggleBtn}
+              onClick={() => setShowDevRules(!showDevRules)}
+              title="Toggle Raw Code Variable Editor (Key O)"
+            >
+              {showDevRules ? 'HIDE CODE [O]' : 'DEV CODE [O]'}
+            </button>
+          </div>
 
-            <div style={styles.rulesCode}>
-              <div style={{ ...styles.codeLine, ...(theme.activeRule === 'gravity' || theme.activeRule === 'all' ? styles.activeCodeLine : {}) }}>
+          {showDevRules ? (
+            /* Developer-Level Code Inspector */
+            <div style={styles.rawDevRules}>
+              <div style={styles.codeLine}>
                 <span style={styles.varName}>gravity</span> ={' '}
                 <button
                   style={{ ...styles.ruleTagBtn, borderColor: state.gravityInverted ? '#FF2E93' : '#00E5FF', color: state.gravityInverted ? '#FF2E93' : '#00E5FF' }}
@@ -297,14 +393,10 @@ export default function HUD() {
                     Sound.playGravityFlip();
                   }}
                 >
-                  {gravityStr}
+                  {state.gravityInverted ? 'INVERTED (UP) [G]' : 'NORMAL (DOWN) [G]'}
                 </button>
-                {(theme.activeRule === 'gravity' || theme.activeRule === 'all') && (
-                  <span style={{ ...styles.activeRuleTag, color: theme.accent }}>● TARGET RULE</span>
-                )}
               </div>
-
-              <div style={{ ...styles.codeLine, ...(theme.activeRule === 'time_scale' || theme.activeRule === 'all' ? styles.activeCodeLine : {}) }}>
+              <div style={styles.codeLine}>
                 <span style={styles.varName}>time_scale</span> ={' '}
                 <button
                   style={{ ...styles.ruleTagBtn, borderColor: state.timeFrozen ? '#00E5FF' : '#FFE14D', color: state.timeFrozen ? '#00E5FF' : '#FFE14D' }}
@@ -313,14 +405,10 @@ export default function HUD() {
                     Sound.playTone(880, 'sine', 0.25, 0.2);
                   }}
                 >
-                  {timeStr}
+                  {state.timeFrozen ? 'FROZEN (3s) [F]' : (state.freezeCooldown > 0 ? `COOLDOWN (${state.freezeCooldown}s)` : 'ACTIVE (1.0) [F]')}
                 </button>
-                {(theme.activeRule === 'time_scale' || theme.activeRule === 'all') && (
-                  <span style={{ ...styles.activeRuleTag, color: theme.accent }}>● TARGET RULE</span>
-                )}
               </div>
-
-              <div style={{ ...styles.codeLine, ...(theme.activeRule === 'layer' || theme.activeRule === 'all' ? styles.activeCodeLine : {}) }}>
+              <div style={styles.codeLine}>
                 <span style={styles.varName}>layer</span> ={' '}
                 <button
                   style={{ ...styles.ruleTagBtn, borderColor: state.activeDimension === 'REAL' ? '#00E5FF' : '#FF2E93', color: state.activeDimension === 'REAL' ? '#00E5FF' : '#FF2E93' }}
@@ -329,87 +417,109 @@ export default function HUD() {
                     Sound.playTone(350, 'sawtooth', 0.1, 0.15);
                   }}
                 >
-                  {layerStr}
+                  {state.activeDimension === 'REAL' ? 'REAL CAMPUS [Q]' : 'GLITCH LAYER [Q]'}
                 </button>
-                {(theme.activeRule === 'layer' || theme.activeRule === 'all') && (
-                  <span style={{ ...styles.activeRuleTag, color: theme.accent }}>● TARGET RULE</span>
-                )}
               </div>
-
-              <div style={{ ...styles.codeLine, ...(state.currentLevel === 4 ? styles.activeCodeLine : {}) }}>
-                <span style={styles.varName}>time_echo</span> ={' '}
-                <button
-                  style={{
-                    ...styles.ruleTagBtn,
-                    borderColor: state.timeEchoActive ? '#00E5FF' : '#FF2E93',
-                    color: state.timeEchoActive ? '#00E5FF' : '#FF2E93'
-                  }}
-                  onClick={() => {
-                    window.dispatchEvent(new CustomEvent('trigger-time-echo'));
-                  }}
-                >
-                  {state.timeEchoActive ? 'CLONE ACTIVE [E]' : 'SPAWN CLONE [E]'}
-                </button>
-                {state.currentLevel === 4 && (
-                  <span style={{ ...styles.activeRuleTag, color: '#00E5FF' }}>● PUZZLE 1 RULE</span>
-                )}
-              </div>
-
               <div style={styles.codeLine}>
-                <span style={styles.varName}>attendance</span> ={' '}
-                <span style={{ color: attendanceColor, fontWeight: 'bold' }}>{state.attendance}%</span>;
+                <span style={styles.varName}>attendance_record</span> ={' '}
+                <span style={{ color: attendanceStory.color, fontWeight: 'bold' }}>{attendanceStory.badge}</span>;
               </div>
             </div>
-          </div>
-        ) : (
-          /* Sleek Contextual Objective & Clue Progress Pill */
-          <div style={{
-            background: 'rgba(15, 23, 42, 0.88)',
-            border: `1.5px solid ${theme.accent}`,
-            borderRadius: '8px',
-            padding: '10px 16px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '16px',
-            fontSize: '12px',
-            color: '#F8FAFC',
-            boxShadow: `0 0 20px ${theme.accentGlow}`,
-            backdropFilter: 'blur(8px)',
-            maxWidth: '560px'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '15px' }}>🎯</span>
-              <div>
-                <div style={{ fontSize: '10px', color: '#FFE14D', fontWeight: 'bold', letterSpacing: '0.5px' }}>
-                  CURRENT OBJECTIVE
-                </div>
-                <div style={{ fontSize: '12px', color: '#F8FAFC', fontWeight: '500' }}>
-                  {theme.howToPlay}
-                </div>
+          ) : (
+            /* Sleek Live Mechanic Badges */
+            <div style={styles.mechanicPillsRow}>
+              <div
+                style={{
+                  ...styles.statusBadge,
+                  borderColor: state.gravityInverted ? '#FF2E93' : '#00E5FF',
+                  color: state.gravityInverted ? '#FF2E93' : '#00E5FF'
+                }}
+                onClick={() => {
+                  GameState.toggleGravity();
+                  Sound.playGravityFlip();
+                }}
+                title="Gravity Vector [G] (20 Energy)"
+              >
+                <span style={{ opacity: 0.7 }}>GRAVITY:</span> {state.gravityInverted ? 'INVERTED ▲' : 'NORMAL ▼'}
+              </div>
+
+              <div
+                style={{
+                  ...styles.statusBadge,
+                  borderColor: state.timeFrozen ? '#00E5FF' : (state.freezeCooldown > 0 ? '#64748B' : '#10B981'),
+                  color: state.timeFrozen ? '#00E5FF' : (state.freezeCooldown > 0 ? '#94A3B8' : '#10B981')
+                }}
+                onClick={() => {
+                  GameState.triggerTimeFreeze();
+                  Sound.playTone(880, 'sine', 0.25, 0.2);
+                }}
+                title="Time Stasis [F] (35 Energy)"
+              >
+                <span style={{ opacity: 0.7 }}>TIME:</span> {state.timeFrozen ? 'FROZEN ❄' : (state.freezeCooldown > 0 ? `CD (${state.freezeCooldown}s)` : 'ACTIVE ▶')}
+              </div>
+
+              <div
+                style={{
+                  ...styles.statusBadge,
+                  borderColor: state.activeDimension === 'REAL' ? '#38BDF8' : '#FF2E93',
+                  color: state.activeDimension === 'REAL' ? '#38BDF8' : '#FF2E93'
+                }}
+                onClick={() => {
+                  GameState.toggleDimension();
+                  Sound.playTone(350, 'sawtooth', 0.1, 0.15);
+                }}
+                title="Dimension Switch [Q] (15 Energy)"
+              >
+                <span style={{ opacity: 0.7 }}>LAYER:</span> {state.activeDimension === 'REAL' ? 'REAL' : 'GLITCH 🌀'}
+              </div>
+
+              <div
+                style={{
+                  ...styles.statusBadge,
+                  borderColor: state.timeEchoActive ? '#00E5FF' : (state.currentLevel === 4 ? '#FFE14D' : '#334155'),
+                  color: state.timeEchoActive ? '#00E5FF' : (state.currentLevel === 4 ? '#FFE14D' : '#475569'),
+                  opacity: state.currentLevel === 4 ? 1 : 0.5
+                }}
+                onClick={() => {
+                  if (state.currentLevel === 4) {
+                    window.dispatchEvent(new CustomEvent('trigger-time-echo'));
+                  }
+                }}
+                title="Time Echo Ghost Clone [C] (Level 4 Only)"
+              >
+                <span style={{ opacity: 0.7 }}>CLONE:</span> {state.currentLevel === 4 ? (state.timeEchoActive ? 'GHOST ON PLATE' : 'STAND & PRESS [C]') : 'OFFLINE'}
               </div>
             </div>
+          )}
+        </div>
 
-            <button
-              style={{
-                background: 'rgba(255, 255, 255, 0.08)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                color: '#94A3B8',
-                borderRadius: '4px',
-                padding: '4px 8px',
-                fontSize: '10px',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                fontWeight: 'bold'
-              }}
-              onClick={() => setShowDevRules(true)}
-              title="Inspect Live Gameplay Rule Variables (Key O)"
-            >
-              ⚙️ DEV RULES [O]
-            </button>
+        {/* Dynamic Contextual Objective Pill */}
+        <div style={{
+          background: 'rgba(15, 23, 42, 0.92)',
+          border: `1.5px solid ${theme.accent}`,
+          borderRadius: '8px',
+          padding: '10px 16px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          fontSize: '12px',
+          color: '#F8FAFC',
+          boxShadow: `0 0 20px ${theme.accentGlow}`,
+          backdropFilter: 'blur(8px)',
+          maxWidth: '520px'
+        }}>
+          <span style={{ fontSize: '18px' }}>🎯</span>
+          <div>
+            <div style={{ fontSize: '10px', color: '#FFE14D', fontWeight: 'bold', letterSpacing: '0.5px' }}>
+              ACTIVE CAMPUS OBJECTIVE
+            </div>
+            <div style={{ fontSize: '12px', color: '#F8FAFC', fontWeight: '600', marginTop: '2px' }}>
+              {dynamicObjective}
+            </div>
           </div>
-        )}
+        </div>
 
-        {/* Quick Action & Hotkeys Bar */}
+        {/* Authoritative Quick Action & Hotkeys Bar */}
         <div style={{ ...styles.hotkeysBar, borderColor: theme.accent }}>
           <div style={styles.hotkeyItem}>
             <kbd style={styles.kbd}>W A S D</kbd>
@@ -420,14 +530,19 @@ export default function HUD() {
             <span>Jump</span>
           </div>
           <div style={styles.hotkeyItem}>
+            <kbd style={{ ...styles.kbd, color: '#FFE14D', borderColor: '#FFE14D' }}>E</kbd>
+            <span>Interact</span>
+          </div>
+          <div style={styles.hotkeyItem}>
             <button
               style={{ ...styles.keyBtn, borderColor: state.currentLevel === 1 ? '#00E5FF' : 'rgba(255,255,255,0.2)' }}
               onClick={() => {
                 GameState.toggleGravity();
                 Sound.playGravityFlip();
               }}
+              title="Gravity Flip [G] (20 Energy)"
             >
-              <kbd style={styles.kbd}>G</kbd> Gravity (20)
+              <kbd style={styles.kbd}>G</kbd> Grav
             </button>
           </div>
           <div style={styles.hotkeyItem}>
@@ -437,8 +552,9 @@ export default function HUD() {
                 GameState.triggerTimeFreeze();
                 Sound.playTone(880, 'sine', 0.25, 0.2);
               }}
+              title="Time Stasis [F] (35 Energy)"
             >
-              <kbd style={styles.kbd}>F</kbd> Freeze (35)
+              <kbd style={styles.kbd}>F</kbd> Freeze
             </button>
           </div>
           <div style={styles.hotkeyItem}>
@@ -448,25 +564,28 @@ export default function HUD() {
                 GameState.toggleDimension();
                 Sound.playTone(350, 'sawtooth', 0.1, 0.15);
               }}
+              title="Dimension Switch [Q] (15 Energy)"
             >
-              <kbd style={styles.kbd}>Q</kbd> Dimension (15)
+              <kbd style={styles.kbd}>Q</kbd> Layer
             </button>
           </div>
-          <div style={styles.hotkeyItem}>
-            <button
-              style={{
-                ...styles.keyBtn,
-                borderColor: state.currentLevel === 4 || state.timeEchoActive ? '#00E5FF' : 'rgba(255,255,255,0.2)',
-                background: state.timeEchoActive ? 'rgba(0, 229, 255, 0.25)' : 'rgba(15, 23, 42, 0.75)'
-              }}
-              onClick={() => {
-                window.dispatchEvent(new CustomEvent('trigger-time-echo'));
-              }}
-              title="Spawn Student Ghost Clone on Pressure Plate (Key E)"
-            >
-              <kbd style={styles.kbd}>E</kbd> Clone (40)
-            </button>
-          </div>
+          {state.currentLevel === 4 && (
+            <div style={styles.hotkeyItem}>
+              <button
+                style={{
+                  ...styles.keyBtn,
+                  borderColor: state.timeEchoActive ? '#00E5FF' : '#FFE14D',
+                  background: state.timeEchoActive ? 'rgba(0, 229, 255, 0.25)' : 'rgba(15, 23, 42, 0.75)'
+                }}
+                onClick={() => {
+                  window.dispatchEvent(new CustomEvent('trigger-time-echo'));
+                }}
+                title="Spawn Student Ghost Clone on Pressure Plate (Key C)"
+              >
+                <kbd style={{ ...styles.kbd, color: '#FFE14D', borderColor: '#FFE14D' }}>C</kbd> Clone
+              </button>
+            </div>
+          )}
           <div style={styles.hotkeyItem}>
             <button
               style={styles.keyBtn}
@@ -475,7 +594,7 @@ export default function HUD() {
               }}
               title="Center Camera POV Behind Player"
             >
-              <kbd style={styles.kbd}>V</kbd> POV Center
+              <kbd style={styles.kbd}>V</kbd> POV
             </button>
           </div>
           <div style={styles.hotkeyItem}>
@@ -492,7 +611,7 @@ export default function HUD() {
               style={styles.pauseBtn}
               onClick={() => GameState.setScreen('PAUSE')}
             >
-              <kbd style={styles.kbd}>Esc</kbd> Pause
+              <kbd style={styles.kbd}>Esc</kbd>
             </button>
           </div>
         </div>
@@ -515,7 +634,7 @@ export default function HUD() {
         <DetainedModal isTimeout={false} reason={state.detentionReason} />
       )}
       {state.isTimeOut && (
-        <DetainedModal isTimeout={true} reason="Exam Bell rang before completing the campus sector!" />
+        <DetainedModal isTimeout={true} reason="Exam Bell rang before completing the campus sector! Resetting to start." />
       )}
 
       {/* ========================================================
@@ -539,7 +658,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    padding: '16px 22px',
+    padding: '14px 20px',
     boxSizing: 'border-box',
     fontFamily: '"Plus Jakarta Sans", sans-serif',
     zIndex: 30
@@ -551,20 +670,30 @@ const styles = {
     border: '1.5px solid',
     borderRadius: '10px',
     padding: '10px 18px',
-    backdropFilter: 'blur(8px)',
+    backdropFilter: 'blur(10px)',
     pointerEvents: 'auto',
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
+    boxShadow: '0 4px 25px rgba(0, 0, 0, 0.6)',
     transition: 'all 0.3s'
   },
   leftInfo: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '2px'
+    gap: '3px'
   },
   deptBadge: {
     fontSize: '10px',
     fontWeight: '800',
     letterSpacing: '1px'
+  },
+  lockdownTag: {
+    fontSize: '9px',
+    fontWeight: '800',
+    color: '#EF4444',
+    background: 'rgba(239, 68, 68, 0.15)',
+    border: '1px solid #EF4444',
+    borderRadius: '4px',
+    padding: '1px 5px',
+    letterSpacing: '0.5px'
   },
   sectorTitle: {
     fontSize: '14px',
@@ -574,34 +703,58 @@ const styles = {
   monitorTicker: {
     fontSize: '11px',
     color: '#CBD5E1',
-    fontFamily: '"Fira Code", monospace'
+    fontFamily: '"Fira Code", monospace',
+    maxWidth: '480px',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap'
   },
   centerMeters: {
     display: 'flex',
     alignItems: 'center',
-    gap: '16px'
+    gap: '14px'
   },
   examTimerCard: {
     background: '#090E21',
     border: '1px solid',
     borderRadius: '6px',
-    padding: '6px 12px',
+    padding: '6px 10px',
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
-    gap: '8px',
-    fontSize: '11px',
-    fontWeight: 'bold'
+    gap: '2px',
+    minWidth: '85px'
   },
   timerDigits: {
     fontSize: '16px',
     fontFamily: '"Fira Code", monospace',
     fontWeight: '900'
   },
+  storyAttendanceCard: {
+    background: '#090E21',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    borderRadius: '6px',
+    padding: '6px 10px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '2px',
+    minWidth: '150px'
+  },
+  storyAttendanceDetail: {
+    fontSize: '9px',
+    color: '#94A3B8',
+    fontFamily: '"Fira Code", monospace',
+    letterSpacing: '0.3px',
+    maxWidth: '180px',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
+  },
   attendanceBox: {
-    width: '140px'
+    width: '120px'
   },
   energyBox: {
-    width: '130px'
+    width: '120px'
   },
   meterHeader: {
     display: 'flex',
@@ -623,7 +776,7 @@ const styles = {
   rightMetrics: {
     display: 'flex',
     alignItems: 'center',
-    gap: '14px',
+    gap: '12px',
     background: '#090E21',
     border: '1px solid rgba(255, 255, 255, 0.1)',
     borderRadius: '6px',
@@ -639,38 +792,64 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
+    gap: '12px',
     pointerEvents: 'none'
   },
-  rulesPanel: {
-    background: 'rgba(15, 23, 42, 0.75)',
+  realityStatusPanel: {
+    background: 'rgba(15, 23, 42, 0.88)',
     border: '1.5px solid',
     borderRadius: '8px',
-    padding: '12px 16px',
-    width: '320px',
+    padding: '10px 14px',
+    minWidth: '310px',
     pointerEvents: 'auto',
     fontFamily: '"Fira Code", monospace',
     backdropFilter: 'blur(12px)',
     transition: 'all 0.3s'
   },
-  rulesHeader: {
+  realityHeader: {
     display: 'flex',
     justifyContent: 'space-between',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.15)',
+    alignItems: 'center',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
     paddingBottom: '4px',
     marginBottom: '8px'
   },
-  rulesTitle: {
+  realityTitle: {
     fontSize: '11px',
     fontWeight: 'bold',
     letterSpacing: '1px'
   },
-  rulesLive: {
-    color: '#4ADE80',
-    fontSize: '10px'
+  devToggleBtn: {
+    background: 'rgba(255, 255, 255, 0.08)',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+    color: '#94A3B8',
+    borderRadius: '4px',
+    padding: '2px 6px',
+    fontSize: '9px',
+    cursor: 'pointer',
+    fontWeight: 'bold'
   },
-  rulesCode: {
-    fontSize: '11px',
-    lineHeight: '1.8'
+  mechanicPillsRow: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '6px'
+  },
+  statusBadge: {
+    background: 'rgba(15, 23, 42, 0.7)',
+    border: '1px solid',
+    borderRadius: '4px',
+    padding: '3px 7px',
+    fontSize: '10px',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px'
+  },
+  rawDevRules: {
+    fontSize: '10px',
+    lineHeight: '1.7'
   },
   codeLine: {
     display: 'flex',
@@ -684,7 +863,7 @@ const styles = {
     background: 'rgba(15, 23, 42, 0.8)',
     border: '1px solid',
     borderRadius: '4px',
-    padding: '1px 6px',
+    padding: '1px 5px',
     fontSize: '10px',
     cursor: 'pointer',
     fontFamily: 'inherit',
@@ -693,11 +872,11 @@ const styles = {
   hotkeysBar: {
     display: 'flex',
     alignItems: 'center',
-    gap: '10px',
-    background: 'rgba(15, 23, 42, 0.75)',
+    gap: '8px',
+    background: 'rgba(15, 23, 42, 0.88)',
     border: '1.5px solid',
     borderRadius: '8px',
-    padding: '8px 14px',
+    padding: '8px 12px',
     backdropFilter: 'blur(12px)',
     pointerEvents: 'auto',
     transition: 'all 0.3s'
@@ -705,7 +884,7 @@ const styles = {
   hotkeyItem: {
     display: 'flex',
     alignItems: 'center',
-    gap: '6px',
+    gap: '5px',
     fontSize: '11px',
     color: '#CBD5E1'
   },
@@ -713,7 +892,7 @@ const styles = {
     background: '#1E293B',
     border: '1px solid rgba(0, 229, 255, 0.4)',
     borderRadius: '4px',
-    padding: '2px 6px',
+    padding: '2px 5px',
     color: '#00E5FF',
     fontWeight: 'bold',
     fontSize: '10px'
@@ -723,7 +902,7 @@ const styles = {
     border: '1px solid rgba(255, 255, 255, 0.2)',
     borderRadius: '4px',
     color: '#E2E8F0',
-    padding: '3px 8px',
+    padding: '3px 7px',
     cursor: 'pointer',
     fontSize: '11px',
     display: 'flex',
@@ -736,19 +915,16 @@ const styles = {
     border: '1px solid #FF9E3D',
     borderRadius: '4px',
     color: '#FF9E3D',
-    padding: '3px 8px',
+    padding: '3px 7px',
     cursor: 'pointer',
     fontSize: '11px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '4px',
     fontFamily: 'inherit'
   },
   guideBtn: {
     background: 'rgba(15, 23, 42, 0.75)',
     border: '1px solid',
     borderRadius: '4px',
-    padding: '3px 8px',
+    padding: '3px 7px',
     cursor: 'pointer',
     fontSize: '11px',
     display: 'flex',
@@ -772,16 +948,56 @@ const styles = {
     alignItems: 'center',
     gap: '4px'
   },
-  activeCodeLine: {
-    background: 'rgba(255, 255, 255, 0.08)',
-    borderRadius: '4px',
-    padding: '2px 4px'
+  memoryToast: {
+    position: 'absolute',
+    top: '88px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    zIndex: 95,
+    pointerEvents: 'none',
+    width: '90%',
+    maxWidth: '560px'
   },
-  activeRuleTag: {
-    fontSize: '9px',
-    fontWeight: '800',
-    letterSpacing: '0.5px',
-    marginLeft: '4px'
+  memoryToastCard: {
+    background: 'rgba(15, 23, 42, 0.94)',
+    border: '1.5px solid #FFE14D',
+    borderRadius: '8px',
+    padding: '12px 18px',
+    backdropFilter: 'blur(10px)',
+    boxShadow: '0 0 30px rgba(255, 225, 77, 0.45)',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '6px'
+  },
+  memoryToastHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  memoryToastTitle: {
+    fontSize: '12px',
+    fontWeight: '900',
+    color: '#FFE14D',
+    letterSpacing: '0.8px',
+    fontFamily: 'Outfit, sans-serif'
+  },
+  memoryToastSource: {
+    fontSize: '10px',
+    color: '#94A3B8',
+    fontFamily: '"Fira Code", monospace'
+  },
+  memoryToastSnippet: {
+    fontSize: '12px',
+    color: '#E2E8F0',
+    lineHeight: '1.5',
+    fontStyle: 'italic'
+  },
+  memoryToastFooter: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    fontSize: '10px',
+    marginTop: '2px'
   },
   adminBanner: {
     position: 'absolute',

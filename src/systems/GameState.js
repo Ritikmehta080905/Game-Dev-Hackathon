@@ -41,6 +41,8 @@ class GameStateManager {
     this.timeEchoFrames = [];
     this.timeEchoTimeout = null;
     this.activeStoryModal = null;
+    this.latestMemory = null;
+    this.memoryTimeout = null;
     this.discoveredLogs = new Set();
     this.levelPuzzles = {
       1: { powerRestored: false },
@@ -320,9 +322,25 @@ class GameStateManager {
     this.startLevel(this.currentLevel);
   }
 
-  collectFragment() {
+  collectFragment(fragmentData = null) {
     this.fragmentsCollected++;
     this.score += 100;
+    this.latestMemory = fragmentData || {
+      title: `MEMORY FRAGMENT RECOVERED (${this.fragmentsCollected}/3)`,
+      source: 'Student Encrypted Pen Drive',
+      snippet: 'Encrypted student memory sector decoded into campus archive (+100 PTS)'
+    };
+    this.notify();
+
+    if (this.memoryTimeout) clearTimeout(this.memoryTimeout);
+    this.memoryTimeout = setTimeout(() => {
+      this.latestMemory = null;
+      this.notify();
+    }, 5500);
+  }
+
+  clearMemoryToast() {
+    this.latestMemory = null;
     this.notify();
   }
 

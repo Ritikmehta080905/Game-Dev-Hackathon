@@ -87,15 +87,15 @@ const SECTOR_BRIEFINGS = {
     anomalyDesc: 'The simulation root core is protected by a multi-physics interlock. To save the students and Anya Sharma, all four reality mechanics must be coordinated before the campus collapse!',
     objectiveTitle: '🎯 YOUR OBJECTIVE & HOW TO PLAY:',
     steps: [
-      '1. Step onto the pink Pressure Plate and press [E] (Time Echo) to spawn your Student Ghost Clone to hold the interlock door open!',
+      '1. Step onto the pink Pressure Plate and press [C] (Time Echo) to spawn your Student Ghost Clone to hold the interlock door open!',
       '2. Use Time Freeze [F] to board the rapid server lift across the abyss.',
-      '3. Use Dimension Switch [Q] to navigate the phased cyber-bridge, and Gravity Flip [G] to reach the ceiling Quantum Root Console to execute the Master Reboot!'
+      '3. Use Dimension Switch [Q] to navigate the phased cyber-bridge, and Gravity Flip [G] to reach the ceiling Quantum Root Console [E] to execute the Master Reboot!'
     ],
     unlockedKey: {
-      key: 'E (CLONE) + F + Q + G',
+      key: 'C (CLONE) + F + Q + G',
       action: 'MASTER ALL MECHANICS',
-      cost: 'E=40 | F=35 | Q=15 | G=20',
-      desc: 'Spawn your ghost clone on the pressure plate with [E], then combine stasis, phasing, and gravity!'
+      cost: 'C=40 | F=35 | Q=15 | G=20',
+      desc: 'Spawn your ghost clone on the pressure plate with [C], then combine stasis [F], phasing [Q], and gravity [G]!'
     }
   }
 };
