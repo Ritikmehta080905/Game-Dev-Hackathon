@@ -1,4 +1,4 @@
-// ATHARVA.EXE — useKeyboard Hook (Teammate 1: Input & Player Controller)
+// ATHARVA.EXE — useKeyboard Hook (Teammate 1: Input & Controls)
 
 import { useState, useEffect } from 'react';
 
@@ -10,12 +10,14 @@ export function useKeyboard() {
     right: false,
     jump: false,
     flip: false,
+    freeze: false,
+    dimension: false,
+    interact: false,
     reset: false
   });
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // Prevent scrolling when pressing Space or Arrow keys
       if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
         e.preventDefault();
       }
@@ -42,6 +44,15 @@ export function useKeyboard() {
           break;
         case 'KeyG':
           setKeys((k) => ({ ...k, flip: true }));
+          break;
+        case 'KeyF':
+          setKeys((k) => ({ ...k, freeze: true }));
+          break;
+        case 'KeyQ':
+          setKeys((k) => ({ ...k, dimension: true }));
+          break;
+        case 'KeyE':
+          setKeys((k) => ({ ...k, interact: true }));
           break;
         case 'KeyR':
           setKeys((k) => ({ ...k, reset: true }));
@@ -74,6 +85,15 @@ export function useKeyboard() {
           break;
         case 'KeyG':
           setKeys((k) => ({ ...k, flip: false }));
+          break;
+        case 'KeyF':
+          setKeys((k) => ({ ...k, freeze: false }));
+          break;
+        case 'KeyQ':
+          setKeys((k) => ({ ...k, dimension: false }));
+          break;
+        case 'KeyE':
+          setKeys((k) => ({ ...k, interact: false }));
           break;
         case 'KeyR':
           setKeys((k) => ({ ...k, reset: false }));

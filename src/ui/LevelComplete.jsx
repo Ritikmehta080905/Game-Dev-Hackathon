@@ -1,4 +1,4 @@
-// ATHARVA.EXE — LevelComplete: Sector Reboot Summary & Scoring
+// ATHARVA.EXE — LevelComplete: Sector Reboot Summary & Progression
 
 import React from 'react';
 import { GameState } from '../systems/GameState';
@@ -6,6 +6,7 @@ import { Sound } from '../systems/AudioSystem';
 
 export default function LevelComplete() {
   const data = GameState.levelCompletedData || {
+    levelId: 1,
     score: 350,
     timeBonus: 40,
     fragments: 3,
@@ -14,10 +15,19 @@ export default function LevelComplete() {
     stars: 3
   };
 
+  const isFinalLevel = data.levelId >= 4;
+
   const handleNext = () => {
     Sound.playTone(800, 'square', 0.1, 0.12);
-    // Restart or advance level
-    GameState.startLevel(1);
+    if (isFinalLevel) {
+      GameState.setScreen('MENU');
+    } else {
+      GameState.startLevel(data.levelId + 1);
+    }
+  };
+
+  const handleReplay = () => {
+    GameState.startLevel(data.levelId);
   };
 
   const handleMenu = () => {
@@ -32,8 +42,12 @@ export default function LevelComplete() {
   return (
     <div style={styles.overlay}>
       <div style={styles.card}>
-        <div style={styles.tag}>CAMPUS SIMULATION RESTORED</div>
-        <h2 style={styles.title}>SECTOR 01 REBOOTED!</h2>
+        <div style={styles.tag}>
+          {isFinalLevel ? '🎉 CENTRAL MAINFRAME REBOOT COMPLETE' : 'CAMPUS SIMULATION RESTORED'}
+        </div>
+        <h2 style={styles.title}>
+          {isFinalLevel ? 'ALL 4 SECTORS RESTORED!' : `SECTOR 0${data.levelId} REBOOTED!`}
+        </h2>
         <div style={styles.stars}>{starDisplay}</div>
 
         <div style={styles.statsBox}>
@@ -58,8 +72,13 @@ export default function LevelComplete() {
 
         <div style={styles.btnGroup}>
           <button style={styles.primaryBtn} onClick={handleNext}>
-            ▶  REPLAY SECTOR (MASTER RUN)
+            {isFinalLevel ? '🏆  FINISH & RETURN TO MENU' : `▶  PROCEED TO SECTOR 0${data.levelId + 1}`}
           </button>
+          {!isFinalLevel && (
+            <button style={styles.secondaryBtn} onClick={handleReplay}>
+              ↺  REPLAY SECTOR (MASTER RUN)
+            </button>
+          )}
           <button style={styles.secondaryBtn} onClick={handleMenu}>
             ☰  MAIN MENU
           </button>
@@ -101,7 +120,7 @@ const styles = {
   },
   title: {
     color: '#00E5FF',
-    fontSize: '32px',
+    fontSize: '30px',
     fontFamily: 'Outfit, sans-serif',
     fontWeight: '900',
     margin: '0 0 10px 0'

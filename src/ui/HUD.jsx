@@ -1,8 +1,15 @@
-// ATHARVA.EXE — HUD: In-Game Status & Reality Debugger (Teammate 3: UI/UX)
+// ATHARVA.EXE — HUD: 4-Level Status & Reality Debugger (Teammate 3: UI/UX)
 
 import React, { useState, useEffect } from 'react';
 import { GameState } from '../systems/GameState';
 import { Sound } from '../systems/AudioSystem';
+
+const LEVEL_NAMES = {
+  1: { name: 'THE BROKEN GATE', hint: 'Traverse ceiling corridor to Reboot Terminal' },
+  2: { name: 'THE INFINITE LIBRARY', hint: 'Freeze fast moving shelf with [F] to cross void' },
+  3: { name: 'THE FRACTURED LAB', hint: 'Phase through walls & cross glitch bridge with [Q]' },
+  4: { name: 'THE CORE REBOOT', hint: 'Combine [G], [F], [Q] & plate to reach Root Terminal' }
+};
 
 export default function HUD() {
   const [state, setState] = useState({ ...GameState });
@@ -13,16 +20,18 @@ export default function HUD() {
     });
   }, []);
 
+  const lvlInfo = LEVEL_NAMES[state.currentLevel] || LEVEL_NAMES[1];
   const gravityVector = state.gravityInverted ? '[0, +9.81, 0]' : '[0, -9.81, 0]';
-  const gravityStatus = state.gravityInverted ? 'CEILING (INVERTED)' : 'FLOOR (NORMAL)';
+  const timeStatus = state.timeFrozen ? 'FROZEN (3s)' : (state.freezeCooldown > 0 ? `COOLDOWN (${state.freezeCooldown}s)` : 'RUNNING');
+  const dimColor = state.activeDimension === 'REAL' ? '#00E5FF' : '#FF2E93';
 
   return (
     <div style={styles.overlay}>
       {/* Top Campus Status Bar */}
       <div style={styles.topBar}>
         <div style={styles.group}>
-          <span style={styles.tagCyan}>SECTOR 0{state.currentLevel}: THE BROKEN GATE</span>
-          <span style={styles.textDim}>OBJECTIVE: Traverse ceiling fissure to Reboot Terminal</span>
+          <span style={styles.tagCyan}>SECTOR 0{state.currentLevel}: {lvlInfo.name}</span>
+          <span style={styles.textDim}>{lvlInfo.hint}</span>
         </div>
 
         <div style={styles.group}>
@@ -51,10 +60,10 @@ export default function HUD() {
               <span style={styles.varName}>GRAVITY</span> = <span style={{ color: state.gravityInverted ? '#FF2E93' : '#00E5FF', fontWeight: 'bold' }}>{gravityVector}</span>;
             </div>
             <div>
-              <span style={styles.varName}>TIME</span> = <span style={styles.valYellow}>RUNNING</span>;
+              <span style={styles.varName}>TIME</span> = <span style={{ color: state.timeFrozen ? '#00E5FF' : (state.freezeCooldown > 0 ? '#FF9E3D' : '#FFE14D'), fontWeight: 'bold' }}>{timeStatus}</span>;
             </div>
             <div>
-              <span style={styles.varName}>DIMENSION</span> = <span style={styles.valCyan}>"REAL"</span>;
+              <span style={styles.varName}>DIMENSION</span> = <span style={{ color: dimColor, fontWeight: 'bold' }}>"{state.activeDimension}"</span>;
             </div>
             <div>
               <span style={styles.varName}>STATUS</span> = <span style={styles.valGreen}>CALIBRATED</span>;
@@ -79,6 +88,28 @@ export default function HUD() {
               }}
             >
               <kbd style={styles.kbd}>G</kbd> Flip Gravity
+            </button>
+          </div>
+          <div style={styles.keyItem}>
+            <button
+              style={{ ...styles.btn, borderColor: state.timeFrozen ? '#00E5FF' : '#7B4BFF' }}
+              onClick={() => {
+                GameState.triggerTimeFreeze();
+                Sound.playTone(880, 'sine', 0.25, 0.2);
+              }}
+            >
+              <kbd style={styles.kbd}>F</kbd> Freeze Time
+            </button>
+          </div>
+          <div style={styles.keyItem}>
+            <button
+              style={{ ...styles.btn, borderColor: dimColor }}
+              onClick={() => {
+                GameState.toggleDimension();
+                Sound.playTone(350, 'sawtooth', 0.1, 0.15);
+              }}
+            >
+              <kbd style={styles.kbd}>Q</kbd> Dimension
             </button>
           </div>
           <div style={styles.keyItem}>
@@ -169,7 +200,7 @@ const styles = {
     border: '1px solid #7B4BFF',
     borderRadius: '8px',
     padding: '12px 16px',
-    width: '280px',
+    width: '300px',
     boxShadow: '0 0 20px rgba(123, 75, 255, 0.25)',
     pointerEvents: 'auto'
   },
@@ -197,20 +228,13 @@ const styles = {
   varName: {
     color: '#E2E8F0'
   },
-  valYellow: {
-    color: '#FFE14D'
-  },
-  valCyan: {
-    color: '#00E5FF',
-    fontWeight: 'bold'
-  },
   valGreen: {
     color: '#4ADE80'
   },
   controlsBar: {
     display: 'flex',
     alignItems: 'center',
-    gap: '14px',
+    gap: '12px',
     background: 'rgba(11, 16, 38, 0.88)',
     border: '1px solid rgba(0, 229, 255, 0.25)',
     borderRadius: '8px',
@@ -222,7 +246,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '6px',
-    fontSize: '13px',
+    fontSize: '12px',
     color: '#CBD5E1'
   },
   kbd: {
@@ -239,7 +263,7 @@ const styles = {
     border: '1px solid #00E5FF',
     borderRadius: '4px',
     color: '#E2E8F0',
-    padding: '4px 10px',
+    padding: '4px 8px',
     cursor: 'pointer',
     fontSize: '12px',
     display: 'flex',

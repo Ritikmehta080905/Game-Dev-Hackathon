@@ -1,18 +1,26 @@
-// ATHARVA.EXE — MainMenu: Cyber Campus Gateway
+// ATHARVA.EXE — MainMenu: 4-Sector Campus Gateway & Sector Selector
 
 import React, { useState } from 'react';
 import { GameState } from '../systems/GameState';
 import { Sound } from '../systems/AudioSystem';
 
+const SECTORS = [
+  { id: 1, name: 'SECTOR 01: THE BROKEN GATE', mechanic: 'GRAVITY FLIP [G]', desc: 'Campus entrance courtyard, fissure gap, and ceiling ID route' },
+  { id: 2, name: 'SECTOR 02: THE INFINITE LIBRARY', mechanic: 'TIME FREEZE [F]', desc: 'Floating book stacks, sweeping laser scanners, and moving shelf' },
+  { id: 3, name: 'SECTOR 03: THE FRACTURED LAB', mechanic: 'DIMENSION SWITCH [Q]', desc: 'Phased reality walls, glitch void bridge, and laser gate' },
+  { id: 4, name: 'SECTOR 04: THE CORE REBOOT', mechanic: 'MASTER ALL MECHANICS', desc: 'Pressure plate, moving server elevator, glitch bridge, and Root Terminal' }
+];
+
 export default function MainMenu() {
   const [showHowToPlay, setShowHowToPlay] = useState(false);
+  const [showLevelSelect, setShowLevelSelect] = useState(false);
   const [isMuted, setIsMuted] = useState(Sound.muted);
 
-  const handleStartGame = () => {
+  const handleStartGame = (lvl = 1) => {
     Sound.init();
     Sound.startDrone();
     Sound.playTone(700, 'square', 0.1, 0.12);
-    GameState.startLevel(1);
+    GameState.startLevel(lvl);
   };
 
   const toggleSound = () => {
@@ -30,8 +38,11 @@ export default function MainMenu() {
 
         {/* Action Buttons */}
         <div style={styles.btnGroup}>
-          <button style={styles.primaryBtn} onClick={handleStartGame}>
-            ▶  REBOOT SIMULATION (NEW GAME)
+          <button style={styles.primaryBtn} onClick={() => handleStartGame(1)}>
+            ▶  START SIMULATION (SECTOR 01)
+          </button>
+          <button style={styles.secondaryBtn} onClick={() => setShowLevelSelect(true)}>
+            ☰  SECTOR SELECT (ALL 4 LEVELS)
           </button>
           <button style={styles.secondaryBtn} onClick={() => setShowHowToPlay(true)}>
             ❓  HOW TO PLAY &amp; CONTROLS
@@ -42,9 +53,38 @@ export default function MainMenu() {
         </div>
 
         <div style={styles.footerText}>
-          SECTOR 01: THE BROKEN GATE AVAILABLE • RUNNING AT 60 FPS
+          4 DISTINCT 3D CAMPUS LEVELS  •  60 FPS TARGET
         </div>
       </div>
+
+      {/* Level Select Modal */}
+      {showLevelSelect && (
+        <div style={styles.modalBackdrop} onClick={() => setShowLevelSelect(false)}>
+          <div style={styles.levelModal} onClick={(e) => e.stopPropagation()}>
+            <h2 style={styles.modalTitle}>⚡ SELECT CAMPUS SECTOR</h2>
+            <div style={styles.levelGrid}>
+              {SECTORS.map((s) => (
+                <div
+                  key={s.id}
+                  style={styles.levelCard}
+                  onClick={() => {
+                    setShowLevelSelect(false);
+                    handleStartGame(s.id);
+                  }}
+                >
+                  <div style={styles.cardHeader}>{s.name}</div>
+                  <div style={styles.cardMech}>{s.mechanic}</div>
+                  <div style={styles.cardDesc}>{s.desc}</div>
+                  <button style={styles.cardBtn}>LAUNCH SECTOR ▶</button>
+                </div>
+              ))}
+            </div>
+            <button style={styles.closeBtn} onClick={() => setShowLevelSelect(false)}>
+              CLOSE
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* How to Play Modal */}
       {showHowToPlay && (
@@ -65,16 +105,20 @@ export default function MainMenu() {
                 <span style={styles.desc}>Flip Gravity (walk upside down on ceiling routes)</span>
               </div>
               <div style={styles.controlRow}>
+                <span style={styles.key}>[F] Key</span>
+                <span style={styles.desc}>Freeze Time (pause moving lasers &amp; platforms for 3s)</span>
+              </div>
+              <div style={styles.controlRow}>
+                <span style={styles.key}>[Q] Key</span>
+                <span style={styles.desc}>Dimension Switch (toggle between Real &amp; Glitch layers)</span>
+              </div>
+              <div style={styles.controlRow}>
                 <span style={styles.key}>Mouse Drag</span>
                 <span style={styles.desc}>Orbit camera 360° around player</span>
               </div>
               <div style={styles.controlRow}>
                 <span style={styles.key}>[R] Key</span>
                 <span style={styles.desc}>Instant reset to latest checkpoint</span>
-              </div>
-              <div style={styles.controlRow}>
-                <span style={styles.key}>Esc</span>
-                <span style={styles.desc}>Pause game and open menu</span>
               </div>
             </div>
             <button style={styles.closeBtn} onClick={() => setShowHowToPlay(false)}>
@@ -187,6 +231,58 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 100
+  },
+  levelModal: {
+    background: '#0B1026',
+    border: '1.5px solid #00E5FF',
+    borderRadius: '8px',
+    padding: '28px 32px',
+    maxWidth: '780px',
+    width: '92%'
+  },
+  levelGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+    gap: '14px',
+    marginBottom: '20px'
+  },
+  levelCard: {
+    background: '#0F172A',
+    border: '1px solid #7B4BFF',
+    borderRadius: '6px',
+    padding: '16px',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+    textAlign: 'left'
+  },
+  cardHeader: {
+    color: '#00E5FF',
+    fontSize: '14px',
+    fontWeight: 'bold',
+    marginBottom: '4px'
+  },
+  cardMech: {
+    color: '#FFE14D',
+    fontSize: '11px',
+    fontWeight: 'bold',
+    marginBottom: '8px'
+  },
+  cardDesc: {
+    color: '#94A3B8',
+    fontSize: '12px',
+    lineHeight: '1.4',
+    marginBottom: '12px'
+  },
+  cardBtn: {
+    background: '#1E293B',
+    color: '#00E5FF',
+    border: '1px solid #00E5FF',
+    borderRadius: '4px',
+    padding: '6px 12px',
+    fontSize: '11px',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    width: '100%'
   },
   modalContent: {
     background: '#0B1026',

@@ -1,4 +1,4 @@
-// ATHARVA.EXE — Player: 3D Third-Person Controller & Physics (Teammate 1: Character & Controls)
+// ATHARVA.EXE — Player: 3D Controller & Reality Mechanics (Teammate 1: Character & Controls)
 
 import React, { useRef, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
@@ -15,12 +15,13 @@ export default function Player({ playerPosRef, gravityInverted }) {
 
   const canJumpRef = useRef(true);
   const flipPressedRef = useRef(false);
+  const freezePressedRef = useRef(false);
+  const dimensionPressedRef = useRef(false);
   const wasGroundedRef = useRef(false);
 
-  // Target rotation for upright vs upside-down orientation
   const targetRotationZ = gravityInverted ? Math.PI : 0;
 
-  // Listen for Gravity Flip [G]
+  // 1. Listen for Gravity Flip [G]
   useEffect(() => {
     if (keys.flip && !flipPressedRef.current) {
       flipPressedRef.current = true;
@@ -31,12 +32,43 @@ export default function Player({ playerPosRef, gravityInverted }) {
     }
   }, [keys.flip]);
 
-  // Listen for Manual Reset [R]
+  // 2. Listen for Time Freeze [F]
+  useEffect(() => {
+    if (keys.freeze && !freezePressedRef.current) {
+      freezePressedRef.current = true;
+      const triggered = GameState.triggerTimeFreeze();
+      if (triggered) {
+        Sound.playTone(900, 'sine', 0.3, 0.2);
+        setTimeout(() => Sound.playTone(600, 'sine', 0.3, 0.15), 100);
+      }
+    } else if (!keys.freeze) {
+      freezePressedRef.current = false;
+    }
+  }, [keys.freeze]);
+
+  // 3. Listen for Dimension Switch [Q]
+  useEffect(() => {
+    if (keys.dimension && !dimensionPressedRef.current) {
+      dimensionPressedRef.current = true;
+      GameState.toggleDimension();
+      Sound.playTone(350, 'sawtooth', 0.12, 0.15);
+    } else if (!keys.dimension) {
+      dimensionPressedRef.current = false;
+    }
+  }, [keys.dimension]);
+
+  // 4. Listen for Manual Reset [R] and Hazard Hit Events
   useEffect(() => {
     if (keys.reset) {
       respawnPlayer();
     }
   }, [keys.reset]);
+
+  useEffect(() => {
+    const handleHit = () => respawnPlayer();
+    window.addEventListener('player-respawn', handleHit);
+    return () => window.removeEventListener('player-respawn', handleHit);
+  }, []);
 
   const respawnPlayer = () => {
     if (!rbRef.current) return;
@@ -54,18 +86,17 @@ export default function Player({ playerPosRef, gravityInverted }) {
     const translation = rbRef.current.translation();
     const linvel = rbRef.current.linvel();
 
-    // Update shared player position reference for collectibles & triggers
     if (playerPosRef) {
       playerPosRef.current = translation;
     }
 
-    // 1. Fall Detection Boundary (Triggers respawn at latest checkpoint)
+    // Fall Detection Boundary
     if (translation.y < -15 || translation.y > 35) {
       respawnPlayer();
       return;
     }
 
-    // 2. Camera-Relative Movement
+    // Movement
     const moveSpeed = 8.5;
     const forward = (keys.forward ? 1 : 0) - (keys.backward ? 1 : 0);
     const side = (keys.right ? 1 : 0) - (keys.left ? 1 : 0);
@@ -93,13 +124,11 @@ export default function Player({ playerPosRef, gravityInverted }) {
         true
       );
 
-      // Face movement direction
       if (visualRef.current) {
         const angle = Math.atan2(moveDir.x, moveDir.z);
         visualRef.current.rotation.y = angle;
       }
     } else {
-      // Damping
       rbRef.current.setLinvel(
         {
           x: linvel.x * 0.82,
@@ -110,7 +139,7 @@ export default function Player({ playerPosRef, gravityInverted }) {
       );
     }
 
-    // 3. Ground / Ceiling Contact & Jumping
+    // Ground / Ceiling Contact & Jump
     const isGrounded = Math.abs(linvel.y) < 0.25;
 
     if (isGrounded && !wasGroundedRef.current) {
@@ -129,7 +158,7 @@ export default function Player({ playerPosRef, gravityInverted }) {
       }, 350);
     }
 
-    // 4. Smooth Inverted Rotation on Character Mesh
+    // Smooth Inverted Rotation
     if (visualRef.current) {
       visualRef.current.rotation.z = THREE.MathUtils.lerp(
         visualRef.current.rotation.z,
@@ -138,7 +167,7 @@ export default function Player({ playerPosRef, gravityInverted }) {
       );
     }
 
-    // 5. Third-Person Orbit Camera Follow
+    // Camera follow
     if (state.controls) {
       state.controls.target.lerp(
         new THREE.Vector3(translation.x, translation.y + 1, translation.z),
@@ -159,15 +188,12 @@ export default function Player({ playerPosRef, gravityInverted }) {
     >
       <CapsuleCollider args={[0.5, 0.4]} />
 
-      {/* Visual Placeholder Character: Student Debugger */}
       <group ref={visualRef}>
-        {/* Main Body / Hoodie */}
         <mesh castShadow position={[0, 0, 0]}>
           <capsuleGeometry args={[0.4, 0.7, 8, 16]} />
           <meshStandardMaterial color="#1E1B4B" roughness={0.6} />
         </mesh>
 
-        {/* Cyber Visor (Cyan Glow) */}
         <mesh position={[0, 0.35, 0.3]}>
           <boxGeometry args={[0.5, 0.18, 0.25]} />
           <meshStandardMaterial
@@ -178,13 +204,11 @@ export default function Player({ playerPosRef, gravityInverted }) {
           />
         </mesh>
 
-        {/* Campus ID Lanyard */}
         <mesh position={[0, -0.05, 0.38]}>
           <boxGeometry args={[0.2, 0.25, 0.05]} />
           <meshStandardMaterial color="#FFE14D" roughness={0.4} />
         </mesh>
 
-        {/* Tech Boots (Orange Accent) */}
         <mesh position={[-0.18, -0.7, 0.05]}>
           <boxGeometry args={[0.18, 0.2, 0.3]} />
           <meshStandardMaterial color="#FF9E3D" roughness={0.5} />
