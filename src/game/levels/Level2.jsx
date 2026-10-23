@@ -233,18 +233,20 @@ export default function Level2({ playerPosRef }) {
       {/* Canteen Coffee Cup on Midway Balcony */}
       <CoffeeCup position={[-3.5, 5.8, -29.0]} id="l2_coffee_1" playerPosRef={playerPosRef} />
 
-      {/* STASIS SHUTTER OVERRIDE CONSOLE (STAGE 2 PUZZLE) */}
+      {/* ARCHIVE DATA RELAY CONSOLE (MIDWAY BONUS LORE & SYSTEM SYNC) */}
       <StoryTerminal
-        position={[3.6, 5.2, -29.5]}
+        position={[3.8, 5.2, -29.5]}
         rotation={[0, -Math.PI / 2, 0]}
-        label="STASIS SHUTTER OVERRIDE"
-        promptText={archiveDoorUnlocked ? '✔ SHUTTER DISENGAGED' : '[E] CALIBRATE STASIS SHUTTER'}
+        label="ARCHIVE DATA RELAY"
+        promptText={archiveDoorUnlocked ? '✔ MEZZANINE LOGS ACCESSED' : '[E] ACCESS ARCHIVE DATA LOGS (+100 PTS)'}
         accentColor={archiveDoorUnlocked ? '#10B981' : '#FFE14D'}
         isActivated={archiveDoorUnlocked}
+        triggerRadius={5.0}
         playerPosRef={playerPosRef}
         onActivate={() => {
           if (!archiveDoorUnlocked) {
             GameState.setLevelPuzzle(2, 'archiveDoorUnlocked', true);
+            GameState.addScore(100);
             Sound.playPowerRestored();
             Sound.playPuzzleSuccess();
           }
@@ -252,70 +254,102 @@ export default function Level2({ playerPosRef }) {
         modalData={{
           id: 'l2_shutter_console',
           type: 'terminal',
-          badge: 'STASIS CALIBRATION',
-          badgeColor: archiveDoorUnlocked ? '#10B981' : '#FFE14D',
-          title: archiveDoorUnlocked ? 'UPPER ARCHIVE SHUTTER // OPEN' : 'UPPER ARCHIVE SHUTTER // LOCKED',
+          badge: 'DEWEY ARCHIVE RELAY',
+          badgeColor: '#10B981',
+          title: 'UPPER ARCHIVES // MEZZANINE ACCESS GRANTED',
           subtitle: 'STASIS CALIBRATION CONSOLE #LIB-02',
           timestamp: '19:42:55 IST',
           paragraphs: [
-            archiveDoorUnlocked
-              ? '✔ STASIS SECURITY SHUTTER DISENGAGED. Upper vertical shelf lift is now unblocked!'
-              : '⚡ SECURITY INTERLOCK ACTIVE: Heavy archive security grille blocks access to the vertical lift.',
-            'Calibrating this stasis relay opens the motorized shutter above.',
-            archiveDoorUnlocked
-              ? 'Board the vertical shelf lift to reach the restricted upper study mezzanine.'
-              : 'Clicking action will synchronize the temporal stasis pins and raise the shutter!'
+            '✔ CENTRAL ARCHIVE MEZZANINE LINK ONLINE (+100 PTS).',
+            'All academic stacks and catalogue records on the elevated study deck are accessible via the grand atrium stairs directly ahead.',
+            'Chief Librarian Note: "Proceed up the grand staircase to the upper mezzanine to recover Catalogue Card #3 and inspect the Restricted Student Ledger."'
           ],
-          actionLabel: archiveDoorUnlocked ? 'PROCEED TO LIFT [E]' : 'DISENGAGE SECURITY SHUTTER [E]'
+          actionLabel: 'PROCEED UP GRAND STAIRS [E]'
         }}
       />
 
-      {/* Physical Stasis Security Shutter Mesh */}
-      <group position={[0, archiveDoorUnlocked ? 9.5 : 6.8, -33.5]}>
+      {/* Overhead Architectural Security Portal / Gantry (Non-blocking, High Overhead at y=11.5) */}
+      <group position={[0, 11.5, -33.5]}>
+        {/* Overhead Gantry Crossbeam */}
         <mesh castShadow>
-          <boxGeometry args={[7.5, 3.2, 0.2]} />
+          <boxGeometry args={[9.5, 0.6, 0.6]} />
+          <meshStandardMaterial color="#0f172a" roughness={0.4} metalness={0.7} />
+        </mesh>
+        {/* Glowing Portal Header Trim */}
+        <mesh position={[0, -0.32, 0]}>
+          <boxGeometry args={[9.2, 0.08, 0.62]} />
           <meshStandardMaterial
-            map={warningTexture}
-            color={archiveDoorUnlocked ? '#10b981' : '#ea580c'}
-            roughness={0.4}
-            metalness={0.6}
-            transparent
-            opacity={archiveDoorUnlocked ? 0.3 : 1.0}
+            color="#00E5FF"
+            emissive="#00E5FF"
+            emissiveIntensity={2.0}
           />
         </mesh>
-        {/* Shutter Warning Beacons */}
-        <mesh position={[-3.4, 1.4, 0.15]}>
-          <sphereGeometry args={[0.18, 12, 12]} />
+        {/* Gantry Warning Beacons */}
+        <mesh position={[-4.4, 0.35, 0]}>
+          <sphereGeometry args={[0.2, 12, 12]} />
           <meshStandardMaterial
-            color={archiveDoorUnlocked ? '#10B981' : '#EF4444'}
-            emissive={archiveDoorUnlocked ? '#10B981' : '#EF4444'}
+            color="#10B981"
+            emissive="#10B981"
             emissiveIntensity={2.5}
           />
         </mesh>
-        <mesh position={[3.4, 1.4, 0.15]}>
-          <sphereGeometry args={[0.18, 12, 12]} />
+        <mesh position={[4.4, 0.35, 0]}>
+          <sphereGeometry args={[0.2, 12, 12]} />
           <meshStandardMaterial
-            color={archiveDoorUnlocked ? '#10B981' : '#EF4444'}
-            emissive={archiveDoorUnlocked ? '#10B981' : '#EF4444'}
+            color="#10B981"
+            emissive="#10B981"
             emissiveIntensity={2.5}
           />
         </mesh>
       </group>
 
+      {/* Portal Vertical Architectural Columns on Sides */}
+      <mesh position={[-4.6, 8.2, -33.5]} castShadow>
+        <cylinderGeometry args={[0.25, 0.3, 6.4, 16]} />
+        <meshStandardMaterial color="#334155" roughness={0.5} metalness={0.5} />
+      </mesh>
+      <mesh position={[4.6, 8.2, -33.5]} castShadow>
+        <cylinderGeometry args={[0.25, 0.3, 6.4, 16]} />
+        <meshStandardMaterial color="#334155" roughness={0.5} metalness={0.5} />
+      </mesh>
+
       {/* ========================================================
-          5. ELEVATED UPPER STUDY MEZZANINE (UPPER DECK)
+          5. ELEVATED UPPER STUDY MEZZANINE GRAND ATRIUM STAIRS
+          Direct, seamless, wide 8.5m tiered steps connecting Balcony (y=5.2) to Mezzanine (y=9.0)
           ======================================================== */}
-      {/* Vertical Moving Shelf Lift */}
-      <MovingPlatform
-        position={[0, 6.5, -36.5]}
-        axis="y"
-        distance={4.5}
-        speed={2.2}
-        size={[5.0, 0.8, 5.0]}
-        glowColor={archiveDoorUnlocked ? '#10B981' : '#FFE14D'}
+      {/* Tier 1: Lower Grand Step (y=6.0, top surface y=6.4 — tiny 1.2m hop from Balcony!) */}
+      <CampusPlatform
+        position={[0, 6.0, -34.8]}
+        size={[8.5, 0.8, 3.4]}
+        pavementColor="#1e293b"
+        curbColor="#00E5FF"
+        accentColor="#FFE14D"
+        hasLamps={false}
+        hasGuideArrows={true}
       />
 
-      {/* Upper Study Mezzanine Platform */}
+      {/* Tier 2: Mid Grand Step (y=7.4, top surface y=7.8 — comfortable 1.4m hop to Tier 2!) */}
+      <CampusPlatform
+        position={[0, 7.4, -37.4]}
+        size={[8.5, 0.8, 3.4]}
+        pavementColor="#1e293b"
+        curbColor="#FFE14D"
+        accentColor="#10B981"
+        hasLamps={false}
+        hasGuideArrows={true}
+      />
+
+      {/* Flanking Decorative Stepped Bookstacks on Left & Right for Atmosphere */}
+      <mesh position={[-4.6, 7.2, -36.0]} castShadow>
+        <boxGeometry args={[1.2, 2.8, 4.0]} />
+        <meshStandardMaterial map={woodTexture} color="#381e0f" roughness={0.6} />
+      </mesh>
+      <mesh position={[4.6, 7.2, -36.0]} castShadow>
+        <boxGeometry args={[1.2, 2.8, 4.0]} />
+        <meshStandardMaterial map={woodTexture} color="#381e0f" roughness={0.6} />
+      </mesh>
+
+      {/* Upper Study Mezzanine Platform (y=8.6, top surface y=9.0 — direct 1.2m hop onto floor!) */}
       <CampusPlatform
         position={[0, 8.6, -44.5]}
         size={[16, 0.8, 11]}
@@ -326,8 +360,9 @@ export default function Level2({ playerPosRef }) {
         hasGuideArrows={true}
       />
 
-      {/* Mezzanine Protective Glass Balustrades */}
-      <GlassBalustrade position={[0, 9.5, -39.1]} length={15.8} rotation={[0, 0, 0]} glassTexture={glassTexture} />
+      {/* Mezzanine Protective Glass Balustrades (Wide Open 8m Central Entrance) */}
+      <GlassBalustrade position={[-5.8, 9.5, -39.1]} length={4.4} rotation={[0, 0, 0]} glassTexture={glassTexture} />
+      <GlassBalustrade position={[5.8, 9.5, -39.1]} length={4.4} rotation={[0, 0, 0]} glassTexture={glassTexture} />
       <GlassBalustrade position={[-7.8, 9.5, -44.5]} length={10.8} rotation={[0, Math.PI / 2, 0]} glassTexture={glassTexture} />
       <GlassBalustrade position={[7.8, 9.5, -44.5]} length={10.8} rotation={[0, Math.PI / 2, 0]} glassTexture={glassTexture} />
 
@@ -365,12 +400,8 @@ export default function Level2({ playerPosRef }) {
       <Terminal
         position={[0, 9.1, -48.5]}
         playerPosRef={playerPosRef}
-        isLocked={!archiveDoorUnlocked || fragmentsCount < 3}
-        lockMessage={
-          !archiveDoorUnlocked
-            ? '⚠ SHUTTER LOCKED // CALIBRATE CONSOLE ON BALCONY'
-            : `⚠ ARCHIVE RESTRICTED // RECOVER ALL 3 CATALOGUE CARDS (${fragmentsCount}/3)`
-        }
+        isLocked={fragmentsCount < 3}
+        lockMessage={`⚠ ARCHIVE RESTRICTED // RECOVER ALL 3 CATALOGUE CARDS (${fragmentsCount}/3)`}
         onAutoUnlock={() => {
           GameState.setLevelPuzzle(2, 'archiveDoorUnlocked', true);
           Sound.playPowerRestored();
