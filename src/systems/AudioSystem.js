@@ -125,6 +125,27 @@ class AudioSystem {
     this.playTone(110, 'sawtooth', 0.4, 0.25);
   }
 
+  playCoffeeBoost() {
+    const boostChord = [440, 554.37, 659.25, 880];
+    boostChord.forEach((f, i) => {
+      setTimeout(() => this.playTone(f, 'square', 0.18, 0.12), i * 50);
+    });
+  }
+
+  playNoteCollect() {
+    const noteChime = [880, 1108.73, 1318.51, 1760];
+    noteChime.forEach((f, i) => {
+      setTimeout(() => this.playTone(f, 'sine', 0.2, 0.15), i * 60);
+    });
+  }
+
+  playAdminGlitchAlarm() {
+    const alarmTones = [440, 311.13, 440, 311.13];
+    alarmTones.forEach((f, i) => {
+      setTimeout(() => this.playTone(f, 'sawtooth', 0.15, 0.2), i * 120);
+    });
+  }
+
   startDrone() {
     if (this.muted || this.isDroneActive) return;
     this.init();

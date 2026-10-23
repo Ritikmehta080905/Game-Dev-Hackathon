@@ -224,6 +224,29 @@ export default function HUD() {
       </div>
 
       {/* ========================================================
+          CORRUPTED ADMIN SYSTEM OVERRIDE WARNING BANNER (DOC §9)
+          ======================================================== */}
+      {state.adminGlitchWarning && (
+        <div style={styles.adminBanner}>
+          <div style={{ ...styles.adminBannerCard, borderColor: state.adminGlitchWarning.color || '#FF2E93' }}>
+            <div style={{ ...styles.adminBannerTitle, color: state.adminGlitchWarning.color || '#FF2E93' }}>
+              {state.adminGlitchWarning.title}
+            </div>
+            <div style={styles.adminBannerDetail}>
+              {state.adminGlitchWarning.detail}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Speed Boost Badge */}
+      {state.speedBoostActive && (
+        <div style={styles.speedBoostBadge}>
+          ☕ CANTEEN COFFEE BOOST ACTIVE! SPRINT SPEED +50%
+        </div>
+      )}
+
+      {/* ========================================================
           2. BOTTOM WORKSPACE: VISIBLE RULES PANEL & HOTKEY CONTROLS
           ======================================================== */}
       <div style={styles.bottomRow}>
@@ -641,5 +664,50 @@ const styles = {
     fontWeight: '800',
     letterSpacing: '0.5px',
     marginLeft: '4px'
+  },
+  adminBanner: {
+    position: 'absolute',
+    top: '90px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    zIndex: 90,
+    pointerEvents: 'none',
+    width: '90%',
+    maxWidth: '560px'
+  },
+  adminBannerCard: {
+    background: 'rgba(15, 23, 42, 0.92)',
+    border: '2px solid #FF2E93',
+    borderRadius: '8px',
+    padding: '12px 20px',
+    textAlign: 'center',
+    backdropFilter: 'blur(8px)',
+    boxShadow: '0 0 30px rgba(255, 46, 147, 0.5)'
+  },
+  adminBannerTitle: {
+    fontSize: '14px',
+    fontWeight: '900',
+    letterSpacing: '1.5px',
+    fontFamily: 'Outfit, sans-serif'
+  },
+  adminBannerDetail: {
+    fontSize: '11px',
+    color: '#E2E8F0',
+    marginTop: '4px',
+    letterSpacing: '0.5px'
+  },
+  speedBoostBadge: {
+    position: 'absolute',
+    top: '90px',
+    right: '24px',
+    background: 'rgba(245, 158, 11, 0.9)',
+    color: '#0F172A',
+    fontWeight: '800',
+    fontSize: '11px',
+    letterSpacing: '1px',
+    padding: '6px 14px',
+    borderRadius: '20px',
+    boxShadow: '0 0 15px rgba(245, 158, 11, 0.5)',
+    zIndex: 85
   }
 };

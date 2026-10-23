@@ -117,7 +117,7 @@ export default function Player({ playerPosRef, gravityInverted }) {
     }
 
     // Movement
-    const moveSpeed = 9.0;
+    const moveSpeed = GameState.speedBoostActive ? 13.5 : 9.0;
     const forward = (keys.forward ? 1 : 0) - (keys.backward ? 1 : 0);
     const side = (keys.right ? 1 : 0) - (keys.left ? 1 : 0);
 

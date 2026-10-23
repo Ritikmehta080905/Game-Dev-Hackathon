@@ -6,6 +6,8 @@ import CampusPlatform from '../entities/CampusPlatform';
 import MovingPlatform from '../entities/MovingPlatform';
 import Hazard from '../entities/Hazard';
 import Collectible from '../entities/Collectible';
+import CoffeeCup from '../entities/CoffeeCup';
+import ExamNote from '../entities/ExamNote';
 import Checkpoint from '../entities/Checkpoint';
 import Terminal from '../entities/Terminal';
 
@@ -127,6 +129,15 @@ export default function Level2({ playerPosRef }) {
       <Collectible position={[0, 1.4, 9]} id="l2_frag_1" playerPosRef={playerPosRef} />
       <Collectible position={[4.5, 2.4, -5]} id="l2_frag_2" playerPosRef={playerPosRef} />
       <Collectible position={[4.5, 9.8, -39]} id="l2_frag_3" playerPosRef={playerPosRef} />
+
+      {/* ========================================================
+          8. CANTEEN COFFEE BOOST & HIDDEN EXAM NOTE (DOC §4)
+          ======================================================== */}
+      {/* Coffee Cup on Reading Balcony (+100 Energy & Sprint Boost) */}
+      <CoffeeCup position={[-3.5, 5.8, -24]} id="l2_coffee_1" playerPosRef={playerPosRef} />
+
+      {/* Hidden Exam Cheatsheet Note behind Reference Bookshelves (+50 Score) */}
+      <ExamNote position={[7.5, 1.2, 3]} id="l2_note_1" playerPosRef={playerPosRef} />
     </group>
   );
 }

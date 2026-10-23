@@ -5,6 +5,8 @@ import React from 'react';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import CampusPlatform from '../entities/CampusPlatform';
 import Collectible from '../entities/Collectible';
+import CoffeeCup from '../entities/CoffeeCup';
+import ExamNote from '../entities/ExamNote';
 import Checkpoint from '../entities/Checkpoint';
 import Terminal from '../entities/Terminal';
 
@@ -264,6 +266,15 @@ export default function Level1({ playerPosRef }) {
       <Collectible position={[0, 1.4, 7]} id="frag_1" playerPosRef={playerPosRef} />
       <Collectible position={[5, 4.4, -14]} id="frag_2" playerPosRef={playerPosRef} />
       <Collectible position={[0, 12.8, -38]} id="frag_3" playerPosRef={playerPosRef} />
+
+      {/* ========================================================
+          9. CANTEEN COFFEE BOOST & HIDDEN EXAM NOTE (DOC §4)
+          ======================================================== */}
+      {/* Canteen Coffee Cup on Midway Checkpoint (Energy 100% + Sprint Boost) */}
+      <CoffeeCup position={[-3.2, 5.8, -29]} id="l1_coffee_1" playerPosRef={playerPosRef} />
+
+      {/* Hidden Exam Cheatsheet Note in Courtyard Corner (+50 Bonus Score) */}
+      <ExamNote position={[5.8, 1.2, 10]} id="l1_note_1" playerPosRef={playerPosRef} />
     </group>
   );
 }

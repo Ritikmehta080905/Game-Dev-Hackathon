@@ -28,8 +28,12 @@ class GameStateManager {
     this.isDetained = false;
     this.isTimeOut = false;
     this.showSectorIntro = true;
-    this.detentionReason = '';
     this.levelCompletedData = null;
+    this.speedBoostActive = false;
+    this.notesCollected = 0;
+    this.coffeeCollected = 0;
+    this.adminGlitchWarning = null;
+    this.adminGlitchActive = false;
     this.studentInfo = {
       name: 'Aditya Sharma',
       role: 'Student Debugger',
@@ -213,6 +217,35 @@ class GameStateManager {
   collectFragment() {
     this.fragmentsCollected++;
     this.score += 100;
+    this.notify();
+  }
+
+  collectCoffee() {
+    this.coffeeCollected = (this.coffeeCollected || 0) + 1;
+    this.glitchEnergy = 100;
+    this.speedBoostActive = true;
+    this.score += 20;
+    this.notify();
+
+    setTimeout(() => {
+      this.speedBoostActive = false;
+      this.notify();
+    }, 5000); // 5s coffee sprint boost
+  }
+
+  collectExamNote() {
+    this.notesCollected = (this.notesCollected || 0) + 1;
+    this.score += 50;
+    this.notify();
+  }
+
+  setAdminGlitchWarning(warning) {
+    this.adminGlitchWarning = warning;
+    this.notify();
+  }
+
+  setAdminGlitchActive(active) {
+    this.adminGlitchActive = active;
     this.notify();
   }
 
