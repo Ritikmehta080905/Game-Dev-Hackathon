@@ -6,55 +6,56 @@ import { GameState } from '../systems/GameState';
 import { Sound } from '../systems/AudioSystem';
 import DetainedModal from './DetainedModal';
 import SectorBriefingModal from './SectorBriefingModal';
+import StoryTerminalModal from './StoryTerminalModal';
 
 const LEVEL_THEMES = {
   1: {
-    sector: 'SECTOR 01',
+    sector: 'LEVEL 01',
     code: 'SEC-101',
-    name: 'THE BROKEN GATE',
-    environment: 'Monument Pillars • Security Cabin • Paved Courtyard • Broken Fissure',
-    deptTag: '🏛️ SECTOR GATEWAY // GRAVITY RULES',
-    docRole: 'SECURITY ENTRY VERIFICATION',
-    anomaly: 'Ground walkway fissure impassable! Campus ID Scanner is mounted upside down on the ceiling skywalk.',
-    howToPlay: 'Press [G] to Flip Gravity (Costs 20 Energy) — walk along the illuminated ceiling gantry to reach the Scanner Terminal!',
-    keyPrompt: '[G] FLIP GRAVITY',
+    name: 'AFTER THE LAST BELL',
+    environment: 'Monument Columns • Security Cabin • Paved Courtyard • Inverted Gantry',
+    deptTag: '🏛️ CAMPUS GATE // 19:42 PM LOCKDOWN',
+    docRole: 'MAIN GATE ATTENDANCE SCANNER',
+    anomaly: 'Entrance power grid offline! Scanner on ceiling skywalk requires emergency breaker activation.',
+    howToPlay: 'Cross to midway checkpoint -> Press [G] to Flip Gravity -> Activate Circuit Breaker [E] -> Audit Exit Terminal!',
+    keyPrompt: '[G] FLIP GRAVITY + [E] BREAKER',
     accent: '#00E5FF',
     secondaryAccent: '#38BDF8',
     accentGlow: 'rgba(0, 229, 255, 0.35)',
     bgTint: 'rgba(0, 229, 255, 0.08)',
     borderStyle: '2px solid #00E5FF',
     badgeBg: 'rgba(0, 229, 255, 0.15)',
-    monitorText: 'SECURITY LOCK: GATEWAY GROUND BLOCKED // USE [G] ON CEILING SKYWALK',
+    monitorText: 'GATE LOCKED (19:42 PM) // FLIP GRAVITY [G] TO CEILING & SWITCH BREAKER [E]',
     activeRule: 'gravity'
   },
   2: {
-    sector: 'SECTOR 02',
+    sector: 'LEVEL 02',
     code: 'LIB-202',
-    name: 'THE INFINITE ARCHIVES',
-    environment: 'Multi-tier Book Stacks • Banker Lamp Study Desks • Sweeping RFID Lasers • Fast Archive Shelf',
-    deptTag: '📚 DIGITAL ARCHIVES // TIME FREEZE',
-    docRole: 'SILENCE IN READING HALL // ARCHIVE ACCESS',
-    anomaly: 'Temporal clock desynced! High-speed archive shelves moving dangerously fast & RFID barcode lasers sweeping the floor.',
-    howToPlay: 'Press [F] to Freeze Time (Costs 35 Energy) — halts fast shelves and laser hazards for 3s so you can board them and cross!',
-    keyPrompt: '[F] FREEZE TIME',
+    name: 'THE LIBRARY OF THINGS UNWRITTEN',
+    environment: 'Reading Hall • Multi-tier Stacks • Study Desks • Stasis Shutters',
+    deptTag: '📚 CENTRAL ARCHIVES // TIME FREEZE',
+    docRole: 'RESTRICTED CATALOG // ANYA SHARMA',
+    anomaly: 'Library stasis desynced! High-speed archive stacks and lasers block upper archive mezzanine.',
+    howToPlay: 'Dodge RFID lasers -> Press [F] to Freeze Time when shelves align -> Ride to Upper Archive Catalog!',
+    keyPrompt: '[F] FREEZE TIME (3s)',
     accent: '#10B981',
     secondaryAccent: '#FFE14D',
     accentGlow: 'rgba(16, 185, 129, 0.35)',
     bgTint: 'rgba(16, 185, 129, 0.08)',
     borderStyle: '2px solid #10B981',
     badgeBg: 'rgba(16, 185, 129, 0.15)',
-    monitorText: 'ARCHIVE STASIS DESYNCED: SPEED HAZARD // USE [F] TO FREEZE SHELVES',
+    monitorText: 'ARCHIVE DESYNC // TIME FREEZE [F] TO HALT MOVING STACKS & ACCESS ANYA FILE',
     activeRule: 'time_scale'
   },
   3: {
-    sector: 'SECTOR 03',
+    sector: 'LEVEL 03',
     code: 'CAN-303',
-    name: 'THE NEON CORRIDORS',
-    environment: 'Chai & Samosa Stall • Room 301 Coding Lab • Phased Concrete Walls • Neon Glitch Bridges',
-    deptTag: '☕ NEON CORRIDORS // DIMENSION SHIFT',
-    docRole: 'STUDENT CAFETERIA RECEIPT & LAB 301 PASS',
-    anomaly: 'Campus reality split into two layers! Solid concrete wall blocks the Real layer, and the cyber-bridge only exists in Glitch layer.',
-    howToPlay: 'Press [Q] to phase through the wall -> Jump across Glitch cyber-bridges -> Press [Q] at checkpoint to deactivate laser!',
+    name: 'THE LAB THAT NEVER EXISTED',
+    environment: 'Canteen Stall • Room 301 Coding Lab • Phased Walls • Neon Glitch Bridges',
+    deptTag: '☕ LAB 301 // DIMENSION SWITCH',
+    docRole: 'PROJECT ATHARVA EXPERIMENT ARCHIVE',
+    anomaly: 'Campus reality split into Real and Glitch dimensions! Lab 301 only accessible in Glitch mode.',
+    howToPlay: 'Press [Q] to phase into Glitch layer -> Cross cyber-bridges -> Deactivate laser & access Lab 301 terminal!',
     keyPrompt: '[Q] DIMENSION SWITCH',
     accent: '#FF2E93',
     secondaryAccent: '#FF9E3D',
@@ -62,18 +63,18 @@ const LEVEL_THEMES = {
     bgTint: 'rgba(255, 46, 147, 0.08)',
     borderStyle: '2px solid #FF2E93',
     badgeBg: 'rgba(255, 46, 147, 0.15)',
-    monitorText: 'CORRIDOR BLOCKED: PRESS [Q] TO TURN WALL HOLOGRAPHIC & PASS THROUGH',
+    monitorText: 'ROOM 301 PHANTOM // PRESS [Q] TO ENTER GLITCH LAYER & INVESTIGATE EXPERIMENT',
     activeRule: 'layer'
   },
   4: {
-    sector: 'SECTOR 04',
+    sector: 'LEVEL 04',
     code: 'DAT-404',
-    name: 'THE CORE REBOOT',
-    environment: 'Mainframe Array • Security Firewall Blast Door • Floor Pressure Plate • Quantum Root Core',
-    deptTag: '⚡ CENTRAL MAINFRAME // ROOT TERMINAL',
-    docRole: 'SYSADMIN ROOT ACCESS TERMINAL // REBOOT',
-    anomaly: 'Firewall blast door locked by pressure plate! Corrupted Admin System Override guarding root mainframe terminal.',
-    howToPlay: 'Stand on Pink Plate & Press [E] to spawn Ghost Clone to hold it down -> Use [F] on lift -> [Q] on cyber-bridge -> [G] to reach gantry & press REBOOT!',
+    name: 'ATTENDANCE: NEVER CLOSED',
+    environment: 'Mainframe Array • Security Blast Door • Pressure Plate • Quantum Root Core',
+    deptTag: '⚡ CENTRAL MAINFRAME // MASTER REBOOT',
+    docRole: 'SIMULATION CORE DE-ARCHIVE PROTOCOL',
+    anomaly: 'Quadruple physics interlock locking the root core. Coordinate all mechanics to save the campus.',
+    howToPlay: 'Spawn Ghost Clone [E] on pressure plate -> Use [F] on lift -> [Q] on cyber-bridge -> [G] to reach Quantum Core!',
     keyPrompt: '[E] CLONE + [F] + [Q] + [G]',
     accent: '#7B4BFF',
     secondaryAccent: '#00E5FF',
@@ -81,7 +82,7 @@ const LEVEL_THEMES = {
     bgTint: 'rgba(123, 75, 255, 0.08)',
     borderStyle: '2px solid #7B4BFF',
     badgeBg: 'rgba(123, 75, 255, 0.15)',
-    monitorText: 'FIREWALL LOCKED: STAND ON PINK PLATE & PRESS [E] TO SPAWN GHOST CLONE',
+    monitorText: 'MASTER REBOOT READY // SPAWN CLONE [E] ON PLATE & EXECUTE LAST ATTENDANCE',
     activeRule: 'all'
   }
 };
@@ -451,6 +452,13 @@ export default function HUD() {
       )}
       {state.isTimeOut && (
         <DetainedModal isTimeout={true} reason="Exam Bell rang before completing the campus sector!" />
+      )}
+
+      {/* ========================================================
+          5. INTERACTIVE CAMPUS STORY & ATTENDANCE TERMINAL
+          ======================================================== */}
+      {state.activeStoryModal && (
+        <StoryTerminalModal modalData={state.activeStoryModal} />
       )}
     </div>
   );

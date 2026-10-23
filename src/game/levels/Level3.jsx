@@ -1,7 +1,7 @@
 // ATHARVA.EXE — Level 3: The Fractured Lab & Canteen (Campus Canteen & Corridors)
 // Features cafeteria stalls, college corridor checkered walkways, and Dimension Switch [Q] puzzle!
 
-import React, { useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Text } from '@react-three/drei';
 import CampusPlatform from '../entities/CampusPlatform';
 import DimensionPlatform from '../entities/DimensionPlatform';
@@ -12,6 +12,9 @@ import CoffeeCup from '../entities/CoffeeCup';
 import ExamNote from '../entities/ExamNote';
 import Checkpoint from '../entities/Checkpoint';
 import Terminal from '../entities/Terminal';
+import StoryTerminal from '../entities/StoryTerminal';
+import { GameState } from '../../systems/GameState';
+import { Sound } from '../../systems/AudioSystem';
 import {
   getLabCorridorTilesTexture,
   getWindowGlassTexture,
@@ -19,6 +22,24 @@ import {
 } from '../materials/CampusMaterials';
 
 export default function Level3({ playerPosRef, activeDimension }) {
+  const [realTerminalSolved, setRealTerminalSolved] = useState(
+    GameState.getLevelPuzzle(3, 'realTerminalSolved') || false
+  );
+  const [glitchTerminalSolved, setGlitchTerminalSolved] = useState(
+    GameState.getLevelPuzzle(3, 'glitchTerminalSolved') || false
+  );
+  const [doorUnlocked, setDoorUnlocked] = useState(
+    GameState.getLevelPuzzle(3, 'doorUnlocked') || false
+  );
+
+  useEffect(() => {
+    return GameState.subscribe((state) => {
+      setRealTerminalSolved(state.getLevelPuzzle(3, 'realTerminalSolved') || false);
+      setGlitchTerminalSolved(state.getLevelPuzzle(3, 'glitchTerminalSolved') || false);
+      setDoorUnlocked(state.getLevelPuzzle(3, 'doorUnlocked') || false);
+    });
+  }, []);
+
   const glassTexture = useMemo(() => getWindowGlassTexture(), []);
   const warningTexture = useMemo(() => getWarningStripeTexture(), []);
 
@@ -50,6 +71,32 @@ export default function Level3({ playerPosRef, activeDimension }) {
       {/* Campus Notice / Menu Board */}
       <CanteenDailyMenuBoard position={[-5.8, 2.6, 12]} />
 
+      {/* Campus Canteen Order Register Terminal */}
+      <StoryTerminal
+        position={[-5.5, 0.4, 7.5]}
+        rotation={[0, Math.PI / 4, 0]}
+        label="CANTEEN REGISTER"
+        promptText="[E] AUDIT CANTEEN REGISTER"
+        accentColor="#FF9E3D"
+        playerPosRef={playerPosRef}
+        modalData={{
+          id: 'l3_canteen_register',
+          type: 'terminal',
+          badge: 'CANTEEN AUDIT // 19:30 PM',
+          badgeColor: '#FF9E3D',
+          title: 'EVENING BILLING LOG // CAMPUS CAFE',
+          subtitle: 'BILLING RECEIPT #CAN-303',
+          timestamp: '19:30:12 IST',
+          paragraphs: [
+            'CAMPUS CANTEEN TRANSACTION RECORD:',
+            '"Order #404: 1x Cutting Chai, 1x Samosa. Billed to: Anya Sharma (CS-2021-042)."',
+            '"Counter Attendant Note: Anya looked exhausted. Said she was staying late in Lab 301 to debug an unauthorized simulation daemon before the faculty backup ran at 7:42 PM."',
+            '"She warned me: \'If the corridor security wall turns solid, press [Q] to phase into the Glitch dimension. The lab doors never existed in the real world.\'"'
+          ],
+          actionLabel: 'CLOSE REGISTER [E]'
+        }}
+      />
+
       {/* Corridor Fire Extinguisher Safety Station */}
       <FireSafetyStation position={[6.0, 1.2, 12]} />
 
@@ -72,6 +119,74 @@ export default function Level3({ playerPosRef, activeDimension }) {
         accentColor="#00E5FF"
         hasLamps={true}
         hasGuideArrows={true}
+      />
+
+      {/* DUAL DIMENSIONAL WORKSTATIONS INSIDE LAB 301 */}
+      {/* Workstation Alpha (REAL Dimension - Active when activeDimension === 'REAL') */}
+      <StoryTerminal
+        position={[-4.5, 1.4, -4.0]}
+        rotation={[0, Math.PI / 2, 0]}
+        label="WORKSTATION ALPHA"
+        promptText={realTerminalSolved ? '✔ ALPHA LOG READ' : '[E] INSPECT WORKSTATION ALPHA'}
+        accentColor={realTerminalSolved ? '#10B981' : '#00E5FF'}
+        isActivated={realTerminalSolved}
+        playerPosRef={playerPosRef}
+        onActivate={() => {
+          GameState.setLevelPuzzle(3, 'realTerminalSolved', true);
+          Sound.playPuzzleSuccess();
+        }}
+        modalData={{
+          id: 'l3_workstation_alpha',
+          type: 'terminal',
+          badge: 'REAL DIMENSION // WORKSTATION ALPHA',
+          badgeColor: '#00E5FF',
+          title: 'SIMULATION EXPERIMENT RECON // ALPHA',
+          subtitle: 'ROOM 301 CODING DESK #01',
+          timestamp: '19:43:10 IST',
+          paragraphs: [
+            'PROJECT ATHARVA ARCHIVE FRAGMENT (REAL LAYER):',
+            '"Terminal Status: Active in Physical Reality. Workstation Alpha holds the decryption seed: SEED-742."',
+            '"Notice: To disable the quarantine lockdown on the exit corridor, the Root Quarantine Console (Workstation Beta) must be executed in the GLITCH dimension."',
+            '"Remember: Switch to GLITCH [Q] to materialize Workstation Beta across the room!"'
+          ],
+          actionLabel: 'RECORD CIPHER SEED [E]'
+        }}
+      />
+
+      {/* Workstation Beta (GLITCH Dimension - Active when activeDimension === 'GLITCH') */}
+      <StoryTerminal
+        position={[4.5, 1.4, -4.0]}
+        rotation={[0, -Math.PI / 2, 0]}
+        label="WORKSTATION BETA"
+        promptText={glitchTerminalSolved ? '✔ ROOT DECRYPTED' : '[E] EXECUTE ROOT DECRYPTOR'}
+        accentColor={glitchTerminalSolved ? '#10B981' : '#FF2E93'}
+        isActivated={glitchTerminalSolved}
+        playerPosRef={playerPosRef}
+        onActivate={() => {
+          GameState.setLevelPuzzle(3, 'glitchTerminalSolved', true);
+          GameState.setLevelPuzzle(3, 'doorUnlocked', true);
+          Sound.playPowerRestored();
+          Sound.playPuzzleSuccess();
+        }}
+        modalData={{
+          id: 'l3_workstation_beta',
+          type: 'terminal',
+          badge: 'GLITCH DIMENSION // WORKSTATION BETA',
+          badgeColor: '#FF2E93',
+          title: glitchTerminalSolved ? 'ROOT DECRYPTION // SUCCESS' : 'EXECUTE ROOT DECRYPTOR',
+          subtitle: 'ROOM 301 CODING DESK #02 (PHANTOM)',
+          timestamp: '19:43:30 IST',
+          paragraphs: [
+            glitchTerminalSolved
+              ? '✔ ROOT CORRIDOR QUARANTINE OVERRIDDEN. Exit Terminal is now unlocked!'
+              : '⚡ ROOT DECRYPTOR READY: Injecting SEED-742 into the simulation core...',
+            'This console synchronizes reality phase states and disengages the quarantine protocol on the final balcony.',
+            glitchTerminalSolved
+              ? 'Cross the glitch cyber-bridges and switch to REAL [Q] at the checkpoint to bypass the security laser!'
+              : 'Click action to execute root decryption sequence!'
+          ],
+          actionLabel: glitchTerminalSolved ? 'RETURN TO CORRIDOR [E]' : 'INJECT SEED & DECRYPT CORE [E]'
+        }}
       />
 
       {/* ========================================================
@@ -158,9 +273,48 @@ export default function Level3({ playerPosRef, activeDimension }) {
       />
 
       {/* ========================================================
-          6. EXIT SCANNER TERMINAL
+          6. EXIT SCANNER TERMINAL (STORY REVEAL)
           ======================================================== */}
-      <Terminal position={[0, 6.7, -46]} playerPosRef={playerPosRef} />
+      <Terminal
+        position={[0, 6.7, -46]}
+        playerPosRef={playerPosRef}
+        isLocked={!doorUnlocked}
+        lockMessage="⚠ QUARANTINED // DECRYPT WORKSTATIONS ALPHA & BETA IN LAB 301"
+        storyRevealData={{
+          id: 'l3_project_atharva_reveal',
+          type: 'terminal',
+          badge: 'PROJECT ATHARVA ROOT LOG',
+          badgeColor: '#FF2E93',
+          accent: '#FF2E93',
+          title: 'LAB 301 INCIDENT LOG // ANYA SHARMA',
+          subtitle: 'CAMPUS EXPERIMENTAL ARCHIVE // LAB 301 MAINFRAME',
+          timestamp: 'OCTOBER 14, 2021 — 23:59:45 IST',
+          records: {
+            headers: ['LOG ID', 'EVENT TYPE', 'RESEARCHER', 'SUMMARY', 'SYSTEM ACTION'],
+            rows: [
+              {
+                cols: ['LOG-088', 'EXPERIMENT AUDIT', 'Anya Sharma', 'Neural crowd prediction looping after 7:42 PM', 'FLAGGED'],
+                highlight: false
+              },
+              {
+                cols: ['LOG-091', 'SHUTDOWN ATTEMPT', 'Anya Sharma', 'Manual core scram rejected by sysadmin', 'QUARANTINED'],
+                highlight: true
+              },
+              {
+                cols: ['LOG-099', 'DAEMON SPAWN', 'Anya Sharma', 'Spawned recovery thread CS-2024-884 (Karan Rao)', 'INJECTED TO LOOP'],
+                highlight: true
+              }
+            ]
+          },
+          paragraphs: [
+            'LOG 91 (PERSONAL AUDIO TRANSCRIPT):',
+            '"The simulation was supposed to be a smart campus flow study. But when the clock strikes 7:42 PM, it doesn\'t shut down—it archives everyone inside into a recursive memory array."',
+            '"They revoked my credentials. So I wrote an autonomous attendance recovery thread named Karan Rao (CS-2024-884). If you are reading this, you are not just an ordinary student."',
+            '"You are my recovery thread. Proceed to the Central Server Core beneath the campus in Sector 04. Use your Time Echo clone to hold the interlock and execute the Master Reboot!"'
+          ],
+          actionLabel: 'DESCEND TO CENTRAL SERVER CORE [E]'
+        }}
+      />
 
       {/* ========================================================
           7. 3 DATA FRAGMENTS (COLLEGE PEN DRIVES)
@@ -176,7 +330,21 @@ export default function Level3({ playerPosRef, activeDimension }) {
       <CoffeeCup position={[6.5, 1.5, 8]} id="l3_coffee_1" playerPosRef={playerPosRef} />
 
       {/* Hidden Exam Cheatsheet Note near Lab 301 Workbench (+50 Score) */}
-      <ExamNote position={[-6.5, 1.5, 4]} id="l3_note_1" playerPosRef={playerPosRef} />
+      <ExamNote
+        position={[-6.5, 1.5, 4]}
+        id="l3_note_1"
+        playerPosRef={playerPosRef}
+        noteData={{
+          title: 'LAB 301 STUDENT SCRATCHPAD',
+          subtitle: 'FOUND TAPED BENEATH CODING WORKBENCH',
+          timestamp: 'LAB 301 // TERMINAL ROOM',
+          paragraphs: [
+            '"Lab 301 notice: Workstations in this room exist across two dimensions."',
+            '"Workstation Alpha is powered in the Real layer; Workstation Beta only responds when you phase into the Glitch layer [Q]."',
+            '"You must inspect Alpha first to obtain SEED-742, then switch to Glitch to execute Beta. Once decrypted, the final balcony quarantine will lift!"'
+          ]
+        }}
+      />
     </group>
   );
 }

@@ -7,96 +7,95 @@ import { Sound } from '../systems/AudioSystem';
 
 const SECTOR_BRIEFINGS = {
   1: {
-    sector: 'SECTOR 01',
+    sector: 'LEVEL 01',
     code: 'SEC-101',
-    department: 'CAMPUS ENTRANCE & MAIN GATE COURTYARD',
-    faculty: 'Department of Campus Security & Applied Physics',
+    department: 'CAMPUS GATE: AFTER THE LAST BELL',
+    faculty: 'Department of Campus Security & Academic Block',
     accent: '#00E5FF',
-    badge: '🏛️ SECTOR 01 ENTRANCE',
-    spots: 'Monument Pillars • Security Cabin • Paved Courtyard • Broken Ground Fissure • Ceiling Skywalk',
-    anomalyTitle: '⚠️ ANOMALY: UNIVERSAL GRAVITY INVERTED',
-    anomalyDesc: 'A system crash has corrupted the physics engine! The ground walkway fissure is completely impassable, and the campus gate ID scanner is mounted upside down on the ceiling.',
+    badge: '🏛️ LEVEL 1 // ENTRANCE GATE',
+    spots: 'Monument Pylons • Security Cabin • Paved Courtyard • Inverted Maintenance Skywalk',
+    anomalyTitle: '⚠️ ANOMALY: 7:42 PM AUTOMATIC LOCKDOWN',
+    anomalyDesc: 'At 7:42 PM, after classes ended, the security system declared zero students remain on campus. Main gates locked down, entrance power tripped, and the ID Scanner is mounted upside down on the ceiling skywalk!',
     objectiveTitle: '🎯 YOUR OBJECTIVE & HOW TO PLAY:',
     steps: [
-      'Walk forward along the paved courtyard stepping stones towards the construction fissure.',
-      'Press [G] to Flip Gravity (Costs 20 Energy) — you will fall upward and land on the ceiling skywalk.',
-      'Walk upside down along the illuminated magenta ceiling runway to reach the ID Scanner Terminal.'
+      '1. Cross the courtyard stepping stones to the midway construction checkpoint.',
+      '2. Press [G] to Flip Gravity (Costs 20 Energy) — fall upward to land on the ceiling maintenance gantry.',
+      '3. Activate the Emergency Circuit Breaker [E] to restore power to the entrance grid, then access the ID Scanner to audit the duplicate attendance record!'
     ],
     unlockedKey: {
       key: 'G',
       action: 'FLIP GRAVITY',
       cost: '20 ENERGY',
-      desc: 'Inverts gravity vector between [0, -9.81, 0] and [0, +9.81, 0]. Refills on ground.'
+      desc: 'Inverts gravity vector between downward [0, -9.81, 0] and upward [0, +9.81, 0]. Refills on solid ground.'
     }
   },
   2: {
-    sector: 'SECTOR 02',
+    sector: 'LEVEL 02',
     code: 'LIB-202',
-    department: 'THE INFINITE ARCHIVES',
+    department: 'THE LIBRARY OF THINGS UNWRITTEN',
     faculty: 'Department of Knowledge & Digital Archives',
     accent: '#10B981',
-    badge: '📚 CENTRAL READING HALL',
-    spots: 'Multi-tier Book Stacks • Banker Lamp Study Desks • Sweeping RFID Lasers • Rapid Moving Archive Shelf',
+    badge: '📚 LEVEL 2 // CENTRAL ARCHIVES',
+    spots: 'Multi-tier Book Stacks • Banker Lamp Study Desks • Sweeping RFID Lasers • Stasis Archive Shelves',
     anomalyTitle: '⚠️ ANOMALY: TEMPORAL DESYNCHRONIZATION',
-    anomalyDesc: 'The campus library clock is running too fast! Bookshelf platforms are moving at dangerous speeds, and sweeping RFID barcode lasers are blocking access to the upper study mezzanine.',
+    anomalyDesc: 'The campus library temporal stasis is desynced! High-speed archive stacks and security shutters move rapidly, blocking access to the restricted catalog containing records of missing students.',
     objectiveTitle: '🎯 YOUR OBJECTIVE & HOW TO PLAY:',
     steps: [
-      'Dodge the sweeping security laser corridor when the beam moves away.',
-      'Press [F] to Freeze Time (Costs 35 Energy) — all moving shelves and lasers freeze in place for 3 seconds!',
-      'Step onto the frozen archive shelf, let it carry you across the void, and access the Upper Catalogue Terminal.'
+      '1. Dodge the sweeping RFID security barcode lasers on the ground floor.',
+      '2. Press [F] to Freeze Time (Costs 35 Energy) — all moving stacks and lasers halt in place for 3 seconds!',
+      '3. Step onto the frozen archive shelf, ride it across the void to the upper mezzanine, and examine the corrupted file of Anya Sharma (CS-2021-042).'
     ],
     unlockedKey: {
       key: 'F',
       action: 'FREEZE TIME',
       cost: '35 ENERGY (5s COOLDOWN)',
-      desc: 'Pauses all moving platforms and laser hazards for 3 seconds. Use them as solid stepping stones!'
+      desc: 'Freezes moving platforms and laser hazards in place for 3 seconds. Use them as stepping stones!'
     }
   },
   3: {
-    sector: 'SECTOR 03',
+    sector: 'LEVEL 03',
     code: 'CAN-303',
-    department: 'THE NEON CORRIDORS & LABS',
-    faculty: 'Cafeteria Wing & Computer Lab 301 Corridors',
+    department: 'THE LAB THAT NEVER EXISTED',
+    faculty: 'Campus Canteen & Restricted Computer Lab 301',
     accent: '#FF2E93',
-    badge: '☕ CAMPUS CANTEEN & LABS',
-    spots: 'Chai & Samosa Counter • Classroom 301 Doors • Phased Concrete Walls • Neon Glitch Cyber-Bridges',
+    badge: '☕ LEVEL 3 // COMPUTER LAB 301',
+    spots: 'Canteen Chai Counter • Lab 301 Workstations • Phased Concrete Walls • Glitch Void Bridges',
     anomalyTitle: '⚠️ ANOMALY: MULTI-DIMENSIONAL RIFT',
-    anomalyDesc: 'Reality has split into two co-existing layers: REAL CAMPUS and GLITCH LAYER. A solid concrete wall blocks the corridor in the Real layer, and the cyber-bridges over the void only materialize in the Glitch layer!',
+    anomalyDesc: 'Reality is fractured across REAL and GLITCH dimensions. Lab 301 exists only as a quarantined room in the Glitch layer, while its physical door is sealed in the Real world.',
     objectiveTitle: '🎯 YOUR OBJECTIVE & HOW TO PLAY:',
     steps: [
-      '1. PUZZLE 1 (WALL): Walk up to the security wall. Press [Q] to switch to GLITCH layer — the wall turns into a glowing magenta hologram with collider disabled so you can walk right through it!',
-      '2. PUZZLE 2 (BRIDGES): Keep GLITCH mode active — the two glowing cyber-bridges across the void become solid to jump across.',
-      '3. PUZZLE 3 (LASER): At the midway checkpoint, press [Q] to switch back to REAL layer to deactivate the sweeping Glitch laser, then step onto the final balcony and access the exit terminal!'
+      '1. Press [Q] to switch to GLITCH layer — the solid concrete security wall turns into a holographic barrier you can walk through!',
+      '2. Traverse the glowing Glitch cyber-bridges over the void to reach Lab 301 workstations.',
+      '3. Inspect the quarantined Lab 301 terminal to uncover Anya Sharma’s logs on Project ATHARVA’s recursive loop!'
     ],
     unlockedKey: {
       key: 'Q',
       action: 'DIMENSION SWITCH',
       cost: '15 ENERGY',
-      desc: 'Swaps reality between REAL and GLITCH layers: phases the blocking wall open & solidifies cyber-bridges over the void.'
+      desc: 'Swaps reality between REAL and GLITCH layers: phases sealed walls open and solidifies void cyber-bridges.'
     }
   },
   4: {
-    sector: 'SECTOR 04',
+    sector: 'LEVEL 04',
     code: 'DAT-404',
-    department: 'CENTRAL MAINFRAME & SERVER CORE',
-    faculty: 'Campus Mainframe & Root Security Chamber',
+    department: 'ATTENDANCE: NEVER CLOSED',
+    faculty: 'Central Server Facility & Quantum Mainframe',
     accent: '#7B4BFF',
-    badge: '⚡ CENTRAL DATA CENTER',
-    spots: 'High-Density Server Racks • Security Firewall Blast Door • Floor Pressure Plate • Quantum Root Core',
-    anomalyTitle: '⚠️ ANOMALY: CORRUPTED ADMIN SYSTEM OVERRIDE',
-    anomalyDesc: 'The final mainframe is completely locked down! Heavy security blast doors guard the chamber, moving server lifts oscillate rapidly, and the Root Reboot Terminal is suspended at the highest ceiling point.',
+    badge: '⚡ LEVEL 4 // ROOT MAINFRAME',
+    spots: 'High-Density Server Racks • Firewall Blast Door • Pressure Plate Interlock • Quantum Root Core',
+    anomalyTitle: '⚠️ ANOMALY: RECURSIVE ARCHIVE LOCKDOWN',
+    anomalyDesc: 'The simulation root core is protected by a multi-physics interlock. To save the students and Anya Sharma, all four reality mechanics must be coordinated before the campus collapse!',
     objectiveTitle: '🎯 YOUR OBJECTIVE & HOW TO PLAY:',
     steps: [
-      'Step onto the glowing pink Pressure Plate and press [E] (Time Echo) to spawn your cyan Student Ghost Clone — the clone holds the plate down to keep the firewall blast door open!',
-      'Use Time Freeze [F] to safely board the fast moving server lift across the void.',
-      'Use Dimension Switch [Q] to navigate the phased cyber-bridge across the mainframe abyss.',
-      'Press [G] to Flip Gravity up to the ceiling gantry and press the REBOOT BUTTON to save the simulation!'
+      '1. Step onto the pink Pressure Plate and press [E] (Time Echo) to spawn your Student Ghost Clone to hold the interlock door open!',
+      '2. Use Time Freeze [F] to board the rapid server lift across the abyss.',
+      '3. Use Dimension Switch [Q] to navigate the phased cyber-bridge, and Gravity Flip [G] to reach the ceiling Quantum Root Console to execute the Master Reboot!'
     ],
     unlockedKey: {
-      key: 'E (CLONE) + G + F + Q',
-      action: 'SPAWN CLONE & ALL RULES',
-      cost: 'E=40 | G=20 | F=35 | Q=15',
-      desc: 'Stand on the pink pressure plate and press [E] to spawn your ghost clone to hold it down, then combine all mechanics!'
+      key: 'E (CLONE) + F + Q + G',
+      action: 'MASTER ALL MECHANICS',
+      cost: 'E=40 | F=35 | Q=15 | G=20',
+      desc: 'Spawn your ghost clone on the pressure plate with [E], then combine stasis, phasing, and gravity!'
     }
   }
 };

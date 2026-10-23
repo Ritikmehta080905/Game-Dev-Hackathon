@@ -15,6 +15,7 @@ import CoffeeCup from '../entities/CoffeeCup';
 import ExamNote from '../entities/ExamNote';
 import Checkpoint from '../entities/Checkpoint';
 import Terminal from '../entities/Terminal';
+import StoryTerminal from '../entities/StoryTerminal';
 import { GameState } from '../../systems/GameState';
 import { Sound } from '../../systems/AudioSystem';
 import {
@@ -119,10 +120,47 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
           <meshStandardMaterial
             color="#00e5ff"
             emissive="#00e5ff"
-            emissiveIntensity={1.2}
+            emissiveIntensity={0.6}
           />
         </mesh>
+        <Text
+          position={[0, 0, 0.08]}
+          fontSize={0.32}
+          color="#060A17"
+          fontWeight="bold"
+          anchorX="center"
+          anchorY="middle"
+        >
+          CENTRAL SERVER CORE // REBOOT INTERLOCK FACILITY
+        </Text>
       </group>
+
+      {/* Mainframe Diagnostic Instruction Console */}
+      <StoryTerminal
+        position={[-4.0, 0.4, 7.0]}
+        rotation={[0, Math.PI / 4, 0]}
+        label="MAINFRAME DIAGNOSTIC CONSOLE"
+        promptText="[E] AUDIT REBOOT SPECIFICATIONS"
+        accentColor="#7B4BFF"
+        playerPosRef={playerPosRef}
+        modalData={{
+          id: 'l4_diagnostic_console',
+          type: 'terminal',
+          badge: 'ROOT SECURITY CHAMBER // SPEC-404',
+          badgeColor: '#7B4BFF',
+          title: 'CENTRAL MAINFRAME // QUADRUPLE INTERLOCK',
+          subtitle: 'CAMPUS QUANTUM CORE PROTOCOL',
+          timestamp: '19:43:55 IST',
+          paragraphs: [
+            'SYSADMIN EMERGENCY MANUAL // LEVEL 4 CHALLENGE:',
+            '1. Layer 1 (Interlock): Step on the pink Pressure Plate and press [E] to spawn your cyan Student Ghost Clone to hold the firewall blast door open.',
+            '2. Layer 2 (Server Lift): Use Time Freeze [F] to board the rapid server lift across the abyss to the midway data balcony.',
+            '3. Layer 3 (Glitch Bridge): Switch to GLITCH [Q] to traverse the phased cyber-bridges.',
+            '4. Layer 4 (Quantum Core): Flip Gravity [G] to reach the suspended ceiling gantry and trigger the Master Reboot Terminal!'
+          ],
+          actionLabel: 'CONFIRM REBOOT STRATEGY [E]'
+        }}
+      />
 
       {/* ========================================================
           2. PUZZLE 1: CAMPUS FIREWALL DOOR & ILLUMINATED PRESSURE PLATE
@@ -212,13 +250,39 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
       />
       <Checkpoint position={[0, 5.3, -23]} playerPosRef={playerPosRef} />
 
-      {/* Auxiliary Backup Rack on Checkpoint Platform */}
+      {/* Auxiliary Backup Rack & Story Terminal on Checkpoint Platform */}
       <group position={[-3.6, 6.2, -23]}>
         <mesh castShadow>
           <boxGeometry args={[1.2, 2.8, 1.2]} />
           <meshStandardMaterial map={serverRackTexture} roughness={0.4} />
         </mesh>
       </group>
+
+      {/* Anya's Recovery Archive Terminal on Midway Balcony */}
+      <StoryTerminal
+        position={[-2.4, 5.2, -22.5]}
+        rotation={[0, Math.PI / 4, 0]}
+        label="ANYA'S RECOVERY ARCHIVE // LOG #884"
+        promptText="[E] ACCESS RECOVERY LOG #884"
+        accentColor="#00E5FF"
+        playerPosRef={playerPosRef}
+        modalData={{
+          id: 'l4_anya_recovery',
+          type: 'terminal',
+          badge: 'ANYA SHARMA [CS-2021-042] // RECURSIVE ARCHIVE',
+          badgeColor: '#00E5FF',
+          title: 'PROJECT ATHARVA: THE DAEMON AWAKENING',
+          subtitle: 'TRANSCRIPTION RECOVERED FROM OCT 14, 2021 (19:42:00 IST)',
+          timestamp: '19:42:00 IST (ARCHIVED)',
+          paragraphs: [
+            '"If you are reading this from the midway balcony, you made it past the firewall. You found the pressure plate and spawned your ghost clone."',
+            '"I need to tell you the truth before you ascend to the ceiling quantum core. When the neural simulation trapped me three years ago, I knew the security watchdog would purge any human account attempting a manual shutdown."',
+            '"So I compiled an autonomous student profile—a recovery daemon that would mirror my movements, solve the campus backdoors, and reach the root terminal."',
+            '"Karan... you were that daemon. But in solving these four sectors, you didn\'t just execute code—you became real. When you flip gravity [G] and touch the ceiling root terminal, the reboot will purge Project ATHARVA forever, de-archive my consciousness, and free us into the morning sun."'
+          ],
+          actionLabel: 'ASCEND TO QUANTUM ROOT CORE [E]'
+        }}
+      />
 
       {/* ========================================================
           5. PUZZLE 3: THE GLITCH BRIDGE (DIMENSION SWITCH [Q])
@@ -316,6 +380,28 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
         position={[0, 16.8, -52]}
         rotation={[Math.PI, 0, 0]}
         playerPosRef={playerPosRef}
+        storyRevealData={{
+          id: 'l4_story_reveal',
+          type: 'story',
+          badge: 'ATTENDANCE RECONCILIATION // 08:00 AM SUNRISE',
+          badgeColor: '#10B981',
+          title: 'ATTENDANCE: FINALLY CLOSED',
+          subtitle: 'CAMPUS GATE UNLOCKED // SIMULATION DECONSTRUCTED',
+          timestamp: '24-OCT 08:00:00 IST',
+          attendanceData: [
+            { id: 'CS-2021-042', name: 'Anya Sharma', exitTime: '19:42:00 (Oct 14 2021)', status: 'DE-ARCHIVED // PRESENT', color: '#10B981' },
+            { id: 'CS-2024-884', name: 'Karan Rao', exitTime: '19:42:00 (Today)', status: 'RECONCILED // DISCHARGED', color: '#00E5FF' },
+            { id: 'SYS-DAEMON', name: 'Curfew Watchdog', exitTime: '08:00:00 (Sunrise)', status: 'OFFLINE // TERMINATED', color: '#94A3B8' }
+          ],
+          paragraphs: [
+            'CENTRAL MAINFRAME REBOOT SEQUENCE EXECUTED.',
+            'The blinding neon cyan grid fractures into crystalline dust as morning golden sunlight pours through the atrium glass skylights.',
+            'At the campus main gate, the heavy iron turnstiles release with a resonant mechanical chime. The attendance log updates to 100% reconciled: zero students trapped, zero missing persons.',
+            'Anya Sharma steps out onto the library quad, holding her project notebook. Beside her, student ID badge CS-2024-884 shines with full clearance in the morning breeze.',
+            'The simulation has ended. Reality has been restored.'
+          ],
+          actionLabel: 'PROCEED TO CONVOCATION CEREMONY [E]'
+        }}
       />
 
       {/* ========================================================
@@ -331,8 +417,29 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
       {/* Canteen Coffee Cup on Midway Backup Terminal (Refills 100% Glitch Energy + Sprint Boost) */}
       <CoffeeCup position={[0, 5.6, -22]} id="l4_coffee_1" playerPosRef={playerPosRef} />
 
-      {/* Hidden Exam Cheatsheet Note behind the Quantum Mainframe (+50 Bonus Score) */}
-      <ExamNote position={[-6.5, 1.5, 8]} id="l4_note_1" playerPosRef={playerPosRef} />
+      {/* Hidden Exam Cheatsheet Note behind the Datacenter Server Racks */}
+      <ExamNote
+        position={[-6.5, 1.5, 8]}
+        id="l4_note_1"
+        playerPosRef={playerPosRef}
+        noteData={{
+          id: 'l4_note_data',
+          badge: 'HANDWRITTEN NOTEBOOK PAGE',
+          badgeColor: '#FFE14D',
+          title: "ANYA'S SCRATCHPAD: THE 4 FAIL-SAFES",
+          subtitle: 'FOUND HIDDEN BEHIND DATACENTER SERVER RACK #04',
+          timestamp: 'OCT 14, 2021',
+          paragraphs: [
+            '"If the central watchdog ever gains sentience and locks the students inside, remember the 4 architectural fail-safes I baked into the campus code:"',
+            '"1. Gate: The inverted breaker CB-01 bypasses the turnstile interlock."',
+            '"2. Library: Stasis shutter overrides respond only to temporal freezing [F]."',
+            '"3. Computer Lab: The glitch phase [Q] exposes Workstation Beta\'s hidden root shell."',
+            '"4. Core: A student ghost clone [E] on the pressure plate will prevent the firewall from collapsing while you cross."',
+            '"Whoever finds this: don\'t give up. The college is worth saving."'
+          ],
+          actionLabel: 'COLLECT CHEATSHEET (+50 PTS) [E]'
+        }}
+      />
     </group>
   );
 }

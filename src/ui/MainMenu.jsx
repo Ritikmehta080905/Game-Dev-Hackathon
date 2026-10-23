@@ -8,38 +8,38 @@ import { Sound } from '../systems/AudioSystem';
 const SECTORS = [
   {
     id: 1,
-    name: 'SECTOR 01: THE BROKEN GATE',
-    code: 'SECTOR 01',
+    name: 'LEVEL 1: AFTER THE LAST BELL',
+    code: 'SEC-101',
     mechanic: 'GRAVITY FLIP [G]',
-    objective: 'Reach the security ID scanner via the overhead ceiling skywalk',
-    spots: 'Monumental Pylons, Security Cabin, Courtyard Pavement, Inverted ID Gate',
+    objective: 'Restore entrance power via inverted maintenance route & audit the 7:42 PM exit log',
+    spots: 'Monument Pylons, Security Cabin, 7:42 PM Gate, Inverted Skywalk Breaker',
     accent: '#00E5FF'
   },
   {
     id: 2,
-    name: 'SECTOR 02: THE INFINITE ARCHIVES',
-    code: 'SECTOR 02',
+    name: 'LEVEL 2: THE LIBRARY OF THINGS UNWRITTEN',
+    code: 'LIB-202',
     mechanic: 'TIME FREEZE [F]',
-    objective: 'Freeze the rapidly moving book stack and dodge RFID lasers to reach upper deck',
-    spots: 'Reading Hall, Book Stacks, Banker Lamps, High-Speed Archive Shelf',
-    accent: '#FFE14D'
+    objective: 'Coordinate moving archive stacks with Time Freeze to uncover missing student Anya Sharma',
+    spots: 'Reading Hall, Book Stacks, Banker Lamps, Stasis Shutters, Restricted Archive',
+    accent: '#10B981'
   },
   {
     id: 3,
-    name: 'SECTOR 03: THE NEON CORRIDORS',
-    code: 'SECTOR 03',
+    name: 'LEVEL 3: THE LAB THAT NEVER EXISTED',
+    code: 'CAN-303',
     mechanic: 'DIMENSION SWITCH [Q]',
-    objective: 'Phase through blocked walls & cross glitch cyber-bridges over the void',
-    spots: 'Neon Cafeteria Counter, Chai & Samosa Stall, Room 301 Lab, Phased Bridges',
+    objective: 'Alternate between Real & Glitch dimensions in Lab 301 to decode the simulation experiment',
+    spots: 'Campus Canteen, Room 301 Workstations, Dimensional Void Bridges, Quarantined Server',
     accent: '#FF2E93'
   },
   {
     id: 4,
-    name: 'SECTOR 04: THE CORE REBOOT',
-    code: 'SECTOR 04',
-    mechanic: 'MASTER ALL MECHANICS',
-    objective: 'Step on the security pressure plate, scale server lifts, and reboot the root core',
-    spots: 'Mainframe Array, Security Firewall Door, Quantum Server Core, Root Terminal',
+    name: 'LEVEL 4: ATTENDANCE: NEVER CLOSED',
+    code: 'DAT-404',
+    mechanic: 'MASTER ALL MECHANICS [E+F+Q+G]',
+    objective: 'Use Ghost Echo [E] to hold the safety interlock, cross the core, and execute Master Reboot',
+    spots: 'Central Server Core, Interlock Pressure Plate, Ghost Clone, Quantum Mainframe',
     accent: '#7B4BFF'
   }
 ];
@@ -75,15 +75,15 @@ export default function MainMenu() {
         <div style={styles.navLeft}>
           <div style={styles.crestCircle}>⚡</div>
           <div>
-            <div style={styles.navUnivTitle}>CAMPUS ZERO // GLITCHVERSE</div>
-            <div style={styles.navSub}>ARCADE PORTAL &amp; REALITY DEBUGGER • ARTIFICIAL ARCADE VI</div>
+            <div style={styles.navUnivTitle}>ATHARVA.EXE // THE LAST ATTENDANCE</div>
+            <div style={styles.navSub}>CAMPUS ZERO SIMULATION ARCHIVE • 19:42 PM ANOMALY</div>
           </div>
         </div>
 
         <div style={styles.navRight}>
           <div style={styles.campusStatusPill}>
-            <span>⚡ ARTIFICIAL ARCADE VI</span>
-            <span style={{ color: '#4ADE80' }}>● TIMER: 90s</span>
+            <span>⚡ TIME: 19:42:00 IST</span>
+            <span style={{ color: '#EF4444' }}>● GATE LOCKED</span>
           </div>
           <button
             style={{
@@ -118,65 +118,68 @@ export default function MainMenu() {
           {/* Debugger Cadet ID Card */}
           <div style={styles.idCard}>
             <div style={styles.idHeader}>
-              <div style={styles.idUnivTitle}>GLITCHVERSE VIRTUAL REALITY</div>
-              <div style={styles.idUnivSub}>OPERATIONAL DEBUGGER UNIT // PS01</div>
+              <div style={styles.idUnivTitle}>UNIVERSITY STUDENT IDENTITY CARD</div>
+              <div style={styles.idUnivSub}>DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING</div>
             </div>
 
             <div style={styles.idBody}>
-              {/* Cadet Avatar */}
+              {/* Student Avatar */}
               <div style={styles.avatarBox}>
-                <div style={styles.avatarEmoji}>👨‍💻</div>
-                <div style={styles.avatarLabel}>DEBUGGER</div>
+                <div style={styles.avatarEmoji}>🎓</div>
+                <div style={styles.avatarLabel}>STUDENT</div>
               </div>
 
-              {/* Cadet Metadata */}
+              {/* Student Metadata */}
               <div style={styles.idFields}>
-                <div style={styles.idName}>CADET DEBUGGER</div>
-                <div style={styles.idDept}>REALITY ARCHITECT • LEVEL 4</div>
-                <div style={styles.idRoll}>CADET ID: <span style={styles.highlightCyan}>CADET-0809</span></div>
-                <div style={styles.idRoll}>CLEARANCE: <span style={styles.highlightGold}>ALPHA-ACTIVE</span></div>
+                <div style={styles.idName}>KARAN RAO</div>
+                <div style={styles.idDept}>B.TECH CSE • SEMESTER 6</div>
+                <div style={styles.idRoll}>ROLL NO: <span style={styles.highlightCyan}>CS-2024-884</span></div>
+                <div style={styles.idRoll}>ATTENDANCE LOG: <span style={styles.highlightGold}>19:42 PM (DUPLICATE)</span></div>
               </div>
             </div>
 
             {/* Attendance & Performance Grade Bar */}
             <div style={styles.idMetrics}>
               <div style={styles.metricRow}>
-                <span>CAMPUS ATTENDANCE:</span>
-                <span style={{ color: '#10B981', fontWeight: 'bold' }}>100% [ELIGIBLE]</span>
+                <span>CAMPUS ATTENDANCE RECORD:</span>
+                <span style={{ color: '#EF4444', fontWeight: 'bold' }}>SCAN ERROR #404</span>
               </div>
               <div style={styles.attendanceBarBg}>
-                <div style={{ ...styles.attendanceBarFill, width: '100%' }} />
+                <div style={{ ...styles.attendanceBarFill, width: '100%', background: '#EF4444' }} />
               </div>
 
               <div style={styles.metricRow}>
-                <span>CUMULATIVE CGPA:</span>
+                <span>ACADEMIC PERFORMANCE:</span>
                 <span style={{ color: '#FFE14D', fontWeight: 'bold' }}>9.8 / 10.0 (DEAN'S LIST)</span>
               </div>
             </div>
 
             <div style={styles.idFooter}>
-              <span>STATUS: SYSTEM DEBUGGER</span>
-              <span style={styles.validTag}>VALID: 2026</span>
+              <span>STATUS: TRAPPED IN CAMPUS</span>
+              <span style={styles.validTag}>LOCKDOWN: 19:42 PM</span>
             </div>
           </div>
 
           {/* System Glitch Notice Board Widget */}
           <div style={styles.noticeCard}>
             <div style={styles.noticeHeader}>
-              <span>📌 CRITICAL SYSTEM ANOMALY #404</span>
-              <span style={styles.urgentBadge}>URGENT</span>
+              <span>📌 SECURITY NOTICE: 7:42 PM LOCKDOWN</span>
+              <span style={styles.urgentBadge}>ANOMALY</span>
             </div>
             <div style={styles.noticeText}>
-              <strong>Attention Cadet:</strong> Central mainframe malfunction detected during Artificial Arcade VI. Physics rules across 4 simulation sectors are broken.
+              <strong>Attention Student:</strong> At 7:42 PM, all campus gates auto-locked. The security system reports 0 students remaining, yet your ID scanner logged a duplicate exit record from October 14, 2021.
             </div>
             <div style={styles.noticeBullet}>
-              • <strong>Main Gate:</strong> Gravity inverted. Use <span style={styles.keyTag}>[G]</span> on ceiling skywalk.
+              • <strong>Level 1 (Gate):</strong> Power offline. Use <span style={styles.keyTag}>[G]</span> on ceiling skywalk to switch breaker.
             </div>
             <div style={styles.noticeBullet}>
-              • <strong>Central Archives:</strong> High-speed shelves active. Use <span style={styles.keyTag}>[F]</span> to freeze.
+              • <strong>Level 2 (Library):</strong> Shelf stasis desynced. Use <span style={styles.keyTag}>[F]</span> to locate Anya Sharma's file.
             </div>
             <div style={styles.noticeBullet}>
-              • <strong>Neon Corridors:</strong> Phased walls active. Use <span style={styles.keyTag}>[Q]</span> to shift layers.
+              • <strong>Level 3 (Lab 301):</strong> Reality fractured. Use <span style={styles.keyTag}>[Q]</span> to investigate simulation experiment.
+            </div>
+            <div style={styles.noticeBullet}>
+              • <strong>Level 4 (Mainframe):</strong> Spawn clone with <span style={styles.keyTag}>[E]</span> &amp; execute Master Reboot.
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 // ATHARVA.EXE — Level 2: The Infinite Library (University Central Library & Reading Hall)
 // Features realistic academic book stacks, student study carrels, glass balustrades, and Time Freeze [F] puzzle!
 
-import React, { useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import CampusPlatform from '../entities/CampusPlatform';
 import MovingPlatform from '../entities/MovingPlatform';
 import Hazard from '../entities/Hazard';
@@ -10,6 +10,9 @@ import CoffeeCup from '../entities/CoffeeCup';
 import ExamNote from '../entities/ExamNote';
 import Checkpoint from '../entities/Checkpoint';
 import Terminal from '../entities/Terminal';
+import StoryTerminal from '../entities/StoryTerminal';
+import { GameState } from '../../systems/GameState';
+import { Sound } from '../../systems/AudioSystem';
 import {
   getGranitePaversTexture,
   getWoodGrainTexture,
@@ -19,6 +22,16 @@ import {
 } from '../materials/CampusMaterials';
 
 export default function Level2({ playerPosRef }) {
+  const [archiveDoorUnlocked, setArchiveDoorUnlocked] = useState(
+    GameState.getLevelPuzzle(2, 'archiveDoorUnlocked') || false
+  );
+
+  useEffect(() => {
+    return GameState.subscribe((state) => {
+      setArchiveDoorUnlocked(state.getLevelPuzzle(2, 'archiveDoorUnlocked') || false);
+    });
+  }, []);
+
   const shelfTexture = useMemo(() => getLibraryBookshelfTexture(), []);
   const woodTexture = useMemo(() => getWoodGrainTexture(), []);
   const glassTexture = useMemo(() => getWindowGlassTexture(), []);
@@ -72,6 +85,32 @@ export default function Level2({ playerPosRef }) {
         code="DEWEY 004-006 // SILENCE PLEASE"
       />
 
+      {/* Library Circulation Desk Security Terminal */}
+      <StoryTerminal
+        position={[-3.5, 0.4, 5.5]}
+        rotation={[0, Math.PI / 4, 0]}
+        label="CIRCULATION DESK"
+        promptText="[E] ACCESS BORROWING CATALOGUE"
+        accentColor="#10B981"
+        playerPosRef={playerPosRef}
+        modalData={{
+          id: 'l2_circulation_desk',
+          type: 'terminal',
+          badge: 'LIBRARY CATALOGUE // WING B',
+          badgeColor: '#10B981',
+          title: 'CENTRAL UNIVERSITY ARCHIVES // SYSTEM DESYNC',
+          subtitle: 'DESK TERMINAL #02 • DEWEY 004-006',
+          timestamp: '19:42:40 IST',
+          paragraphs: [
+            'LIBRARY STASIS CONTROLLER ALERT:',
+            '"High-speed motorized book stacks in Aisles 4 & 5 are desynchronized due to a temporal clock failure after the 7:42 PM curfew bell."',
+            '"Notice from Chief Librarian: To reach the restricted archives on the upper mezzanine, use the Stasis Suspension Protocol [F] to temporarily freeze the stacks in alignment."',
+            '"The upper mezzanine security shutter is currently locked. Calibrate the stasis console on the midway balcony to disengage the security grille."'
+          ],
+          actionLabel: 'CLOSE CATALOGUE [E]'
+        }}
+      />
+
       {/* Glitch Simulation Digital Artifacts floating near shelves */}
       <HoloCatalogIndex position={[-5.8, 2.5, 6]} />
       <HoloCatalogIndex position={[5.8, 2.5, 6]} />
@@ -103,15 +142,36 @@ export default function Level2({ playerPosRef }) {
       />
 
       {/* ========================================================
-          3. PUZZLE 2: RAPID MOVING ARCHIVE SHELF (TIME FREEZE [F])
+          3. PUZZLE 2: DUAL MOVING ARCHIVE SHELVES (TIME FREEZE [F])
           ======================================================== */}
+      {/* Rapid Archive Stack A (Left to Right) */}
       <MovingPlatform
-        position={[0, 3.4, -15]}
+        position={[-3.0, 2.5, -11]}
         axis="x"
-        distance={13}
+        distance={9}
         speed={3.2}
-        size={[6, 0.8, 6]}
+        size={[5.5, 0.8, 5.0]}
         glowColor="#00E5FF"
+      />
+
+      {/* Mid-air Hazard Laser sweeping between moving shelves */}
+      <Hazard
+        position={[0, 3.2, -14]}
+        axis="x"
+        range={8}
+        speed={2.8}
+        beamLength={6}
+        playerPosRef={playerPosRef}
+      />
+
+      {/* Rapid Archive Stack B (Right to Left) */}
+      <MovingPlatform
+        position={[3.0, 3.8, -17]}
+        axis="x"
+        distance={9}
+        speed={3.2}
+        size={[5.5, 0.8, 5.0]}
+        glowColor="#10B981"
       />
 
       {/* ========================================================
@@ -119,7 +179,7 @@ export default function Level2({ playerPosRef }) {
           ======================================================== */}
       <CampusPlatform
         position={[0, 4.8, -25]}
-        size={[9, 0.8, 7]}
+        size={[10, 0.8, 7]}
         pavementColor="#1e293b"
         curbColor="#00E5FF"
         accentColor="#7B4BFF"
@@ -128,10 +188,82 @@ export default function Level2({ playerPosRef }) {
       />
 
       {/* Modern Glass Railing on Checkpoint Balcony Edges */}
-      <GlassBalustrade position={[-4.3, 5.7, -25]} length={6.8} rotation={[0, Math.PI / 2, 0]} glassTexture={glassTexture} />
-      <GlassBalustrade position={[4.3, 5.7, -25]} length={6.8} rotation={[0, Math.PI / 2, 0]} glassTexture={glassTexture} />
+      <GlassBalustrade position={[-4.8, 5.7, -25]} length={6.8} rotation={[0, Math.PI / 2, 0]} glassTexture={glassTexture} />
+      <GlassBalustrade position={[4.8, 5.7, -25]} length={6.8} rotation={[0, Math.PI / 2, 0]} glassTexture={glassTexture} />
 
       <Checkpoint position={[0, 5.3, -25]} playerPosRef={playerPosRef} />
+
+      {/* Canteen Coffee Cup on Midway Balcony */}
+      <CoffeeCup position={[-3.5, 5.8, -24]} id="l2_coffee_1" playerPosRef={playerPosRef} />
+
+      {/* STASIS SHUTTER OVERRIDE CONSOLE (STAGE 2 PUZZLE) */}
+      <StoryTerminal
+        position={[3.6, 5.2, -25]}
+        rotation={[0, -Math.PI / 2, 0]}
+        label="STASIS SHUTTER OVERRIDE"
+        promptText={archiveDoorUnlocked ? '✔ SHUTTER DISENGAGED' : '[E] CALIBRATE STASIS SHUTTER'}
+        accentColor={archiveDoorUnlocked ? '#10B981' : '#FFE14D'}
+        isActivated={archiveDoorUnlocked}
+        playerPosRef={playerPosRef}
+        onActivate={() => {
+          if (!archiveDoorUnlocked) {
+            GameState.setLevelPuzzle(2, 'archiveDoorUnlocked', true);
+            Sound.playPowerRestored();
+            Sound.playPuzzleSuccess();
+          }
+        }}
+        modalData={{
+          id: 'l2_shutter_console',
+          type: 'terminal',
+          badge: 'STASIS CALIBRATION',
+          badgeColor: archiveDoorUnlocked ? '#10B981' : '#FFE14D',
+          title: archiveDoorUnlocked ? 'UPPER ARCHIVE SHUTTER // OPEN' : 'UPPER ARCHIVE SHUTTER // LOCKED',
+          subtitle: 'STASIS CALIBRATION CONSOLE #LIB-02',
+          timestamp: '19:42:55 IST',
+          paragraphs: [
+            archiveDoorUnlocked
+              ? '✔ STASIS SECURITY SHUTTER DISENGAGED. Upper vertical shelf lift is now unblocked!'
+              : '⚡ SECURITY INTERLOCK ACTIVE: Heavy archive security grille blocks access to the vertical lift.',
+            'Calibrating this stasis relay opens the motorized shutter above.',
+            archiveDoorUnlocked
+              ? 'Board the vertical shelf lift to reach the restricted upper study mezzanine.'
+              : 'Clicking action will synchronize the temporal stasis pins and raise the shutter!'
+          ],
+          actionLabel: archiveDoorUnlocked ? 'PROCEED TO LIFT [E]' : 'DISENGAGE SECURITY SHUTTER [E]'
+        }}
+      />
+
+      {/* Physical Stasis Security Shutter Mesh */}
+      <group position={[0, archiveDoorUnlocked ? 9.5 : 6.8, -28.5]}>
+        <mesh castShadow>
+          <boxGeometry args={[7.5, 3.2, 0.2]} />
+          <meshStandardMaterial
+            map={warningTexture}
+            color={archiveDoorUnlocked ? '#10b981' : '#ea580c'}
+            roughness={0.4}
+            metalness={0.6}
+            transparent
+            opacity={archiveDoorUnlocked ? 0.3 : 1.0}
+          />
+        </mesh>
+        {/* Shutter Warning Beacons */}
+        <mesh position={[-3.4, 1.4, 0.15]}>
+          <sphereGeometry args={[0.18, 12, 12]} />
+          <meshStandardMaterial
+            color={archiveDoorUnlocked ? '#10B981' : '#EF4444'}
+            emissive={archiveDoorUnlocked ? '#10B981' : '#EF4444'}
+            emissiveIntensity={2.5}
+          />
+        </mesh>
+        <mesh position={[3.4, 1.4, 0.15]}>
+          <sphereGeometry args={[0.18, 12, 12]} />
+          <meshStandardMaterial
+            color={archiveDoorUnlocked ? '#10B981' : '#EF4444'}
+            emissive={archiveDoorUnlocked ? '#10B981' : '#EF4444'}
+            emissiveIntensity={2.5}
+          />
+        </mesh>
+      </group>
 
       {/* ========================================================
           5. ELEVATED UPPER STUDY MEZZANINE (UPPER DECK)
@@ -143,7 +275,7 @@ export default function Level2({ playerPosRef }) {
         distance={4.5}
         speed={2.2}
         size={[4.5, 0.8, 4.5]}
-        glowColor="#FFE14D"
+        glowColor={archiveDoorUnlocked ? '#10B981' : '#FFE14D'}
       />
 
       {/* Upper Study Mezzanine Platform */}
@@ -191,9 +323,44 @@ export default function Level2({ playerPosRef }) {
       </mesh>
 
       {/* ========================================================
-          6. EXIT CATALOGUE TERMINAL ON UPPER STUDY MEZZANINE
+          6. EXIT CATALOGUE TERMINAL ON UPPER STUDY MEZZANINE (STORY REVEAL)
           ======================================================== */}
-      <Terminal position={[0, 9.1, -43]} playerPosRef={playerPosRef} />
+      <Terminal
+        position={[0, 9.1, -43]}
+        playerPosRef={playerPosRef}
+        isLocked={!archiveDoorUnlocked}
+        lockMessage="⚠ SHUTTER LOCKED // CALIBRATE CONSOLE ON BALCONY"
+        storyRevealData={{
+          id: 'l2_anya_sharma_reveal',
+          type: 'attendance',
+          badge: 'RESTRICTED ARCHIVES // DEWEY 004.8',
+          badgeColor: '#10B981',
+          accent: '#10B981',
+          title: 'CORRUPTED STUDENT LEDGER // ANYA SHARMA',
+          subtitle: 'CENTRAL UNIVERSITY ARCHIVES • CS-2021-042',
+          timestamp: 'OCTOBER 14, 2021 — 23:59:00 IST',
+          records: {
+            headers: ['FILE CODE', 'NAME / ROLL NO', 'DEPARTMENT / LAB', 'INCIDENT AUDIT', 'CLEARANCE STATUS'],
+            rows: [
+              {
+                cols: ['STU-2021-042', 'Anya Sharma (CS-2021-042)', 'Lab 301 (Machine Intel)', 'Flagged recursive simulation loop', 'STATUS: CORRUPTED // ERASED'],
+                highlight: true
+              },
+              {
+                cols: ['THREAD-884', 'Karan Rao (CS-2024-884)', 'Lab 301 (Recovery Thread)', 'Autonomous thread spawned at 23:58', 'ACTIVE IN SIMULATION'],
+                highlight: false
+              }
+            ]
+          },
+          paragraphs: [
+            'ARCHIVED FACULTY AUDIT LOG #2021-OCT-14:',
+            '"Student Anya Sharma discovered that Project ATHARVA, an experimental neural crowd simulation, was capturing and digitizing consciousness fragments of students remaining on campus after curfew."',
+            '"She attempted an emergency server shutdown from Computer Engineering Lab 301, but the system quarantined her user credentials and initiated an automated registry purge."',
+            '"Terminal Note: \'If an autonomous recovery thread is reading this: proceed to Computer Engineering Lab 301 in Sector 03. Switch dimensions to enter the quarantined room.\'"'
+          ],
+          actionLabel: 'PROCEED TO LEVEL 3: LAB 301 [E]'
+        }}
+      />
 
       {/* ========================================================
           7. 3 DATA FRAGMENTS (COLLEGE PEN DRIVES)
@@ -203,13 +370,24 @@ export default function Level2({ playerPosRef }) {
       <Collectible position={[4.5, 9.8, -39]} id="l2_frag_3" playerPosRef={playerPosRef} />
 
       {/* ========================================================
-          8. CANTEEN COFFEE BOOST & HIDDEN EXAM NOTE (DOC §4)
+          8. HIDDEN EXAM NOTE (DOC §4)
           ======================================================== */}
-      {/* Coffee Cup on Reading Balcony (+100 Energy & Sprint Boost) */}
-      <CoffeeCup position={[-3.5, 5.8, -24]} id="l2_coffee_1" playerPosRef={playerPosRef} />
-
       {/* Hidden Exam Cheatsheet Note behind Reference Bookshelves (+50 Score) */}
-      <ExamNote position={[7.5, 1.2, 3]} id="l2_note_1" playerPosRef={playerPosRef} />
+      <ExamNote
+        position={[7.5, 1.2, 3]}
+        id="l2_note_1"
+        playerPosRef={playerPosRef}
+        noteData={{
+          title: 'STUDENT BORROWER RECORD SLIP',
+          subtitle: 'FOUND TUCKED INSIDE DEWEY 004 REFERENCE BOOK',
+          timestamp: 'OCTOBER 2021 // BORROWER CARD',
+          paragraphs: [
+            '"Borrower: Anya Sharma (CS-2021-042). Checked out: Neural Architecture, Distributed Mainframe Quorum, Simulation Fail-Safe Protocols."',
+            '"Handwritten scribble in margins: \'The campus security cameras aren\'t recording real time. The clock at 7:42 PM is a reset cycle. We are trapped in the cache.\'"',
+            '"Note: To cross the library void, use Time Freeze [F] when the two moving stacks align. Then calibrate the balcony shutter console."'
+          ]
+        }}
+      />
     </group>
   );
 }

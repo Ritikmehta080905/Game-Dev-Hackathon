@@ -6,7 +6,7 @@ import { useFrame } from '@react-three/fiber';
 import { GameState } from '../../systems/GameState';
 import { Sound } from '../../systems/AudioSystem';
 
-export default function ExamNote({ position, id, playerPosRef }) {
+export default function ExamNote({ position, id, playerPosRef, noteData }) {
   const meshRef = useRef();
   const [collected, setCollected] = useState(false);
 
@@ -27,6 +27,16 @@ export default function ExamNote({ position, id, playerPosRef }) {
         setCollected(true);
         Sound.playNoteCollect();
         GameState.collectExamNote();
+        if (noteData) {
+          GameState.openStoryModal({
+            id: id || 'note',
+            type: 'note',
+            badge: 'HANDWRITTEN STUDENT NOTE',
+            badgeColor: '#FFE14D',
+            accent: '#FFE14D',
+            ...noteData
+          });
+        }
       }
     }
   });

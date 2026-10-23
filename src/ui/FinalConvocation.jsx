@@ -25,20 +25,39 @@ export default function FinalConvocation() {
         <div style={styles.innerBorder}>
           {/* Victory Seal & Ribbon */}
           <div style={styles.sealRow}>
-            <div style={styles.sealBadge}>🏅</div>
+            <div style={styles.sealBadge}>🎓</div>
             <div>
-              <div style={styles.univTitle}>CAMPUS ZERO // GLITCHVERSE VICTORY</div>
-              <div style={styles.convocationHeader}>SECTOR DIAGNOSTIC CLEARANCE • GRAND FINALE</div>
+              <div style={styles.univTitle}>ATHARVA.EXE // THE LAST ATTENDANCE</div>
+              <div style={styles.convocationHeader}>08:00 AM SUNRISE • RECONCILIATION COMPLETE</div>
             </div>
-            <div style={styles.goldMedalPill}>TOP OPERATOR</div>
+            <div style={styles.goldMedalPill}>RECONCILED: 100%</div>
           </div>
 
-          <h1 style={styles.certHeading}>CERTIFICATE OF REALITY RESTORATION</h1>
-          <div style={styles.certSub}>CONFERRED BY THE GLITCHVERSE ARCHITECT &amp; SECURITY COUNCIL</div>
+          <h1 style={styles.certHeading}>CONVOCATION OF REALITY RESTORATION</h1>
+          <div style={styles.certSub}>CAMPUS ZERO CENTRAL EXAMINATION &amp; DATA SECURITY COUNCIL</div>
 
           <p style={styles.certBody}>
-            This is to officially certify that operator <strong>CADET DEBUGGER (CADET-0809)</strong> has successfully overcome all 4 corrupted sectors of <strong>CAMPUS ZERO</strong>, restored universal gravity, unfrozen archive time, bridged dimensional rifts, and rebooted the central mainframe before system collapse.
+            This is to officially certify that student daemon <strong>KARAN RAO (CS-2024-884)</strong> has successfully traversed the 4 corrupted campus sectors, solved the architectural fail-safes, de-archived missing researcher <strong>ANYA SHARMA (CS-2021-042)</strong>, and triggered the Quantum Master Reboot.
+            <br /><br />
+            The 7:42 PM recursive curfew has been dissolved. The university gates stand open in the morning sun, and all duplicate attendance records have been permanently cleared.
           </p>
+
+          {/* Student Status Reconciliation Grid */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-around',
+            background: 'rgba(16, 185, 129, 0.1)',
+            border: '1px solid rgba(16, 185, 129, 0.3)',
+            borderRadius: '8px',
+            padding: '10px 16px',
+            marginBottom: '20px',
+            fontSize: '12px',
+            color: '#A7F3D0'
+          }}>
+            <div><strong>ANYA SHARMA</strong> [CS-2021-042]: <span style={{ color: '#10B981', fontWeight: 'bold' }}>DE-ARCHIVED &amp; SAFE</span></div>
+            <div><strong>KARAN RAO</strong> [CS-2024-884]: <span style={{ color: '#00E5FF', fontWeight: 'bold' }}>ATTENDANCE RECORDED</span></div>
+            <div><strong>CAMPUS MAIN GATE</strong>: <span style={{ color: '#FFE14D', fontWeight: 'bold' }}>UNLOCKED (08:00 AM)</span></div>
+          </div>
 
           {/* Academic Rank & Honors Box */}
           <div style={styles.honorsGrid}>
@@ -47,7 +66,7 @@ export default function FinalConvocation() {
               <div style={styles.honorValGold}>{cgpa} / 10.0</div>
             </div>
             <div style={styles.honorCard}>
-              <div style={styles.honorLabel}>SIMULATION RATING</div>
+              <div style={styles.honorLabel}>ACADEMIC STANDING</div>
               <div style={styles.honorValCyan}>{rank}</div>
             </div>
             <div style={styles.honorCard}>
@@ -60,23 +79,23 @@ export default function FinalConvocation() {
           <div style={styles.signaturesRow}>
             <div style={styles.sigCol}>
               <div style={styles.sigLine} />
-              <div style={styles.sigTitle}>LEAD REALITY ARCHITECT</div>
-              <div style={styles.sigSub}>Academy of Reality Systems</div>
+              <div style={styles.sigTitle}>ANYA SHARMA</div>
+              <div style={styles.sigSub}>Lead Simulation Researcher [CS-2021-042]</div>
             </div>
             <div style={styles.sigCol}>
-              <div style={styles.goldStamp}>★ SEAL OF EXCELLENCE ★</div>
+              <div style={styles.goldStamp}>★ ATTENDANCE VERIFIED ★</div>
             </div>
             <div style={styles.sigCol}>
               <div style={styles.sigLine} />
-              <div style={styles.sigTitle}>SYSTEM SECURITY CHIEF</div>
-              <div style={styles.sigSub}>Artificial Arcade VI (PS01)</div>
+              <div style={styles.sigTitle}>CAMPUS EXAMINATION COUNCIL</div>
+              <div style={styles.sigSub}>Division of Reality Systems</div>
             </div>
           </div>
 
           {/* Action Buttons */}
           <div style={styles.btnGroup}>
             <button style={styles.primaryBtn} onClick={handleRestart}>
-              ↺ PLAY AGAIN (NEW SIMULATION RUN)
+              ↺ PLAY AGAIN (NEW ADVENTURE RUN)
             </button>
             <button style={styles.secondaryBtn} onClick={handleMenu}>
               🏛️ RETURN TO MAIN MENU

@@ -40,14 +40,22 @@ class GameStateManager {
     this.timeEchoActive = false;
     this.timeEchoFrames = [];
     this.timeEchoTimeout = null;
+    this.activeStoryModal = null;
+    this.discoveredLogs = new Set();
+    this.levelPuzzles = {
+      1: { powerRestored: false },
+      2: { archiveDoorUnlocked: false, switch1: false, switch2: false },
+      3: { realTerminalSolved: false, glitchTerminalSolved: false, doorUnlocked: false },
+      4: { pressurePlateHeld: false, liftStasis: false, coreFirewallPhased: false, masterRebootReady: false }
+    };
     this.studentInfo = {
-      name: 'Cadet Debugger',
-      role: 'Reality Architect',
-      rollNo: 'CADET-0809',
-      prn: 'GLITCH-SYS-42',
-      department: 'Reality Architecture & Systems',
-      semester: 'Clearance Level 4',
-      college: 'Campus Zero // GlitchVerse'
+      name: 'Karan Rao',
+      role: 'Student Debugger',
+      rollNo: 'CS-2024-884',
+      prn: 'CAMPUS-2024-SYS884',
+      department: 'Computer Science & Engineering',
+      semester: 'Year 3 (Trapped at 19:42 PM)',
+      college: 'Campus Zero // Simulation Archive'
     };
   }
 
@@ -255,8 +263,33 @@ class GameStateManager {
     }
   }
 
+  openStoryModal(modalData) {
+    this.activeStoryModal = modalData;
+    if (modalData?.id) {
+      this.discoveredLogs.add(modalData.id);
+    }
+    this.notify();
+  }
+
+  closeStoryModal() {
+    const callback = this.activeStoryModal?.onClose;
+    this.activeStoryModal = null;
+    this.notify();
+    if (callback) callback();
+  }
+
+  setLevelPuzzle(levelId, key, val) {
+    if (!this.levelPuzzles[levelId]) this.levelPuzzles[levelId] = {};
+    this.levelPuzzles[levelId][key] = val;
+    this.notify();
+  }
+
+  getLevelPuzzle(levelId, key) {
+    return this.levelPuzzles[levelId]?.[key];
+  }
+
   tickTimer(seconds = 1) {
-    if (this.screen !== 'GAME' || this.isDetained || this.isTimeOut || this.showSectorIntro) return;
+    if (this.screen !== 'GAME' || this.isDetained || this.isTimeOut || this.showSectorIntro || this.activeStoryModal) return;
     this.examTimer = Math.max(0, this.examTimer - seconds);
     if (this.examTimer <= 0) {
       this.isTimeOut = true;

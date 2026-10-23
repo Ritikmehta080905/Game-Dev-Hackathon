@@ -167,6 +167,39 @@ class AudioSystem {
     } catch (e) {}
   }
 
+  playTerminalOpen() {
+    this.playTone(880, 'sine', 0.08, 0.12);
+    setTimeout(() => this.playTone(1320, 'sine', 0.12, 0.15), 60);
+  }
+
+  playPowerRestored() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(80, this.ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(320, this.ctx.currentTime + 0.6);
+      gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.7);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.7);
+      setTimeout(() => this.playTone(523.25, 'triangle', 0.2, 0.15), 300);
+      setTimeout(() => this.playTone(659.25, 'triangle', 0.3, 0.18), 450);
+    } catch (e) {}
+  }
+
+  playPuzzleSuccess() {
+    const notes = [659.25, 880, 1046.5];
+    notes.forEach((f, i) => {
+      setTimeout(() => this.playTone(f, 'triangle', 0.2, 0.16), i * 90);
+    });
+  }
+
   startDrone() {
     if (this.muted || this.isDroneActive) return;
     this.init();

@@ -2,7 +2,7 @@
 // Upgraded 3D Environment: Modern Indian university entrance architecture, authentic courtyard amenities,
 // fractured concrete slabs with exposed rebar, and an inverted ceiling mezzanine colonnade!
 
-import React, { useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import CampusPlatform from '../entities/CampusPlatform';
 import Collectible from '../entities/Collectible';
@@ -10,6 +10,9 @@ import CoffeeCup from '../entities/CoffeeCup';
 import ExamNote from '../entities/ExamNote';
 import Checkpoint from '../entities/Checkpoint';
 import Terminal from '../entities/Terminal';
+import StoryTerminal from '../entities/StoryTerminal';
+import { GameState } from '../../systems/GameState';
+import { Sound } from '../../systems/AudioSystem';
 import {
   getGranitePaversTexture,
   getConcreteBumpTexture,
@@ -19,6 +22,16 @@ import {
 } from '../materials/CampusMaterials';
 
 export default function Level1({ playerPosRef }) {
+  const [powerRestored, setPowerRestored] = useState(
+    GameState.getLevelPuzzle(1, 'powerRestored') || false
+  );
+
+  useEffect(() => {
+    return GameState.subscribe((state) => {
+      setPowerRestored(state.getLevelPuzzle(1, 'powerRestored') || false);
+    });
+  }, []);
+
   const paverTex = useMemo(() => getGranitePaversTexture(), []);
   const concreteBump = useMemo(() => getConcreteBumpTexture(), []);
   const circuitTex = useMemo(() => getGlitchCircuitTexture(), []);
@@ -98,6 +111,31 @@ export default function Level1({ playerPosRef }) {
         <pointLight position={[0, 0.8, 0]} color="#fde047" intensity={0.9} distance={6} />
       </group>
 
+      {/* Interactive Guard Station Security Terminal */}
+      <StoryTerminal
+        position={[-8.4, 0.4, 7.5]}
+        rotation={[0, Math.PI / 2, 0]}
+        label="SECURITY DESK"
+        promptText="[E] AUDIT SECURITY LOG"
+        accentColor="#00E5FF"
+        playerPosRef={playerPosRef}
+        modalData={{
+          id: 'l1_guard_terminal',
+          badge: 'SECURITY LOG // 19:42 PM',
+          badgeColor: '#00E5FF',
+          title: 'CAMPUS GATE SEALED // 19:42 PM CURFEW',
+          subtitle: 'GUARD STATION TERMINAL #01',
+          timestamp: '19:42:00 IST',
+          paragraphs: [
+            'CAMPUS SECURITY SYSTEM NOTIFICATION:',
+            '"All campus gates and academic blocks locked down automatically at 19:42 IST after the final evening bell. Attendance ledger reports: TOTAL CAMPUS OCCUPANCY = 0."',
+            '"Notice to Night Supervisor: The main gate ID scanner power has tripped due to a localized physics surge. Emergency circuit breaker CB-01 is mounted on the overhead inverted maintenance skywalk."',
+            '"Turnstiles will remain locked until emergency breaker is engaged and student ID scanner reconciles the exit record."'
+          ],
+          actionLabel: 'ACKNOWLEDGE AUDIT [E]'
+        }}
+      />
+
       {/* Entrance Boom Barrier & Turnstile Pedestals */}
       <group position={[-6.2, 0.6, 12]}>
         <mesh castShadow>
@@ -160,6 +198,32 @@ export default function Level1({ playerPosRef }) {
           <meshBasicMaterial color="#bae6fd" />
         </mesh>
       </group>
+
+      {/* Interactive Campus Examination Notice Board */}
+      <StoryTerminal
+        position={[7.2, 0.4, 4.2]}
+        rotation={[0, -Math.PI / 5, 0]}
+        label="EXAM NOTICE"
+        promptText="[E] READ NOTICE BOARD"
+        accentColor="#FFE14D"
+        playerPosRef={playerPosRef}
+        modalData={{
+          id: 'l1_notice_board',
+          type: 'notice',
+          badge: 'EXAMINATION NOTICE',
+          badgeColor: '#FFE14D',
+          title: 'DEPARTMENT OF APPLIED SCIENCES // NOTICE #404',
+          subtitle: 'FINAL ATTENDANCE & EXAM CLEARANCE SCHEDULE',
+          timestamp: 'PUBLISHED: OCT 2024',
+          paragraphs: [
+            'ATTENTION ALL UNDERGRADUATE STUDENTS:',
+            '1. All laboratory sessions terminate strictly at 19:30 IST. Any student remaining on campus after 19:42 IST will be flagged by automated biometric turnstiles.',
+            '2. Failure to scan student ID upon exit will result in recursive attendance audit loops.',
+            '3. Warning: Maintenance staff report electrical instability between the courtyard paving and the upper academic colonnade. Use caution near the fissure.'
+          ],
+          actionLabel: 'CLOSE NOTICE [E]'
+        }}
+      />
 
       {/* Landscaped Stone Planter Beds with Tropical Shrubbery */}
       <PlanterBed position={[-5.8, 0.4, -0.5]} />
@@ -326,12 +390,99 @@ export default function Level1({ playerPosRef }) {
       </group>
 
       {/* ========================================================
+          7B. INVERTED EMERGENCY CIRCUIT BREAKER STATION (PUZZLE 1)
+          ======================================================== */}
+      {/* Mounted upside-down on the ceiling gantry walkway at [3.2, 13.88, -36] */}
+      <StoryTerminal
+        position={[3.2, 13.88, -36]}
+        rotation={[Math.PI, 0, 0]}
+        label="CIRCUIT BREAKER CB-01"
+        promptText={powerRestored ? '✔ BREAKER CLOSED (ACTIVE)' : '[E] SWITCH EMERGENCY BREAKER'}
+        accentColor={powerRestored ? '#10B981' : '#FF9E3D'}
+        isActivated={powerRestored}
+        playerPosRef={playerPosRef}
+        onActivate={() => {
+          if (!powerRestored) {
+            GameState.setLevelPuzzle(1, 'powerRestored', true);
+            Sound.playPowerRestored();
+            Sound.playPuzzleSuccess();
+          }
+        }}
+        modalData={{
+          id: 'l1_circuit_breaker',
+          type: 'terminal',
+          badge: 'MAIN GRID MAINTENANCE',
+          badgeColor: powerRestored ? '#10B981' : '#FF9E3D',
+          title: powerRestored ? 'EMERGENCY BREAKER CB-01 // ONLINE' : 'EMERGENCY BREAKER CB-01 // POWER TRIPPED',
+          subtitle: 'INVERTED CEILING GANTRY ELECTRICAL JUNCTION',
+          timestamp: '19:42:15 IST',
+          paragraphs: [
+            powerRestored
+              ? '✔ 3-PHASE EMERGENCY POWER RESTORED TO CAMPUS MAIN ENTRANCE GATE.'
+              : '⚡ AUXILIARY POWER REROUTED: Main entrance turnstiles and ID scanner unpowered due to 7:42 PM grid trip.',
+            'Engaging this breaker energizes the biometric scanner terminal at the end of the ceiling gantry.',
+            powerRestored
+              ? 'Overhead exit scanner is now ONLINE. Proceed to the terminal to audit your student credentials.'
+              : 'Clicking action will close the breaker contacts and power up the exit gateway!'
+          ],
+          actionLabel: powerRestored ? 'RETURN TO SKYWALK [E]' : 'ENGAGE BREAKER & POWER GATE [E]'
+        }}
+      />
+
+      {/* Heavy High-Voltage Power Conduit running along Skywalk to Exit Gateway */}
+      <group position={[3.2, 13.84, -41.5]}>
+        <mesh>
+          <boxGeometry args={[0.15, 0.08, 11]} />
+          <meshStandardMaterial
+            color={powerRestored ? '#00E5FF' : '#78350F'}
+            emissive={powerRestored ? '#00E5FF' : '#78350F'}
+            emissiveIntensity={powerRestored ? 1.8 : 0.3}
+          />
+        </mesh>
+        {powerRestored && (
+          <pointLight color="#00E5FF" intensity={1.5} distance={8} />
+        )}
+      </group>
+
+      {/* ========================================================
           8. INVERTED EXIT SCANNER GATEWAY (AT CEILING y = 13.8)
           ======================================================== */}
       <Terminal
         position={[0, 13.8, -47]}
         rotation={[Math.PI, 0, 0]}
         playerPosRef={playerPosRef}
+        isLocked={!powerRestored}
+        lockMessage="⚠ GATE OFFLINE // RESTORE BREAKER ON SKYWALK"
+        storyRevealData={{
+          id: 'l1_exit_attendance_reveal',
+          type: 'attendance',
+          badge: 'GATEWAY BIOMETRIC VERIFICATION',
+          badgeColor: '#00E5FF',
+          accent: '#00E5FF',
+          title: 'ATTENDANCE RECONCILIATION AUDIT // 19:42 PM',
+          subtitle: 'SECTOR 01 EXIT GATE // STUDENT SCANNER #101',
+          timestamp: '19:42:28 IST',
+          records: {
+            headers: ['RECORD ID', 'STUDENT NAME', 'ROLL NO', 'TIMESTAMP', 'SYSTEM VERDICT'],
+            rows: [
+              {
+                cols: ['SCAN-8841', 'Karan Rao', 'CS-2024-884', 'TODAY 19:42:01 IST', 'CURFEW LOCKOUT ENGAGED'],
+                highlight: false
+              },
+              {
+                cols: ['SCAN-0428', 'Karan Rao', 'CS-2024-884', 'OCT 14, 2021 23:58:12 IST', 'DUPLICATE LOGGED // ARCHIVED'],
+                highlight: true
+              }
+            ]
+          },
+          paragraphs: [
+            '⚠️ CRITICAL DATABASE CONFLICT DETECTED:',
+            'Student Karan Rao (CS-2024-884) was logged exiting campus at 7:42 PM today after the final evening bell.',
+            'However, an identical biometric record exists from October 14, 2021 at 23:58 PM, registered under the exact same student identity alongside missing student Anya Sharma (CS-2021-042).',
+            'A cryptic automated message appears on your student terminal: "THE ATTENDANCE LEDGER DOES NOT LIE. PROCEED TO THE CENTRAL ARCHIVES TO RETRIEVE THE UNWRITTEN FILE."'
+          ],
+          actionLabel: 'PROCEED TO LEVEL 2: THE ARCHIVES [E]'
+        }}
       />
 
       {/* ========================================================
@@ -346,7 +497,21 @@ export default function Level1({ playerPosRef }) {
       <CoffeeCup position={[-3.2, 5.8, -29]} id="l1_coffee_1" playerPosRef={playerPosRef} />
 
       {/* Hidden Exam Cheatsheet Note in Courtyard Corner (+50 Bonus Score) */}
-      <ExamNote position={[5.8, 1.2, 10]} id="l1_note_1" playerPosRef={playerPosRef} />
+      <ExamNote
+        position={[5.8, 1.2, 10]}
+        id="l1_note_1"
+        playerPosRef={playerPosRef}
+        noteData={{
+          title: 'STUDENT SCRATCHPAD MEMO',
+          subtitle: 'FOUND CRUMPLED UNDER COURTYARD TEAK BENCH',
+          timestamp: 'SCRIBBLER: ANONYMOUS CS STUDENT',
+          paragraphs: [
+            '"7:35 PM: The turnstiles refused to let us through. The scanner screen kept glitching: \'DUPLICATE ENTITY - CLEARANCE REJECTED\'. What does that even mean?"',
+            '"Rohan tried climbing the perimeter gate and said the skywalk above us flipped upside down. I can see the emergency circuit box glowing amber on the ceiling gantry right above the fissure."',
+            '"If you have enough energy, flip your personal gravity vector near the midway checkpoint to land on the ceiling pavers. Flip breaker CB-01 to wake the scanner up!"'
+          ]
+        }}
+      />
     </group>
   );
 }
