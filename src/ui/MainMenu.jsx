@@ -1,5 +1,5 @@
-// ATHARVA.EXE — MainMenu: Campus Hub & Sector Gateway
-// Features authentic College Student ID Card, Campus Notice Board, and Hall Ticket Sector Cards!
+// ATHARVA.EXE — MainMenu: Authentic Campus Gateway & Sector Selector
+// Real campus photography, soft 3D glassmorphic cards, and student identity terminal
 
 import React, { useState, useEffect } from 'react';
 import { GameState } from '../systems/GameState';
@@ -8,38 +8,50 @@ import { Sound } from '../systems/AudioSystem';
 const SECTORS = [
   {
     id: 1,
-    name: 'LEVEL 1: THE LAST BELL',
+    name: 'SECTOR 01: CAMPUS ENTRANCE GATE',
     code: 'SEC-101',
+    image: '/assets/sector1.jpg',
     mechanic: 'GRAVITY FLIP [G]',
-    objective: 'Restore entrance power via inverted maintenance route & audit the 7:42 PM exit log',
+    objective: 'Restore entrance power via inverted maintenance skywalk & audit the 7:42 PM exit log.',
     spots: 'Entrance Avenue, Gate Arch, Security Cabin, Courtyard, Inverted Skywalk Breaker',
+    stars: '⭐⭐⭐',
+    difficulty: 'NORMAL',
     accent: '#00E5FF'
   },
   {
     id: 2,
-    name: 'LEVEL 2: THE ATTENDANCE ARCHIVE',
+    name: 'SECTOR 02: CENTRAL LIBRARY',
     code: 'LIB-202',
+    image: '/assets/sector2.jpg',
     mechanic: 'TIME FREEZE [F]',
-    objective: 'Coordinate moving archive stacks with Time Freeze to uncover missing student Anya Sharma',
-    spots: 'Reading Hall, Book Stacks, Banker Lamps, Stasis Shutters, Restricted Archive',
+    objective: 'Freeze moving kinetic book stacks to cross reading halls and locate student records.',
+    spots: 'Dewey Stacks, Reading Carrels, Checkout Desk, Midway Checkpoint Balcony',
+    stars: '⭐⭐☆',
+    difficulty: 'ADVANCED',
     accent: '#10B981'
   },
   {
     id: 3,
-    name: 'LEVEL 3: PROJECT ZERO',
+    name: 'SECTOR 03: COMPUTER LAB 301',
     code: 'CAN-303',
+    image: '/assets/sector3.jpg',
     mechanic: 'DIMENSION SWITCH [Q]',
-    objective: 'Alternate between Real & Glitch dimensions in Lab 301 to decode the simulation experiment',
-    spots: 'Campus Canteen, Room 301 Workstations, Dimensional Void Bridges, Quarantined Server',
+    objective: 'Alternate dimensions to walk through phased security walls and bridge void gaps.',
+    spots: 'Campus Canteen, Lab 301, Workstations Alpha & Beta, Laser Fissure',
+    stars: '⭐⭐⭐',
+    difficulty: 'EXPERT',
     accent: '#FF2E93'
   },
   {
     id: 4,
-    name: 'LEVEL 4: CAMPUS ZERO',
+    name: 'SECTOR 04: CAMPUS SERVER ROOM',
     code: 'DAT-404',
-    mechanic: 'MASTER ALL MECHANICS [C+F+Q+G]',
-    objective: 'Use Ghost Echo [C] to hold the safety interlock, cross the core, and execute Master Reboot [E]',
-    spots: 'Central Server Core, Interlock Pressure Plate, Ghost Clone, Quantum Mainframe',
+    image: '/assets/sector4.jpg',
+    mechanic: 'CLONE ECHO [C+F+Q+G]',
+    objective: 'Coordinate your student ghost echo and all reality rules to execute Master Reboot.',
+    spots: 'Datacenter Bays, Rapid Server Lift, Gravity Catapult, Quantum Root Core',
+    stars: '★★★',
+    difficulty: 'MASTER',
     accent: '#7B4BFF'
   }
 ];
@@ -47,8 +59,8 @@ const SECTORS = [
 export default function MainMenu() {
   const [unlockedLevels, setUnlockedLevels] = useState(GameState.unlockedLevels);
   const [showHandbook, setShowHandbook] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
   const [isMuted, setIsMuted] = useState(Sound.muted);
+  const [hoveredSector, setHoveredSector] = useState(null);
 
   useEffect(() => {
     return GameState.subscribe((state) => {
@@ -73,17 +85,17 @@ export default function MainMenu() {
       {/* 1. TOP SYSTEM NAVIGATION BAR */}
       <header style={styles.topNav}>
         <div style={styles.navLeft}>
-          <div style={styles.crestCircle}>⚡</div>
+          <div style={styles.crestCircle}>🏛️</div>
           <div>
-            <div style={styles.navUnivTitle}>ATHARVA.EXE // THE LAST ATTENDANCE</div>
-            <div style={styles.navSub}>CAMPUS ZERO SIMULATION ARCHIVE • 19:42 PM ANOMALY</div>
+            <div style={styles.navUnivTitle}>ATHARVA.EXE // CAMPUS ZERO</div>
+            <div style={styles.navSub}>CAMPUS SIMULATION HUB • 19:42 PM RECONCILIATION</div>
           </div>
         </div>
 
         <div style={styles.navRight}>
           <div style={styles.campusStatusPill}>
-            <span>⚡ TIME: 19:42:00 IST</span>
-            <span style={{ color: '#EF4444' }}>● GATE LOCKED</span>
+            <span>🕒 19:42 IST</span>
+            <span style={{ color: '#EF4444', fontWeight: 'bold' }}>● GATE LOCKED</span>
           </div>
           <button
             style={{
@@ -100,10 +112,10 @@ export default function MainMenu() {
             }}
             title="Toggle Demo Mode: Unlock all 4 campus sectors or reset"
           >
-            {unlockedLevels >= 4 ? '🔒 RESET PROGRESS' : '🔓 UNLOCK ALL SECTORS'}
+            {unlockedLevels >= 4 ? '🔒 RESET' : '🔓 UNLOCK ALL'}
           </button>
           <button style={styles.navIconBtn} onClick={() => setShowHandbook(true)} title="Student Handbook & Rules">
-            📋 STUDENT GUIDE
+            📖 GUIDE
           </button>
           <button style={styles.navIconBtn} onClick={toggleSound} title="Toggle Audio">
             {isMuted ? '🔇 MUTED' : '🔊 AUDIO'}
@@ -111,142 +123,226 @@ export default function MainMenu() {
         </div>
       </header>
 
-      {/* 2. MAIN WORKSPACE: STUDENT ID CARD (LEFT) & CAMPUS SECTOR PASSES (RIGHT) */}
+      {/* 2. MAIN WORKSPACE: STUDENT ID CARD (LEFT) & REAL CAMPUS SECTORS (RIGHT) */}
       <div style={styles.workspace}>
-        {/* LEFT COLUMN: OFFICIAL STUDENT ID BADGE & CAMPUS NOTICE */}
+        {/* LEFT COLUMN: AUTHENTIC STUDENT ID CARD & CAMPUS CONTROLS */}
         <div style={styles.leftCol}>
-          {/* Debugger Cadet ID Card */}
+          {/* Authentic College Student ID Card */}
           <div style={styles.idCard}>
             <div style={styles.idHeader}>
-              <div style={styles.idUnivTitle}>UNIVERSITY STUDENT IDENTITY CARD</div>
-              <div style={styles.idUnivSub}>DEPARTMENT OF COMPUTER SCIENCE &amp; ENGINEERING</div>
+              <span style={styles.univBadge}>CAMPUS STUDENT IDENTITY CARD</span>
+              <span style={styles.deptBadge}>CSE DEPT</span>
             </div>
 
             <div style={styles.idBody}>
-              {/* Student Avatar */}
-              <div style={styles.avatarBox}>
-                <div style={styles.avatarEmoji}>🎓</div>
-                <div style={styles.avatarLabel}>STUDENT</div>
+              {/* Student Silhouette Badge */}
+              <div style={styles.avatarContainer}>
+                <svg
+                  width="44"
+                  height="44"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  style={{ opacity: 0.85 }}
+                >
+                  <circle cx="12" cy="7" r="4.5" fill="url(#silGrad)" />
+                  <path
+                    d="M4 19.5C4 16.5 7.5 14.5 12 14.5C16.5 14.5 20 16.5 20 19.5V21H4V19.5Z"
+                    fill="url(#silGrad)"
+                  />
+                  <defs>
+                    <linearGradient id="silGrad" x1="12" y1="2.5" x2="12" y2="21" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#CBD5E1" />
+                      <stop offset="1" stopColor="#64748B" />
+                    </linearGradient>
+                  </defs>
+                </svg>
               </div>
 
-              {/* Student Metadata */}
+              {/* Student Academic Metadata */}
               <div style={styles.idFields}>
                 <div style={styles.idName}>KARAN RAO</div>
-                <div style={styles.idDept}>B.TECH CSE • SEMESTER 6</div>
-                <div style={styles.idRoll}>ROLL NO: <span style={styles.highlightCyan}>CS-2024-884</span></div>
-                <div style={styles.idRoll}>ATTENDANCE LOG: <span style={styles.highlightGold}>19:42 PM (DUPLICATE)</span></div>
+                <div style={styles.idDept}>B.Tech Computer Science • Sem 6</div>
+                <div style={styles.idRoll}>
+                  ROLL NO: <span style={styles.highlightCyan}>CS-2024-884</span>
+                </div>
+                <div style={styles.statusPill}>
+                  <span style={{ color: '#EF4444' }}>●</span> 19:42 PM DUPLICATE EXIT
+                </div>
               </div>
             </div>
 
-            {/* Attendance & Performance Grade Bar */}
+            {/* Attendance & Academic Grade Bar */}
             <div style={styles.idMetrics}>
               <div style={styles.metricRow}>
-                <span>CAMPUS ATTENDANCE RECORD:</span>
-                <span style={{ color: '#EF4444', fontWeight: 'bold' }}>SCAN ERROR #404</span>
+                <span style={styles.metricLabel}>SEMESTER ATTENDANCE</span>
+                <span style={{ color: '#10B981', fontWeight: 'bold' }}>100% (OPTIMAL)</span>
               </div>
               <div style={styles.attendanceBarBg}>
-                <div style={{ ...styles.attendanceBarFill, width: '100%', background: '#EF4444' }} />
+                <div style={styles.attendanceBarFill} />
               </div>
 
               <div style={styles.metricRow}>
-                <span>ACADEMIC PERFORMANCE:</span>
-                <span style={{ color: '#FFE14D', fontWeight: 'bold' }}>9.8 / 10.0 (DEAN'S LIST)</span>
+                <span style={styles.metricLabel}>ACADEMIC STANDING</span>
+                <span style={{ color: '#FFE14D', fontWeight: '900' }}>9.8 / 10.0 (DEAN'S LIST)</span>
               </div>
             </div>
 
             <div style={styles.idFooter}>
-              <span>STATUS: TRAPPED IN CAMPUS</span>
-              <span style={styles.validTag}>LOCKDOWN: 19:42 PM</span>
+              <span>STATUS: IN CAMPUS (LOCKDOWN)</span>
+              <span style={styles.validTag}>VERIFIED ID</span>
             </div>
           </div>
 
-          {/* System Glitch Notice Board Widget */}
-          <div style={styles.noticeCard}>
-            <div style={styles.noticeHeader}>
-              <span>📌 SECURITY NOTICE: 7:42 PM LOCKDOWN</span>
-              <span style={styles.urgentBadge}>ANOMALY</span>
+          {/* Campus Game Mechanics Reference Pod */}
+          <div style={styles.overridesCard}>
+            <div style={styles.overridesHeader}>
+              <span>⚡ REALITY OVERRIDE KEYS</span>
+              <span style={styles.activeTag}>ACTIVE</span>
             </div>
-            <div style={styles.noticeText}>
-              <strong>Attention Student:</strong> At 7:42 PM, all campus gates auto-locked. The security system reports 0 students remaining, yet your ID scanner logged a duplicate exit record from October 14, 2021.
-            </div>
-            <div style={styles.noticeBullet}>
-              • <strong>Level 1 (Gate):</strong> Power offline. Use <span style={styles.keyTag}>[G]</span> on ceiling skywalk to switch breaker.
-            </div>
-            <div style={styles.noticeBullet}>
-              • <strong>Level 2 (Library):</strong> Shelf stasis desynced. Use <span style={styles.keyTag}>[F]</span> to locate Anya Sharma's file.
-            </div>
-            <div style={styles.noticeBullet}>
-              • <strong>Level 3 (Lab 301):</strong> Reality fractured. Use <span style={styles.keyTag}>[Q]</span> to investigate simulation experiment.
-            </div>
-            <div style={styles.noticeBullet}>
-              • <strong>Level 4 (Mainframe):</strong> Spawn clone with <span style={styles.keyTag}>[C]</span> &amp; execute Master Reboot <span style={styles.keyTag}>[E]</span>.
+
+            <div style={styles.keysGrid}>
+              <div style={{ ...styles.keyChip, borderColor: '#00E5FF' }}>
+                <kbd style={{ ...styles.kbdMini, color: '#00E5FF' }}>[G]</kbd>
+                <div style={styles.keyMeta}>
+                  <span style={styles.keyTitle}>FLIP GRAVITY</span>
+                  <span style={styles.keyDesc}>Ceiling routes</span>
+                </div>
+              </div>
+
+              <div style={{ ...styles.keyChip, borderColor: '#10B981' }}>
+                <kbd style={{ ...styles.kbdMini, color: '#10B981' }}>[F]</kbd>
+                <div style={styles.keyMeta}>
+                  <span style={styles.keyTitle}>FREEZE TIME</span>
+                  <span style={styles.keyDesc}>Halt moving stacks</span>
+                </div>
+              </div>
+
+              <div style={{ ...styles.keyChip, borderColor: '#FF2E93' }}>
+                <kbd style={{ ...styles.kbdMini, color: '#FF2E93' }}>[Q]</kbd>
+                <div style={styles.keyMeta}>
+                  <span style={styles.keyTitle}>DIMENSION SWITCH</span>
+                  <span style={styles.keyDesc}>Phase walls</span>
+                </div>
+              </div>
+
+              <div style={{ ...styles.keyChip, borderColor: '#7B4BFF' }}>
+                <kbd style={{ ...styles.kbdMini, color: '#7B4BFF' }}>[C]</kbd>
+                <div style={styles.keyMeta}>
+                  <span style={styles.keyTitle}>CLONE ECHO</span>
+                  <span style={styles.keyDesc}>Hold interlocks</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* RIGHT COLUMN: 4 CAMPUS SECTORS (THE 4 COLLEGE LEVELS) */}
+        {/* RIGHT COLUMN: 4 REAL CAMPUS SECTOR STAGES */}
         <div style={styles.rightCol}>
           <div style={styles.sectorHeadingRow}>
             <div>
-              <h1 style={styles.sectorsMainTitle}>CAMPUS SECTORS // SEMESTER CHALLENGE</h1>
+              <h1 style={styles.sectorsMainTitle}>CAMPUS SECTORS // EXPLORATION</h1>
               <p style={styles.sectorsSubtitle}>
-                Clear each college sector to reach the central server room and reboot the campus rules!
+                Select a campus sector to navigate and restore before the final curfew bell.
               </p>
             </div>
             <button style={styles.quickStartBtn} onClick={() => handleStartGame(1)}>
-              ▶ LAUNCH LEVEL 1
+              ▶ PLAY LEVEL 1
             </button>
           </div>
 
           <div style={styles.sectorsGrid}>
             {SECTORS.map((s) => {
               const isUnlocked = s.id <= unlockedLevels;
+              const isHovered = hoveredSector === s.id;
+
               return (
                 <div
                   key={s.id}
                   style={{
                     ...styles.sectorCard,
-                    borderColor: isUnlocked ? s.accent : 'rgba(255, 255, 255, 0.1)',
+                    borderColor: isUnlocked
+                      ? isHovered ? s.accent : 'rgba(255, 255, 255, 0.16)'
+                      : 'rgba(255, 255, 255, 0.08)',
+                    boxShadow: isUnlocked
+                      ? isHovered
+                        ? `0 14px 35px rgba(0, 0, 0, 0.5), 0 0 25px ${s.accent}40`
+                        : '0 8px 20px rgba(0, 0, 0, 0.35)'
+                      : '0 4px 15px rgba(0, 0, 0, 0.25)',
+                    transform: isHovered && isUnlocked ? 'translateY(-5px)' : 'none',
                     opacity: isUnlocked ? 1.0 : 0.65
                   }}
+                  onMouseEnter={() => setHoveredSector(s.id)}
+                  onMouseLeave={() => setHoveredSector(null)}
                   onClick={() => isUnlocked && handleStartGame(s.id)}
                 >
-                  <div style={styles.sectorCardTop}>
-                    <span style={{ ...styles.sectorCodeBadge, borderColor: s.accent, color: s.accent }}>
-                      {s.code}
-                    </span>
-                    <span style={styles.sectorStatusBadge}>
-                      {isUnlocked ? '🔓 UNLOCKED' : '🔒 LOCKED'}
-                    </span>
+                  {/* Real Campus Sector Photograph Banner */}
+                  <div style={styles.bannerWrapper}>
+                    <img
+                      src={s.image}
+                      alt={s.name}
+                      style={{
+                        ...styles.bannerImg,
+                        filter: isUnlocked ? 'none' : 'grayscale(70%) brightness(0.65)'
+                      }}
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                    <div style={styles.bannerGradient} />
+
+                    {/* Floating Badges on Banner */}
+                    <div style={styles.bannerTopRow}>
+                      <span style={{ ...styles.sectorCodeBadge, borderColor: s.accent, color: s.accent }}>
+                        {s.code}
+                      </span>
+                      <span
+                        style={{
+                          ...styles.sectorStatusBadge,
+                          color: isUnlocked ? '#10B981' : '#94A3B8',
+                          borderColor: isUnlocked ? '#10B981' : 'rgba(255, 255, 255, 0.2)'
+                        }}
+                      >
+                        {isUnlocked ? '🔓 UNLOCKED' : '🔒 LOCKED'}
+                      </span>
+                    </div>
+
+                    <div style={styles.bannerBottomRow}>
+                      <span style={styles.difficultyTag}>{s.difficulty}</span>
+                      {isUnlocked && <span style={styles.starsTag}>{s.stars}</span>}
+                    </div>
                   </div>
 
-                  <h3 style={styles.sectorName}>{s.name}</h3>
+                  {/* Card Body */}
+                  <div style={styles.cardContent}>
+                    <h3 style={styles.sectorName}>{s.name}</h3>
 
-                  <div style={styles.mechanicPill}>
-                    <span style={{ color: '#FFE14D' }}>RULE:</span> {s.mechanic}
+                    <div style={{ ...styles.mechanicPill, color: s.accent }}>
+                      <span style={{ color: '#FFE14D', fontWeight: 'bold' }}>RULE:</span> {s.mechanic}
+                    </div>
+
+                    <p style={styles.sectorObj}>{s.objective}</p>
+
+                    {/* 3D Action Button */}
+                    <button
+                      style={{
+                        ...styles.sectorLaunchBtn,
+                        background: isUnlocked
+                          ? `linear-gradient(135deg, ${s.accent} 0%, #0284c7 100%)`
+                          : '#1E293B',
+                        color: isUnlocked ? '#060A17' : '#94A3B8',
+                        cursor: isUnlocked ? 'pointer' : 'not-allowed',
+                        boxShadow: isUnlocked ? `0 4px 15px ${s.accent}35` : 'none'
+                      }}
+                      disabled={!isUnlocked}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (isUnlocked) handleStartGame(s.id);
+                      }}
+                    >
+                      {isUnlocked ? `ENTER ${s.code} ▶` : 'COMPLETE PREVIOUS SECTOR'}
+                    </button>
                   </div>
-
-                  <p style={styles.sectorObj}>{s.objective}</p>
-
-                  <div style={styles.sectorSpots}>
-                    <strong>Campus Spots:</strong> {s.spots}
-                  </div>
-
-                  <button
-                    style={{
-                      ...styles.sectorLaunchBtn,
-                      background: isUnlocked ? s.accent : '#1E293B',
-                      color: isUnlocked ? '#060A17' : '#94A3B8',
-                      cursor: isUnlocked ? 'pointer' : 'not-allowed'
-                    }}
-                    disabled={!isUnlocked}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (isUnlocked) handleStartGame(s.id);
-                    }}
-                  >
-                    {isUnlocked ? `ENTER ${s.code} ▶` : 'COMPLETE PREVIOUS SECTOR'}
-                  </button>
                 </div>
               );
             })}
@@ -259,58 +355,55 @@ export default function MainMenu() {
         <div style={styles.modalBackdrop} onClick={() => setShowHandbook(false)}>
           <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <div style={styles.modalHeader}>
-              <h2 style={styles.modalTitle}>📖 GLITCHVERSE SURVIVAL &amp; CONTROLS GUIDE</h2>
+              <h2 style={styles.modalTitle}>📖 CAMPUS SURVIVAL &amp; CONTROLS GUIDE</h2>
               <button style={styles.modalCloseX} onClick={() => setShowHandbook(false)}>✕</button>
             </div>
 
             <div style={styles.handbookGrid}>
               <div style={styles.handbookCard}>
-                <h3 style={{ color: '#00E5FF', margin: '0 0 8px 0' }}>🎮 KEYBOARD CONTROLS</h3>
+                <h3 style={{ color: '#00E5FF', margin: '0 0 10px 0', fontSize: '14px' }}>🎮 MOVEMENT &amp; KEYS</h3>
                 <div style={styles.controlRow}>
                   <kbd style={styles.kbd}>W A S D</kbd>
-                  <span>Camera-relative movement across campus</span>
+                  <span>Camera-relative movement</span>
                 </div>
                 <div style={styles.controlRow}>
                   <kbd style={styles.kbd}>SPACE</kbd>
-                  <span>Jump across broken walkways</span>
+                  <span>Jump across fractured walkways</span>
                 </div>
                 <div style={styles.controlRow}>
                   <kbd style={styles.kbd}>G</kbd>
-                  <span><strong>Flip Gravity</strong> (Walk upside down on ceiling skywalks)</span>
+                  <span><strong>Flip Gravity</strong> (Walk on inverted ceilings)</span>
                 </div>
                 <div style={styles.controlRow}>
                   <kbd style={styles.kbd}>F</kbd>
-                  <span><strong>Freeze Time</strong> (Pause moving book stacks &amp; lasers for 3s)</span>
+                  <span><strong>Freeze Time</strong> (3s stasis on moving stacks)</span>
                 </div>
                 <div style={styles.controlRow}>
                   <kbd style={styles.kbd}>Q</kbd>
-                  <span><strong>Dimension Switch</strong> (Phase between Real &amp; Glitch layers)</span>
+                  <span><strong>Dimension Switch</strong> (Phase through walls)</span>
                 </div>
                 <div style={styles.controlRow}>
-                  <kbd style={styles.kbd}>R</kbd>
-                  <span>Instant respawn at latest campus checkpoint</span>
+                  <kbd style={styles.kbd}>C</kbd>
+                  <span><strong>Ghost Echo Clone</strong> (Hold switches)</span>
                 </div>
               </div>
 
               <div style={styles.handbookCard}>
-                <h3 style={{ color: '#FFE14D', margin: '0 0 8px 0' }}>🎓 COLLEGE LIFE RULES</h3>
+                <h3 style={{ color: '#FFE14D', margin: '0 0 10px 0', fontSize: '14px' }}>🎓 COLLEGE RULES</h3>
                 <div style={styles.ruleItem}>
-                  <strong>• Attendance (Health):</strong> Starts at 100%. Hazards &amp; falls deduct 25%. If attendance reaches 0%, you are <strong>DETAINED</strong>!
+                  <strong>• Attendance (Health):</strong> Starts at 100%. Hazards deduct 25%. 0% causes detention!
                 </div>
                 <div style={styles.ruleItem}>
-                  <strong>• Glitch Energy:</strong> Powers cost energy (G: 20, F: 35, Q: 15). Energy refills while standing on solid campus pavement.
+                  <strong>• Glitch Energy:</strong> Powers cost energy (G: 20, F: 35, Q: 15, C: 40). Refills on ground.
                 </div>
                 <div style={styles.ruleItem}>
-                  <strong>• Exam Bell Countdown:</strong> Clear the level before the bell rings to earn speed points!
-                </div>
-                <div style={styles.ruleItem}>
-                  <strong>• Collectibles:</strong> Find Pen Drives (+100 pts) and Secret Assignment Notes (+50 bonus pts).
+                  <strong>• Exam Bell:</strong> Clear the level before the bell for bonus points.
                 </div>
               </div>
             </div>
 
             <button style={styles.closeBtn} onClick={() => setShowHandbook(false)}>
-              CLOSE HANDBOOK
+              CLOSE GUIDE
             </button>
           </div>
         </div>
@@ -328,7 +421,7 @@ const styles = {
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    background: 'linear-gradient(135deg, rgba(8, 47, 73, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)',
+    background: 'radial-gradient(ellipse at 50% 30%, rgba(15, 23, 42, 0.94) 0%, rgba(8, 14, 28, 0.98) 100%)',
     zIndex: 90,
     fontFamily: '"Plus Jakarta Sans", sans-serif',
     color: '#F8FAFC',
@@ -338,66 +431,68 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '14px 28px',
-    background: 'rgba(15, 23, 42, 0.95)',
-    borderBottom: '1.5px solid rgba(0, 229, 255, 0.3)',
+    padding: '12px 28px',
+    background: 'rgba(11, 18, 38, 0.92)',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)'
   },
   navLeft: {
     display: 'flex',
     alignItems: 'center',
-    gap: '14px'
+    gap: '12px'
   },
   crestCircle: {
-    fontSize: '26px',
-    background: 'rgba(0, 229, 255, 0.12)',
-    border: '1px solid #00E5FF',
+    fontSize: '22px',
+    background: 'rgba(255, 255, 255, 0.08)',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
     borderRadius: '8px',
     padding: '6px 10px'
   },
   navUnivTitle: {
-    fontSize: '16px',
+    fontSize: '15px',
     fontWeight: '800',
-    letterSpacing: '1px',
+    letterSpacing: '0.8px',
     color: '#F8FAFC'
   },
   navSub: {
-    fontSize: '11px',
+    fontSize: '10px',
     color: '#FFE14D',
     fontWeight: '600',
-    letterSpacing: '0.8px'
+    letterSpacing: '0.5px'
   },
   navRight: {
     display: 'flex',
     alignItems: 'center',
-    gap: '14px'
-  },
-  campusStatusPill: {
-    background: '#090E21',
-    border: '1px solid rgba(0, 229, 255, 0.3)',
-    borderRadius: '20px',
-    padding: '6px 14px',
-    fontSize: '12px',
-    fontWeight: '700',
-    display: 'flex',
     gap: '12px'
   },
+  campusStatusPill: {
+    background: 'rgba(6, 10, 24, 0.75)',
+    border: '1px solid rgba(255, 255, 255, 0.12)',
+    borderRadius: '20px',
+    padding: '6px 14px',
+    fontSize: '11px',
+    fontWeight: '600',
+    display: 'flex',
+    gap: '10px'
+  },
   navIconBtn: {
-    background: '#1E293B',
-    color: '#00E5FF',
-    border: '1px solid rgba(0, 229, 255, 0.4)',
+    background: 'rgba(255, 255, 255, 0.06)',
+    color: '#F8FAFC',
+    border: '1px solid rgba(255, 255, 255, 0.18)',
     borderRadius: '6px',
     padding: '7px 14px',
-    fontSize: '12px',
+    fontSize: '11px',
     fontWeight: '700',
+    letterSpacing: '0.5px',
     cursor: 'pointer',
-    fontFamily: 'inherit'
+    fontFamily: 'inherit',
+    transition: 'all 0.15s ease'
   },
   workspace: {
     display: 'grid',
-    gridTemplateColumns: '380px 1fr',
+    gridTemplateColumns: '360px 1fr',
     gap: '24px',
-    padding: '24px 28px',
+    padding: '22px 28px',
     flex: 1,
     maxWidth: '1440px',
     margin: '0 auto',
@@ -410,59 +505,63 @@ const styles = {
     gap: '18px'
   },
   idCard: {
-    background: 'linear-gradient(145deg, #0F172A 0%, #1E293B 100%)',
-    border: '2px solid #00E5FF',
-    borderRadius: '12px',
+    position: 'relative',
+    background: 'rgba(15, 23, 42, 0.92)',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    borderRadius: '16px',
     padding: '20px',
-    boxShadow: '0 0 30px rgba(0, 229, 255, 0.25)',
-    position: 'relative'
+    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.35)',
+    overflow: 'hidden'
   },
   idHeader: {
-    borderBottom: '1px solid rgba(0, 229, 255, 0.3)',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
     paddingBottom: '10px',
-    marginBottom: '14px',
-    textAlign: 'center'
+    marginBottom: '14px'
   },
-  idUnivTitle: {
-    fontSize: '13px',
+  univBadge: {
+    fontSize: '10px',
     fontWeight: '800',
     color: '#00E5FF',
     letterSpacing: '0.8px'
   },
-  idUnivSub: {
-    fontSize: '10px',
+  deptBadge: {
+    fontSize: '9px',
+    fontWeight: '700',
     color: '#FFE14D',
-    fontWeight: '600'
+    background: 'rgba(255, 225, 77, 0.12)',
+    border: '1px solid rgba(255, 225, 77, 0.3)',
+    borderRadius: '4px',
+    padding: '2px 6px'
   },
   idBody: {
     display: 'flex',
-    gap: '16px',
+    gap: '14px',
     alignItems: 'center',
     marginBottom: '16px'
   },
-  avatarBox: {
-    background: '#090E21',
-    border: '1.5px solid #FFE14D',
-    borderRadius: '8px',
-    padding: '12px 14px',
-    textAlign: 'center'
-  },
-  avatarEmoji: {
-    fontSize: '38px',
-    marginBottom: '4px'
-  },
-  avatarLabel: {
-    fontSize: '10px',
-    fontWeight: 'bold',
-    color: '#FFE14D'
+  avatarContainer: {
+    width: '74px',
+    height: '74px',
+    borderRadius: '12px',
+    border: '1.5px solid rgba(255, 255, 255, 0.16)',
+    background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.85) 100%)',
+    flexShrink: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 4px 12px rgba(0, 0, 0, 0.25)'
   },
   idFields: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '4px'
+    gap: '3px'
   },
   idName: {
-    fontSize: '16px',
+    fontSize: '18px',
+    fontFamily: '"Outfit", sans-serif',
     fontWeight: '800',
     color: '#F8FAFC'
   },
@@ -476,46 +575,61 @@ const styles = {
     color: '#CBD5E1',
     fontFamily: '"Fira Code", monospace'
   },
+  statusPill: {
+    fontSize: '10px',
+    fontWeight: '700',
+    color: '#EF4444',
+    background: 'rgba(239, 68, 68, 0.12)',
+    border: '1px solid rgba(239, 68, 68, 0.3)',
+    borderRadius: '4px',
+    padding: '2px 6px',
+    marginTop: '2px',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '4px'
+  },
   highlightCyan: {
     color: '#00E5FF',
     fontWeight: 'bold'
   },
-  highlightGold: {
-    color: '#FFE14D',
-    fontWeight: 'bold'
-  },
   idMetrics: {
-    background: 'rgba(9, 14, 33, 0.8)',
-    borderRadius: '6px',
+    background: 'rgba(6, 10, 24, 0.7)',
+    borderRadius: '10px',
     padding: '12px',
-    marginBottom: '14px'
+    marginBottom: '12px',
+    border: '1px solid rgba(255, 255, 255, 0.06)'
   },
   metricRow: {
     display: 'flex',
     justifyContent: 'space-between',
-    fontSize: '11px',
+    fontSize: '10px',
     marginBottom: '6px'
   },
+  metricLabel: {
+    color: '#94A3B8',
+    fontWeight: '600'
+  },
   attendanceBarBg: {
-    height: '7px',
+    height: '6px',
     background: '#1E293B',
     borderRadius: '4px',
     overflow: 'hidden',
-    marginBottom: '10px'
+    marginBottom: '8px'
   },
   attendanceBarFill: {
     height: '100%',
-    background: '#10B981',
+    width: '100%',
+    background: 'linear-gradient(90deg, #10B981 0%, #00E5FF 100%)',
     borderRadius: '4px'
   },
   idFooter: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    fontSize: '11px',
+    fontSize: '10px',
     color: '#94A3B8',
-    borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-    paddingTop: '10px'
+    borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+    paddingTop: '8px'
   },
   validTag: {
     background: 'rgba(0, 229, 255, 0.15)',
@@ -523,53 +637,73 @@ const styles = {
     padding: '2px 8px',
     borderRadius: '4px',
     fontWeight: 'bold',
-    fontSize: '10px'
+    fontSize: '9px'
   },
-  noticeCard: {
-    background: '#0F172A',
-    border: '1px solid #FFE14D',
-    borderRadius: '10px',
+  overridesCard: {
+    background: 'rgba(15, 23, 42, 0.92)',
+    border: '1px solid rgba(255, 255, 255, 0.12)',
+    borderRadius: '14px',
     padding: '16px',
     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
   },
-  noticeHeader: {
+  overridesHeader: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    fontSize: '11px',
+    fontWeight: '800',
     color: '#FFE14D',
-    fontSize: '12px',
-    fontWeight: 'bold',
-    marginBottom: '10px'
+    marginBottom: '12px'
   },
-  urgentBadge: {
-    background: '#DC2626',
-    color: '#FFFFFF',
+  activeTag: {
+    background: 'rgba(16, 185, 129, 0.15)',
+    border: '1px solid #10B981',
+    color: '#10B981',
     fontSize: '9px',
     padding: '2px 6px',
     borderRadius: '3px',
     fontWeight: '800'
   },
-  noticeText: {
-    fontSize: '12px',
-    lineHeight: '1.5',
-    color: '#CBD5E1',
-    marginBottom: '10px'
+  keysGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: '10px'
   },
-  noticeBullet: {
+  keyChip: {
+    background: 'rgba(6, 10, 24, 0.7)',
+    border: '1px solid',
+    borderRadius: '8px',
+    padding: '8px 10px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px'
+  },
+  kbdMini: {
+    background: '#090E21',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+    borderRadius: '4px',
+    padding: '2px 6px',
+    fontWeight: 'bold',
     fontSize: '11px',
-    lineHeight: '1.6',
-    color: '#94A3B8',
-    marginBottom: '4px'
+    fontFamily: '"Fira Code", monospace'
   },
-  keyTag: {
-    color: '#00E5FF',
-    fontFamily: '"Fira Code", monospace',
-    fontWeight: 'bold'
+  keyMeta: {
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  keyTitle: {
+    fontSize: '10px',
+    fontWeight: '800',
+    color: '#F8FAFC'
+  },
+  keyDesc: {
+    fontSize: '9px',
+    color: '#94A3B8'
   },
   rightCol: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '16px'
+    gap: '14px'
   },
   sectorHeadingRow: {
     display: 'flex',
@@ -578,25 +712,29 @@ const styles = {
   },
   sectorsMainTitle: {
     fontSize: '22px',
-    fontWeight: '900',
-    margin: '0 0 4px 0',
-    color: '#F8FAFC'
+    fontFamily: '"Outfit", sans-serif',
+    fontWeight: '800',
+    margin: '0 0 2px 0',
+    color: '#F8FAFC',
+    letterSpacing: '0.5px'
   },
   sectorsSubtitle: {
-    fontSize: '13px',
+    fontSize: '12px',
     color: '#94A3B8',
     margin: 0
   },
   quickStartBtn: {
-    background: 'linear-gradient(135deg, #0284c7 0%, #00E5FF 100%)',
+    background: 'linear-gradient(135deg, #00E5FF 0%, #0284c7 100%)',
     color: '#060A17',
     border: 'none',
-    borderRadius: '6px',
+    borderRadius: '8px',
     padding: '10px 20px',
-    fontSize: '13px',
+    fontSize: '12px',
     fontWeight: '800',
+    letterSpacing: '0.8px',
     cursor: 'pointer',
-    boxShadow: '0 0 20px rgba(0, 229, 255, 0.3)'
+    boxShadow: '0 4px 15px rgba(0, 229, 255, 0.35)',
+    fontFamily: 'inherit'
   },
   sectorsGrid: {
     display: 'grid',
@@ -604,22 +742,46 @@ const styles = {
     gap: '16px'
   },
   sectorCard: {
-    background: '#0F172A',
-    border: '1.5px solid',
-    borderRadius: '10px',
-    padding: '18px',
+    background: 'rgba(15, 23, 42, 0.9)',
+    border: '1px solid',
+    borderRadius: '16px',
+    overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.4)',
-    transition: 'all 0.2s',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    transition: 'all 0.25s ease'
   },
-  sectorCardTop: {
+  bannerWrapper: {
+    position: 'relative',
+    height: '135px',
+    width: '100%',
+    overflow: 'hidden',
+    background: '#090E21'
+  },
+  bannerImg: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    transition: 'transform 0.4s ease'
+  },
+  bannerGradient: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '50px',
+    background: 'linear-gradient(to top, rgba(15, 23, 42, 1) 0%, rgba(15, 23, 42, 0) 100%)',
+    pointerEvents: 'none'
+  },
+  bannerTopRow: {
+    position: 'absolute',
+    top: '10px',
+    left: '12px',
+    right: '12px',
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '8px'
+    alignItems: 'center'
   },
   sectorCodeBadge: {
     border: '1px solid',
@@ -627,47 +789,77 @@ const styles = {
     padding: '3px 8px',
     fontSize: '10px',
     fontWeight: 'bold',
-    fontFamily: '"Fira Code", monospace'
+    fontFamily: '"Fira Code", monospace',
+    background: 'rgba(10, 15, 30, 0.85)',
+    backdropFilter: 'blur(4px)'
   },
   sectorStatusBadge: {
-    fontSize: '11px',
-    fontWeight: '600',
-    color: '#94A3B8'
+    fontSize: '10px',
+    fontWeight: '700',
+    border: '1px solid',
+    borderRadius: '12px',
+    padding: '3px 8px',
+    background: 'rgba(10, 15, 30, 0.85)',
+    backdropFilter: 'blur(4px)'
+  },
+  bannerBottomRow: {
+    position: 'absolute',
+    bottom: '8px',
+    left: '12px',
+    right: '12px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  difficultyTag: {
+    fontSize: '9px',
+    fontWeight: '700',
+    color: '#FFE14D',
+    background: 'rgba(0, 0, 0, 0.65)',
+    padding: '2px 6px',
+    borderRadius: '4px',
+    letterSpacing: '0.5px'
+  },
+  starsTag: {
+    fontSize: '12px'
+  },
+  cardContent: {
+    padding: '14px 18px 18px 18px',
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
+    justifyContent: 'space-between'
   },
   sectorName: {
-    fontSize: '16px',
+    fontSize: '15px',
+    fontFamily: '"Outfit", sans-serif',
     fontWeight: '800',
     color: '#F8FAFC',
-    margin: '0 0 8px 0'
+    margin: '0 0 6px 0',
+    letterSpacing: '0.4px'
   },
   mechanicPill: {
-    fontSize: '11px',
-    fontWeight: 'bold',
-    color: '#00E5FF',
+    fontSize: '10px',
+    fontWeight: '700',
     marginBottom: '8px',
     fontFamily: '"Fira Code", monospace'
   },
   sectorObj: {
-    fontSize: '12px',
-    color: '#CBD5E1',
-    lineHeight: '1.4',
-    margin: '0 0 10px 0'
-  },
-  sectorSpots: {
     fontSize: '11px',
-    color: '#94A3B8',
-    marginBottom: '14px',
-    lineHeight: '1.4'
+    color: '#CBD5E1',
+    lineHeight: '1.45',
+    margin: '0 0 14px 0'
   },
   sectorLaunchBtn: {
     border: 'none',
-    borderRadius: '6px',
-    padding: '10px',
+    borderRadius: '8px',
+    padding: '11px',
     fontSize: '12px',
     fontWeight: '800',
     letterSpacing: '0.5px',
     width: '100%',
-    fontFamily: 'inherit'
+    fontFamily: 'inherit',
+    transition: 'all 0.15s ease'
   },
   modalBackdrop: {
     position: 'fixed',
@@ -682,24 +874,25 @@ const styles = {
     zIndex: 110
   },
   modalContent: {
-    background: '#0F172A',
-    border: '1.5px solid #00E5FF',
-    borderRadius: '12px',
+    background: 'rgba(15, 23, 42, 0.96)',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+    borderRadius: '16px',
     padding: '28px 32px',
-    maxWidth: '780px',
-    width: '92%',
-    boxShadow: '0 0 50px rgba(0, 229, 255, 0.25)'
+    maxWidth: '720px',
+    width: '90%',
+    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.5)'
   },
   modalHeader: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '20px',
-    borderBottom: '1px solid rgba(0, 229, 255, 0.2)',
-    paddingBottom: '12px'
+    marginBottom: '18px',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+    paddingBottom: '10px'
   },
   modalTitle: {
-    fontSize: '20px',
+    fontSize: '18px',
+    fontFamily: '"Outfit", sans-serif',
     fontWeight: '800',
     color: '#00E5FF',
     margin: 0
@@ -708,55 +901,56 @@ const styles = {
     background: 'none',
     border: 'none',
     color: '#94A3B8',
-    fontSize: '20px',
+    fontSize: '18px',
     cursor: 'pointer'
   },
   handbookGrid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-    gap: '18px',
-    marginBottom: '24px'
+    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+    gap: '16px',
+    marginBottom: '20px'
   },
   handbookCard: {
-    background: '#090E21',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: '8px',
-    padding: '16px'
+    background: 'rgba(6, 10, 24, 0.75)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    borderRadius: '10px',
+    padding: '14px'
   },
   controlRow: {
     display: 'flex',
     alignItems: 'center',
-    gap: '12px',
-    fontSize: '12px',
+    gap: '10px',
+    fontSize: '11px',
     color: '#CBD5E1',
-    marginBottom: '10px'
+    marginBottom: '8px'
   },
   kbd: {
     background: '#1E293B',
-    border: '1px solid #00E5FF',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
     borderRadius: '4px',
     padding: '3px 8px',
     color: '#00E5FF',
     fontWeight: 'bold',
     fontSize: '11px',
     minWidth: '55px',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: '"Fira Code", monospace'
   },
   ruleItem: {
-    fontSize: '12px',
+    fontSize: '11px',
     color: '#CBD5E1',
     lineHeight: '1.6',
-    marginBottom: '8px'
+    marginBottom: '6px'
   },
   closeBtn: {
     width: '100%',
-    background: '#1E293B',
-    color: '#FF2E93',
-    border: '1px solid #FF2E93',
-    borderRadius: '6px',
-    padding: '11px',
-    fontSize: '13px',
-    fontWeight: 'bold',
+    background: 'rgba(255, 255, 255, 0.1)',
+    color: '#F8FAFC',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+    borderRadius: '8px',
+    padding: '12px',
+    fontSize: '12px',
+    fontWeight: '800',
     cursor: 'pointer',
     fontFamily: 'inherit'
   }
