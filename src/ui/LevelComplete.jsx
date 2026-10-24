@@ -1,15 +1,15 @@
-// ATHARVA.EXE — LevelComplete: Semester Marksheet & Grade Card
-// Official university grade report with CGPA, attendance score, and semester progression!
+// ATHARVA.EXE — LevelComplete: 3D Cyberpunk Stage Clear Card
+// Clean, minimal-text, high-impact arcade victory screen
 
 import React from 'react';
 import { GameState } from '../systems/GameState';
 import { Sound } from '../systems/AudioSystem';
 
-const LEVEL_SUBJECTS = {
-  1: { code: 'CS-601', title: 'APPLIED GRAVITY & CEILING RECONNAISSANCE' },
-  2: { code: 'CS-602', title: 'TEMPORAL OPTIMIZATION & ARCHIVE FREEZING' },
-  3: { code: 'CS-603', title: 'DIMENSIONAL PHASE-SHIFTING & NETWORK BRIDGING' },
-  4: { code: 'CS-604', title: 'CENTRAL MAINFRAME ROOT REBOOT & QUANTUM RESILIENCE' }
+const LEVEL_NAMES = {
+  1: { code: 'SEC-101', name: 'CAMPUS GATE' },
+  2: { code: 'LIB-202', name: 'CENTRAL ARCHIVES' },
+  3: { code: 'CAN-303', name: 'LAB 301' },
+  4: { code: 'DAT-404', name: 'ROOT MAINFRAME' }
 };
 
 export default function LevelComplete() {
@@ -27,7 +27,7 @@ export default function LevelComplete() {
   };
 
   const isFinalLevel = data.levelId >= 4;
-  const subject = LEVEL_SUBJECTS[data.levelId] || LEVEL_SUBJECTS[1];
+  const levelInfo = LEVEL_NAMES[data.levelId] || LEVEL_NAMES[1];
 
   const handleNext = () => {
     Sound.playTone(800, 'square', 0.1, 0.12);
@@ -39,119 +39,90 @@ export default function LevelComplete() {
   };
 
   const handleReplay = () => {
+    Sound.playTone(600, 'triangle', 0.1, 0.1);
     GameState.startLevel(data.levelId);
   };
 
   const handleMenu = () => {
+    Sound.playTone(400, 'sine', 0.1, 0.1);
     GameState.returnToPortal();
   };
 
-  let starDisplay = '☆☆☆';
-  if (data.stars === 1) starDisplay = '⭐☆☆';
-  else if (data.stars === 2) starDisplay = '⭐⭐☆';
-  else if (data.stars >= 3) starDisplay = '⭐⭐⭐';
+  const starsCount = Math.max(1, Math.min(3, data.stars || 3));
 
   return (
     <div style={styles.overlay}>
-      <div style={styles.marksheetCard}>
-        {/* Official GlitchVerse Letterhead */}
-        <div style={styles.letterhead}>
-          <div style={styles.letterheadLeft}>
-            <div style={styles.univEmblem}>⚡</div>
-            <div>
-              <div style={styles.univTitle}>CAMPUS ZERO // SYSTEM RESTORED</div>
-              <div style={styles.univSub}>SECTOR DIAGNOSTIC CLEARANCE • PERFORMANCE REPORT</div>
+      <div style={styles.card}>
+        {/* Glow halo header */}
+        <div style={styles.headerRow}>
+          <span style={styles.sectorPill}>SECTOR 0{data.levelId} // {levelInfo.code}</span>
+          <span style={styles.rankPill}>🏆 S-RANK</span>
+        </div>
+
+        {/* Big 3D Title */}
+        <h1 style={styles.title}>STAGE CLEARED!</h1>
+        <div style={styles.levelName}>{levelInfo.name} RESTORED</div>
+
+        {/* 3D Glowing Stars */}
+        <div style={styles.starRow}>
+          {[1, 2, 3].map((star) => (
+            <span
+              key={star}
+              style={{
+                ...styles.star,
+                color: star <= starsCount ? '#FFE14D' : 'rgba(255, 255, 255, 0.15)',
+                textShadow: star <= starsCount ? '0 0 20px #FFE14D, 0 0 40px rgba(255, 225, 77, 0.6)' : 'none'
+              }}
+            >
+              ★
+            </span>
+          ))}
+        </div>
+
+        {/* 4 Punchy Metric Chips */}
+        <div style={styles.statsGrid}>
+          <div style={styles.statTile}>
+            <div style={styles.statIcon}>⚡</div>
+            <div style={styles.statLabel}>SCORE</div>
+            <div style={{ ...styles.statVal, color: '#FFE14D' }}>{data.score} PTS</div>
+          </div>
+
+          <div style={styles.statTile}>
+            <div style={styles.statIcon}>⏱️</div>
+            <div style={styles.statLabel}>SPEED BONUS</div>
+            <div style={{ ...styles.statVal, color: '#00E5FF' }}>+{data.timeBonus} PTS</div>
+          </div>
+
+          <div style={styles.statTile}>
+            <div style={styles.statIcon}>💾</div>
+            <div style={styles.statLabel}>DATA DISKS</div>
+            <div style={{ ...styles.statVal, color: '#FF2E93' }}>
+              {data.fragments} / {data.totalFragments}
             </div>
           </div>
-          <div style={styles.accreditation}>SECURITY CLEARANCE: VERIFIED</div>
-        </div>
 
-        {/* Candidate & Subject Info */}
-        <div style={styles.candidateGrid}>
-          <div style={styles.candItem}>
-            <span style={styles.candLabel}>OPERATOR:</span>
-            <span style={styles.candVal}>{GameState.studentInfo?.name || 'Cadet Debugger'}</span>
-          </div>
-          <div style={styles.candItem}>
-            <span style={styles.candLabel}>UNIT ID:</span>
-            <span style={styles.candVal}>{GameState.studentInfo?.rollNo || 'CADET-0809'}</span>
-          </div>
-          <div style={styles.candItem}>
-            <span style={styles.candLabel}>SIMULATION:</span>
-            <span style={styles.candVal}>PS01 GlitchVerse (Terminal Mode)</span>
-          </div>
-          <div style={styles.candItem}>
-            <span style={styles.candLabel}>PROTOCOL:</span>
-            <span style={styles.candVal}>{subject.code}: {subject.title}</span>
+          <div style={styles.statTile}>
+            <div style={styles.statIcon}>🛡️</div>
+            <div style={styles.statLabel}>SHIELD</div>
+            <div style={{ ...styles.statVal, color: '#10B981' }}>{data.attendance}%</div>
           </div>
         </div>
 
-        {/* Big Grade Stars & Status */}
-        <div style={styles.gradeBanner}>
-          <div style={styles.stars}>{starDisplay}</div>
-          <div style={styles.gradeResult}>
-            SECTOR 0{data.levelId} RESTORED &amp; CLEARED!
-          </div>
-        </div>
-
-        {/* Official Score & Performance Table */}
-        <table style={styles.gradeTable}>
-          <thead>
-            <tr>
-              <th style={styles.th}>EVALUATION CRITERIA</th>
-              <th style={styles.th}>PERFORMANCE</th>
-              <th style={styles.th}>MARKS AWARDED</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style={styles.td}>Data Fragments Recovered</td>
-              <td style={styles.td}>{data.fragments} of {data.totalFragments} Disks</td>
-              <td style={styles.tdHighlight}>+{data.fragments * 100} PTS</td>
-            </tr>
-            <tr>
-              <td style={styles.td}>Speed Clearance Bonus</td>
-              <td style={styles.td}>Completed Ahead of Bell</td>
-              <td style={styles.tdGold}>+{data.timeBonus} PTS</td>
-            </tr>
-            <tr>
-              <td style={styles.td}>System Shield Retained</td>
-              <td style={styles.td}>{data.attendance}% (Optimal)</td>
-              <td style={{ ...styles.td, color: '#10B981', fontWeight: 'bold' }}>GRADE: O (OUTSTANDING)</td>
-            </tr>
-            <tr>
-              <td style={styles.td}>Glitch Respawns / Resets</td>
-              <td style={styles.td}>{data.respawns} System Resets</td>
-              <td style={{ ...styles.td, color: data.respawns > 0 ? '#EF4444' : '#10B981' }}>
-                {data.respawns > 0 ? `-${data.respawns * 20} PTS` : 'CLEAN RECORD'}
-              </td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colSpan={2} style={styles.tfootLabel}>CUMULATIVE SECTOR SCORE &amp; RATING:</td>
-              <td style={styles.tfootScore}>{data.score} PTS (RATING: {data.cgpa} / 10.0)</td>
-            </tr>
-          </tfoot>
-        </table>
-
-        {/* Faculty Remarks */}
-        <div style={styles.remarksBox}>
-          <strong>System Evaluation:</strong> Exceptional reality rule manipulation and platforming demonstrated in {subject.title}. Clearance granted!
+        {/* Subtle one-line status */}
+        <div style={styles.statusLine}>
+          ✓ Reality synchronization stable • Next sector gateway online
         </div>
 
         {/* Action Buttons */}
-        <div style={styles.btnGroup}>
+        <div style={styles.btnRow}>
           <button style={styles.primaryBtn} onClick={handleNext}>
-            {isFinalLevel ? '🏆 PROCEED TO MISSION DEBRIEF' : `▶ ADVANCE TO SECTOR 0${data.levelId + 1}`}
+            {isFinalLevel ? '🏆 MISSION DEBRIEF ▶' : `ADVANCE TO SECTOR 0${data.levelId + 1} ▶`}
           </button>
-          {!isFinalLevel && (
-            <button style={styles.secondaryBtn} onClick={handleReplay}>
-              ↺ RETRY SECTOR (AIM FOR 3 STARS)
-            </button>
-          )}
-          <button style={styles.secondaryBtn} onClick={handleMenu}>
-            🏛️ RETURN TO MAIN MENU
+          <button style={styles.secondaryBtn} onClick={handleReplay} title="Retry Sector">
+            ↺ RETRY
+          </button>
+          <button style={styles.secondaryBtn} onClick={handleMenu} title="Return to Menu">
+            🏛️ MENU
           </button>
         </div>
       </div>
@@ -166,8 +137,8 @@ const styles = {
     left: 0,
     width: '100%',
     height: '100%',
-    background: 'rgba(15, 23, 42, 0.7)',
-    backdropFilter: 'blur(8px)',
+    background: 'radial-gradient(ellipse at 50% 50%, rgba(12, 21, 46, 0.75) 0%, rgba(6, 10, 24, 0.88) 100%)',
+    backdropFilter: 'blur(12px)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -176,171 +147,139 @@ const styles = {
     color: '#F8FAFC',
     pointerEvents: 'auto'
   },
-  marksheetCard: {
-    background: 'linear-gradient(145deg, #1e293b 0%, #0f172a 100%)',
-    border: '2px solid #00E5FF',
-    borderRadius: '14px',
-    padding: '30px 38px',
-    maxWidth: '680px',
-    width: '92%',
-    boxShadow: '0 0 60px rgba(0, 229, 255, 0.3)',
+  card: {
+    background: 'rgba(11, 18, 38, 0.92)',
+    border: '1.5px solid rgba(0, 229, 255, 0.5)',
+    borderRadius: '18px',
+    padding: '32px 38px',
+    maxWidth: '560px',
+    width: '90%',
+    textAlign: 'center',
+    boxShadow: '0 0 50px rgba(0, 229, 255, 0.3), 0 20px 60px rgba(0, 0, 0, 0.8)',
     boxSizing: 'border-box'
   },
-  letterhead: {
+  headerRow: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottom: '1.5px solid rgba(0, 229, 255, 0.3)',
-    paddingBottom: '12px',
-    marginBottom: '16px'
-  },
-  letterheadLeft: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px'
-  },
-  univEmblem: {
-    fontSize: '28px'
-  },
-  univTitle: {
-    fontSize: '15px',
-    fontWeight: '800',
-    color: '#00E5FF',
-    letterSpacing: '1px'
-  },
-  univSub: {
-    fontSize: '10px',
-    color: '#FFE14D',
-    fontWeight: '600',
-    letterSpacing: '0.8px'
-  },
-  accreditation: {
-    fontSize: '10px',
-    background: 'rgba(255, 225, 77, 0.15)',
-    border: '1px solid #FFE14D',
-    color: '#FFE14D',
-    padding: '3px 8px',
-    borderRadius: '4px',
-    fontWeight: 'bold'
-  },
-  candidateGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
-    gap: '8px',
-    background: '#090E21',
-    borderRadius: '8px',
-    padding: '12px 16px',
-    marginBottom: '16px',
-    fontSize: '12px'
-  },
-  candItem: {
-    display: 'flex',
-    gap: '6px'
-  },
-  candLabel: {
-    color: '#94A3B8',
-    fontWeight: '600'
-  },
-  candVal: {
-    color: '#F8FAFC',
-    fontWeight: '700'
-  },
-  gradeBanner: {
-    textAlign: 'center',
-    marginBottom: '16px'
-  },
-  stars: {
-    fontSize: '32px',
-    marginBottom: '4px'
-  },
-  gradeResult: {
-    color: '#10B981',
-    fontWeight: '800',
-    fontSize: '15px',
-    letterSpacing: '1px'
-  },
-  gradeTable: {
-    width: '100%',
-    borderCollapse: 'collapse',
-    fontSize: '12px',
     marginBottom: '14px'
   },
-  th: {
-    background: '#1E293B',
-    color: '#00E5FF',
-    padding: '8px 12px',
-    textAlign: 'left',
+  sectorPill: {
     fontSize: '11px',
-    fontWeight: 'bold',
-    borderBottom: '1px solid rgba(0, 229, 255, 0.2)'
-  },
-  td: {
-    padding: '8px 12px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-    color: '#CBD5E1'
-  },
-  tdHighlight: {
-    padding: '8px 12px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+    fontWeight: '800',
+    letterSpacing: '1.5px',
     color: '#00E5FF',
-    fontWeight: 'bold'
+    background: 'rgba(0, 229, 255, 0.1)',
+    border: '1px solid rgba(0, 229, 255, 0.3)',
+    borderRadius: '20px',
+    padding: '4px 12px'
   },
-  tdGold: {
-    padding: '8px 12px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-    color: '#FFE14D',
-    fontWeight: 'bold'
-  },
-  tfootLabel: {
-    padding: '10px 12px',
-    fontWeight: 'bold',
-    color: '#F8FAFC',
-    background: '#1E293B'
-  },
-  tfootScore: {
-    padding: '10px 12px',
+  rankPill: {
+    fontSize: '11px',
     fontWeight: '900',
+    letterSpacing: '1px',
     color: '#FFE14D',
-    fontSize: '14px',
-    background: '#1E293B',
-    textAlign: 'right'
+    background: 'rgba(255, 225, 77, 0.12)',
+    border: '1px solid rgba(255, 225, 77, 0.4)',
+    borderRadius: '20px',
+    padding: '4px 12px'
   },
-  remarksBox: {
-    background: '#090E21',
-    borderLeft: '3px solid #10B981',
-    padding: '8px 12px',
-    fontSize: '11px',
-    color: '#CBD5E1',
-    fontStyle: 'italic',
+  title: {
+    fontFamily: '"Outfit", sans-serif',
+    fontSize: '34px',
+    fontWeight: '900',
+    color: '#F8FAFC',
+    letterSpacing: '2px',
+    margin: '0 0 4px 0',
+    textShadow: '0 0 24px rgba(0, 229, 255, 0.5)'
+  },
+  levelName: {
+    fontSize: '12px',
+    fontWeight: '700',
+    color: '#94A3B8',
+    letterSpacing: '2px',
+    textTransform: 'uppercase',
+    marginBottom: '16px'
+  },
+  starRow: {
+    display: 'flex',
+    justifyContent: 'center',
+    gap: '14px',
+    fontSize: '44px',
+    lineHeight: 1,
+    marginBottom: '22px'
+  },
+  star: {
+    transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+    cursor: 'default'
+  },
+  statsGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    gap: '10px',
     marginBottom: '18px'
   },
-  btnGroup: {
+  statTile: {
+    background: 'rgba(6, 10, 24, 0.75)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    borderRadius: '10px',
+    padding: '12px 6px',
+    textAlign: 'center'
+  },
+  statIcon: {
+    fontSize: '16px',
+    marginBottom: '4px'
+  },
+  statLabel: {
+    fontSize: '9px',
+    fontWeight: '700',
+    letterSpacing: '0.8px',
+    color: '#94A3B8',
+    marginBottom: '4px'
+  },
+  statVal: {
+    fontSize: '14px',
+    fontWeight: '900',
+    fontFamily: '"Fira Code", monospace'
+  },
+  statusLine: {
+    fontSize: '11px',
+    color: '#10B981',
+    fontWeight: '600',
+    letterSpacing: '0.5px',
+    marginBottom: '22px'
+  },
+  btnRow: {
     display: 'flex',
     gap: '10px'
   },
   primaryBtn: {
     flex: 2,
-    background: 'linear-gradient(135deg, #0284c7 0%, #00E5FF 100%)',
+    background: 'linear-gradient(135deg, #00E5FF 0%, #0284c7 100%)',
     color: '#060A17',
     border: 'none',
-    borderRadius: '6px',
-    padding: '12px',
-    fontSize: '12px',
-    fontWeight: '800',
+    borderRadius: '8px',
+    padding: '14px 18px',
+    fontSize: '13px',
+    fontWeight: '900',
+    letterSpacing: '1px',
     cursor: 'pointer',
     fontFamily: 'inherit',
-    boxShadow: '0 0 20px rgba(0, 229, 255, 0.3)'
+    boxShadow: '0 0 25px rgba(0, 229, 255, 0.4)',
+    transition: 'transform 0.15s ease'
   },
   secondaryBtn: {
     flex: 1,
-    background: '#1E293B',
+    background: 'rgba(15, 23, 42, 0.85)',
     color: '#E2E8F0',
-    border: '1px solid rgba(255, 255, 255, 0.2)',
-    borderRadius: '6px',
-    padding: '12px',
+    border: '1px solid rgba(255, 255, 255, 0.18)',
+    borderRadius: '8px',
+    padding: '14px 12px',
     fontSize: '12px',
-    fontWeight: '700',
+    fontWeight: '800',
+    letterSpacing: '0.8px',
     cursor: 'pointer',
-    fontFamily: 'inherit'
+    fontFamily: 'inherit',
+    transition: 'background 0.15s ease'
   }
 };

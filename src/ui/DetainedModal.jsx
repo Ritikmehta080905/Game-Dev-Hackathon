@@ -1,5 +1,5 @@
-// ATHARVA.EXE — DetainedModal: Detention & Exam Timeout Screen
-// Authentic college detention notice when attendance drops to 0% or exam bell rings!
+// ATHARVA.EXE — DetainedModal: 3D Glitch Lockout & Retry Screen
+// Sleek red cyber-glitch card with minimal text and fast retry actions
 
 import React from 'react';
 import { GameState } from '../systems/GameState';
@@ -27,58 +27,43 @@ export default function DetainedModal({ isTimeout = false, reason = '' }) {
   return (
     <div style={styles.overlay} onClick={(e) => e.stopPropagation()}>
       <div style={styles.card} onClick={(e) => e.stopPropagation()}>
-        {/* Red Stamp Badge */}
+        {/* Warning Badge */}
         <div style={styles.stampBadge}>
-          {isTimeout ? '⏰ TIME DEPLETED' : '⚠️ SYSTEM LOCKOUT NOTICE'}
+          {isTimeout ? '⏰ TIME DEPLETED' : '⚠️ SYSTEM SHIELD DEPLETED'}
         </div>
 
+        {/* 3D Header */}
         <h1 style={styles.mainTitle}>
-          {isTimeout ? 'MISSION TIME EXPIRED!' : 'SYSTEM COMPROMISED!'}
+          {isTimeout ? 'OUT OF TIME!' : 'SECTOR FAILED'}
         </h1>
 
         <div style={styles.subTitle}>
           {isTimeout
-            ? 'COUNTDOWN REACHED ZERO • MAINFRAME LOCKDOWN'
-            : '0% SHIELD INTEGRITY • EMERGENCY EVACUATION'}
+            ? 'COUNTDOWN REACHED ZERO • GRID LOCKED'
+            : 'SHIELD REACHED 0% • EMERGENCY EVACUATION'}
         </div>
 
-        {/* Official Memo Box */}
-        <div style={styles.memoBox}>
-          <div style={styles.memoRow}>
-            <strong>OPERATOR:</strong> {GameState.studentInfo?.name || 'Cadet Debugger'} ({GameState.studentInfo?.rollNo || 'CADET-0809'})
-          </div>
-          <div style={styles.memoRow}>
-            <strong>UNIT:</strong> Reality Defense &amp; Systems Architecture
-          </div>
-          <div style={styles.memoRow}>
-            <strong>SECTOR:</strong> Sector 0{GameState.currentLevel}
-          </div>
-          <div style={styles.memoRow}>
-            <strong>INCIDENT:</strong> {reason || (isTimeout ? 'Mission countdown reached 00:00 before the central mainframe reboot.' : 'System shield dropped to 0% due to repeated hazard contact.')}
-          </div>
-        </div>
-
-        {/* Cyberpunk Status Quote */}
-        <div style={styles.humorQuote}>
-          {isTimeout
-            ? '“Firewall Alert: Time expired before root terminal access. Resetting grid.”'
-            : '“Emergency backup generator online. Rerouting power to last stable checkpoint.”'}
+        {/* 1-Line Status Box */}
+        <div style={styles.statusBox}>
+          {reason || (isTimeout
+            ? 'Mission clock reached 00:00 before the central mainframe reboot.'
+            : 'Emergency generator online. Checkpoint telemetry restored.')}
         </div>
 
         {/* Action Buttons */}
         <div style={styles.btnGroup}>
           {isTimeout ? (
             <button style={styles.primaryBtn} onClick={handleRetakeExam}>
-              ↺ RETRY SECTOR CHALLENGE
+              ↺ RETRY SECTOR ▶
             </button>
           ) : (
             <button style={styles.primaryBtn} onClick={handleCondonationRespawn}>
-              ⚡ EMERGENCY REBOOT (RESPAWN CHECKPOINT)
+              ⚡ RESPAWN AT CHECKPOINT ▶
             </button>
           )}
 
           <button style={styles.secondaryBtn} onClick={handleReturnToPortal}>
-            🏛️ RETURN TO MAIN MENU
+            🏛️ RETURN TO MENU
           </button>
         </div>
       </div>
@@ -93,8 +78,8 @@ const styles = {
     left: 0,
     width: '100vw',
     height: '100vh',
-    background: 'rgba(15, 23, 42, 0.7)',
-    backdropFilter: 'blur(8px)',
+    background: 'rgba(6, 10, 24, 0.78)',
+    backdropFilter: 'blur(10px)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -103,22 +88,21 @@ const styles = {
     pointerEvents: 'auto'
   },
   card: {
-    background: 'linear-gradient(145deg, #1e293b 0%, #0f172a 100%)',
+    background: 'rgba(16, 12, 28, 0.95)',
     border: '2px solid #EF4444',
-    borderRadius: '14px',
-    padding: '36px 44px',
-    maxWidth: '560px',
+    borderRadius: '18px',
+    padding: '36px 42px',
+    maxWidth: '520px',
     width: '90%',
     textAlign: 'center',
-    boxShadow: '0 0 60px rgba(239, 68, 68, 0.45)',
+    boxShadow: '0 0 60px rgba(239, 68, 68, 0.35), 0 20px 60px rgba(0, 0, 0, 0.8)',
     color: '#F8FAFC',
-    pointerEvents: 'auto',
-    position: 'relative'
+    boxSizing: 'border-box'
   },
   stampBadge: {
     display: 'inline-block',
     background: 'rgba(239, 68, 68, 0.15)',
-    border: '1.5px solid #EF4444',
+    border: '1px solid #EF4444',
     color: '#EF4444',
     padding: '4px 14px',
     borderRadius: '20px',
@@ -129,66 +113,58 @@ const styles = {
   },
   mainTitle: {
     fontFamily: '"Outfit", sans-serif',
-    fontSize: '38px',
+    fontSize: '36px',
     fontWeight: '900',
     color: '#EF4444',
     margin: '0 0 4px 0',
-    letterSpacing: '1px'
+    letterSpacing: '2px',
+    textShadow: '0 0 25px rgba(239, 68, 68, 0.5)'
   },
   subTitle: {
-    fontSize: '12px',
+    fontSize: '11px',
     fontWeight: '700',
     color: '#FFE14D',
     letterSpacing: '1.5px',
-    marginBottom: '20px'
+    marginBottom: '18px'
   },
-  memoBox: {
-    background: '#090E21',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
+  statusBox: {
+    background: 'rgba(6, 10, 24, 0.75)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
     borderRadius: '8px',
-    padding: '16px 20px',
-    textAlign: 'left',
+    padding: '12px 16px',
     fontSize: '12px',
-    lineHeight: '1.8',
-    marginBottom: '18px',
+    lineHeight: '1.6',
     color: '#CBD5E1',
-    fontFamily: '"Fira Code", monospace'
-  },
-  memoRow: {
-    marginBottom: '4px'
-  },
-  humorQuote: {
-    fontSize: '13px',
-    color: '#94A3B8',
-    fontStyle: 'italic',
-    lineHeight: '1.5',
-    marginBottom: '24px'
+    marginBottom: '22px'
   },
   btnGroup: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '12px'
+    gap: '10px'
   },
   primaryBtn: {
-    background: '#DC2626',
+    background: 'linear-gradient(135deg, #DC2626 0%, #EF4444 100%)',
     color: '#FFFFFF',
     border: 'none',
-    borderRadius: '6px',
+    borderRadius: '8px',
     padding: '14px',
     fontSize: '13px',
-    fontWeight: '800',
+    fontWeight: '900',
+    letterSpacing: '1px',
     cursor: 'pointer',
-    boxShadow: '0 0 20px rgba(220, 38, 38, 0.4)',
-    fontFamily: 'inherit'
+    boxShadow: '0 0 25px rgba(239, 68, 68, 0.4)',
+    fontFamily: 'inherit',
+    transition: 'transform 0.15s ease'
   },
   secondaryBtn: {
-    background: '#1E293B',
+    background: 'rgba(15, 23, 42, 0.85)',
     color: '#CBD5E1',
-    border: '1px solid rgba(255, 255, 255, 0.2)',
-    borderRadius: '6px',
+    border: '1px solid rgba(255, 255, 255, 0.18)',
+    borderRadius: '8px',
     padding: '12px',
-    fontSize: '13px',
-    fontWeight: '700',
+    fontSize: '12px',
+    fontWeight: '800',
+    letterSpacing: '0.8px',
     cursor: 'pointer',
     fontFamily: 'inherit'
   }

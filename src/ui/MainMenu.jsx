@@ -8,38 +8,34 @@ import { Sound } from '../systems/AudioSystem';
 const SECTORS = [
   {
     id: 1,
-    name: 'LEVEL 1: AFTER THE LAST BELL',
+    name: 'SECTOR 01: CAMPUS GATE',
     code: 'SEC-101',
     mechanic: 'GRAVITY FLIP [G]',
-    objective: 'Restore entrance power via inverted maintenance route & audit the 7:42 PM exit log',
-    spots: 'Monument Pylons, Security Cabin, 7:42 PM Gate, Inverted Skywalk Breaker',
+    objective: 'Invert gravity to navigate the inverted skywalk & restore entrance power.',
     accent: '#00E5FF'
   },
   {
     id: 2,
-    name: 'LEVEL 2: THE LIBRARY OF THINGS UNWRITTEN',
+    name: 'SECTOR 02: CENTRAL ARCHIVES',
     code: 'LIB-202',
     mechanic: 'TIME FREEZE [F]',
-    objective: 'Coordinate moving archive stacks with Time Freeze to uncover missing student Anya Sharma',
-    spots: 'Reading Hall, Book Stacks, Banker Lamps, Stasis Shutters, Restricted Archive',
+    objective: 'Freeze moving stacks to cross the library void & recover student records.',
     accent: '#10B981'
   },
   {
     id: 3,
-    name: 'LEVEL 3: THE LAB THAT NEVER EXISTED',
+    name: 'SECTOR 03: LAB 301',
     code: 'CAN-303',
     mechanic: 'DIMENSION SWITCH [Q]',
-    objective: 'Alternate between Real & Glitch dimensions in Lab 301 to decode the simulation experiment',
-    spots: 'Campus Canteen, Room 301 Workstations, Dimensional Void Bridges, Quarantined Server',
+    objective: 'Phase through security walls and cross cyber-bridges into the secret lab.',
     accent: '#FF2E93'
   },
   {
     id: 4,
-    name: 'LEVEL 4: ATTENDANCE: NEVER CLOSED',
+    name: 'SECTOR 04: ROOT MAINFRAME',
     code: 'DAT-404',
-    mechanic: 'MASTER ALL MECHANICS [C+F+Q+G]',
-    objective: 'Use Ghost Echo [C] to hold the safety interlock, cross the core, and execute Master Reboot [E]',
-    spots: 'Central Server Core, Interlock Pressure Plate, Ghost Clone, Quantum Mainframe',
+    mechanic: 'MASTER ALL RULES [C+F+Q+G]',
+    objective: 'Deploy your Ghost Echo clone to hold the interlock & execute Master Reboot.',
     accent: '#7B4BFF'
   }
 ];
@@ -163,23 +159,20 @@ export default function MainMenu() {
           {/* System Glitch Notice Board Widget */}
           <div style={styles.noticeCard}>
             <div style={styles.noticeHeader}>
-              <span>📌 SECURITY NOTICE: 7:42 PM LOCKDOWN</span>
-              <span style={styles.urgentBadge}>ANOMALY</span>
-            </div>
-            <div style={styles.noticeText}>
-              <strong>Attention Student:</strong> At 7:42 PM, all campus gates auto-locked. The security system reports 0 students remaining, yet your ID scanner logged a duplicate exit record from October 14, 2021.
+              <span>⚡ REALITY OVERRIDES</span>
+              <span style={styles.urgentBadge}>ACTIVE</span>
             </div>
             <div style={styles.noticeBullet}>
-              • <strong>Level 1 (Gate):</strong> Power offline. Use <span style={styles.keyTag}>[G]</span> on ceiling skywalk to switch breaker.
+              • <span style={styles.keyTag}>[G]</span> Flip Gravity (Ceiling paths)
             </div>
             <div style={styles.noticeBullet}>
-              • <strong>Level 2 (Library):</strong> Shelf stasis desynced. Use <span style={styles.keyTag}>[F]</span> to locate Anya Sharma's file.
+              • <span style={styles.keyTag}>[F]</span> Freeze Time (Pause moving stacks)
             </div>
             <div style={styles.noticeBullet}>
-              • <strong>Level 3 (Lab 301):</strong> Reality fractured. Use <span style={styles.keyTag}>[Q]</span> to investigate simulation experiment.
+              • <span style={styles.keyTag}>[Q]</span> Dimension Switch (Phase walls)
             </div>
             <div style={styles.noticeBullet}>
-              • <strong>Level 4 (Mainframe):</strong> Spawn clone with <span style={styles.keyTag}>[C]</span> &amp; execute Master Reboot <span style={styles.keyTag}>[E]</span>.
+              • <span style={styles.keyTag}>[C]</span> Ghost Clone (Hold interlocks)
             </div>
           </div>
         </div>
@@ -188,13 +181,13 @@ export default function MainMenu() {
         <div style={styles.rightCol}>
           <div style={styles.sectorHeadingRow}>
             <div>
-              <h1 style={styles.sectorsMainTitle}>CAMPUS SECTORS // SEMESTER CHALLENGE</h1>
+              <h1 style={styles.sectorsMainTitle}>CAMPUS SECTORS // GLITCHVERSE</h1>
               <p style={styles.sectorsSubtitle}>
-                Clear each college sector to reach the central server room and reboot the campus rules!
+                Diagnose all 4 sectors to reach the central mainframe and reboot the campus rules!
               </p>
             </div>
             <button style={styles.quickStartBtn} onClick={() => handleStartGame(1)}>
-              ▶ LAUNCH LEVEL 1
+              ▶ LAUNCH SECTOR 01
             </button>
           </div>
 
@@ -227,10 +220,6 @@ export default function MainMenu() {
                   </div>
 
                   <p style={styles.sectorObj}>{s.objective}</p>
-
-                  <div style={styles.sectorSpots}>
-                    <strong>Campus Spots:</strong> {s.spots}
-                  </div>
 
                   <button
                     style={{

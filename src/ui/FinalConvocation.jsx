@@ -1,5 +1,5 @@
-// ATHARVA.EXE — FinalConvocation: GlitchVerse Graduation & Degree Ceremony
-// Awarded upon clearing all 4 campus sectors and rebooting the Central Mainframe!
+// ATHARVA.EXE — FinalConvocation: 3D Victory & Simulation Restored Screen
+// Minimal-text, high-impact cyber victory showcase
 
 import React from 'react';
 import { GameState } from '../systems/GameState';
@@ -9,6 +9,7 @@ export default function FinalConvocation() {
   const { cgpa, rank } = GameState.getRankData();
   const totalScore = GameState.score + 500;
   const isArchitect = GameState.finalChoice === 'BECOME_ARCHITECT';
+  const themeAccent = isArchitect ? '#FF2E93' : '#FFE14D';
 
   const handleRestart = () => {
     Sound.playTone(600, 'square', 0.1, 0.1);
@@ -16,127 +17,73 @@ export default function FinalConvocation() {
   };
 
   const handleMenu = () => {
+    Sound.playTone(400, 'sine', 0.1, 0.1);
     GameState.returnToPortal();
   };
 
   return (
     <div style={styles.overlay}>
-      <div style={{ ...styles.degreeCard, borderColor: isArchitect ? '#FF2E93' : '#FFE14D', boxShadow: isArchitect ? '0 0 80px rgba(255, 46, 147, 0.35)' : '0 0 80px rgba(255, 225, 77, 0.35)' }}>
-        {/* Certificate Golden/Neon Border Frame */}
-        <div style={{ ...styles.innerBorder, borderColor: isArchitect ? 'rgba(255, 46, 147, 0.4)' : 'rgba(255, 225, 77, 0.4)' }}>
-          {/* Victory Seal & Ribbon */}
-          <div style={{ ...styles.sealRow, borderBottomColor: isArchitect ? 'rgba(255, 46, 147, 0.3)' : 'rgba(255, 225, 77, 0.3)' }}>
-            <div style={styles.sealBadge}>{isArchitect ? '⚡' : '🎓'}</div>
-            <div>
-              <div style={{ ...styles.univTitle, color: isArchitect ? '#FF2E93' : '#FFE14D' }}>
-                ATHARVA.EXE // THE LAST ATTENDANCE
-              </div>
-              <div style={styles.convocationHeader}>
-                {isArchitect ? 'INFINITE GLITCHVERSE • SIMULATION TRANSCENDENCE' : '08:00 AM SUNRISE • RECONCILIATION COMPLETE'}
-              </div>
-            </div>
-            <div style={{ ...styles.goldMedalPill, borderColor: isArchitect ? '#FF2E93' : '#FFE14D', color: isArchitect ? '#FF2E93' : '#FFE14D' }}>
-              {isArchitect ? 'ROOT ARCHITECT' : 'RECONCILED: 100%'}
+      <div style={{ ...styles.card, borderColor: themeAccent, boxShadow: `0 0 60px ${themeAccent}40, 0 20px 60px rgba(0,0,0,0.85)` }}>
+        {/* Glowing Trophy Badge */}
+        <div style={styles.trophyWrapper}>
+          <div style={{ ...styles.trophyGlow, background: themeAccent }} />
+          <div style={styles.trophyIcon}>{isArchitect ? '⚡' : '🏆'}</div>
+        </div>
+
+        {/* Victory Header */}
+        <div style={{ ...styles.categoryTag, color: themeAccent }}>
+          {isArchitect ? 'ROOT ACCESS UNLOCKED' : 'CAMPUS RESTORATION COMPLETE'}
+        </div>
+        <h1 style={styles.title}>
+          {isArchitect ? 'SIMULATION TRANSCENDED' : 'CURFEW BROKEN!'}
+        </h1>
+        <div style={styles.subtitle}>ALL 4 SECTORS DIAGNOSED &amp; REBOOTED</div>
+
+        {/* Rank Pill */}
+        <div style={{ ...styles.rankBanner, borderColor: themeAccent, color: themeAccent }}>
+          {isArchitect ? '★ ROOT SIMULATION ARCHITECT ★' : `★ ${rank || "DEAN'S LIST // GOLD MEDALIST"} ★`}
+        </div>
+
+        {/* 3 High-Impact Stat Pods */}
+        <div style={styles.statsRow}>
+          <div style={styles.statPod}>
+            <div style={styles.statLabel}>TOTAL SCORE</div>
+            <div style={{ ...styles.statVal, color: '#FFE14D' }}>{totalScore} PTS</div>
+          </div>
+          <div style={styles.statPod}>
+            <div style={styles.statLabel}>FINAL CGPA</div>
+            <div style={{ ...styles.statVal, color: '#00E5FF' }}>{cgpa} / 10.0</div>
+          </div>
+          <div style={styles.statPod}>
+            <div style={styles.statLabel}>CAMPUS STATUS</div>
+            <div style={{ ...styles.statVal, color: '#10B981' }}>
+              {isArchitect ? 'SYSADMIN ACTIVE' : 'OPEN (08:00 AM)'}
             </div>
           </div>
+        </div>
 
-          <h1 style={styles.certHeading}>
-            {isArchitect ? 'ASCENSION TO SIMULATION ARCHITECT' : 'CONVOCATION OF REALITY RESTORATION'}
-          </h1>
-          <div style={styles.certSub}>
-            {isArchitect ? 'CAMPUS ZERO ROOT QUANTUM CONSORTIUM' : 'CAMPUS ZERO CENTRAL EXAMINATION & DATA SECURITY COUNCIL'}
-          </div>
+        {/* 1-Sentence Epilogue */}
+        <div style={styles.epilogue}>
+          {isArchitect
+            ? '“Permanent sysadmin unlocked. Anya Sharma and the campus simulation now thrive infinitely under your command.”'
+            : '“The 7:42 PM recursive loop has dissolved. Morning sun floods the quad, and your attendance is verified.”'}
+        </div>
 
-          <p style={styles.certBody}>
-            {isArchitect ? (
-              <>
-                This is to officially certify that student daemon <strong>KARAN RAO (CS-2024-884)</strong> has conquered all 4 corrupted sectors and chosen to assimilate with the Central Simulation Core. Rather than erasing the digital universe, you have unlocked permanent sysadmin privileges, providing researcher <strong>ANYA SHARMA (CS-2021-042)</strong> and all future digitized students an infinite world of creative physics, frozen time, and unconstrained exploration.
-              </>
-            ) : (
-              <>
-                This is to officially certify that student daemon <strong>KARAN RAO (CS-2024-884)</strong> has successfully traversed the 4 corrupted campus sectors, solved the architectural fail-safes, de-archived missing researcher <strong>ANYA SHARMA (CS-2021-042)</strong>, and triggered the Quantum Master Reboot.
-                <br /><br />
-                The 7:42 PM recursive curfew has been dissolved. The university gates stand open in the morning sun, and all duplicate attendance records have been permanently cleared.
-              </>
-            )}
-          </p>
-
-          {/* Student Status Reconciliation Grid */}
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-around',
-            background: isArchitect ? 'rgba(255, 46, 147, 0.1)' : 'rgba(16, 185, 129, 0.1)',
-            border: `1px solid ${isArchitect ? 'rgba(255, 46, 147, 0.3)' : 'rgba(16, 185, 129, 0.3)'}`,
-            borderRadius: '8px',
-            padding: '10px 16px',
-            marginBottom: '20px',
-            fontSize: '12px',
-            color: isArchitect ? '#FBCFE8' : '#A7F3D0'
-          }}>
-            <div>
-              <strong>ANYA SHARMA</strong> [CS-2021-042]:{' '}
-              <span style={{ color: isArchitect ? '#FF2E93' : '#10B981', fontWeight: 'bold' }}>
-                {isArchitect ? 'CO-ARCHITECT // IMMORTAL' : 'DE-ARCHIVED & SAFE'}
-              </span>
-            </div>
-            <div>
-              <strong>KARAN RAO</strong> [CS-2024-884]:{' '}
-              <span style={{ color: '#00E5FF', fontWeight: 'bold' }}>
-                {isArchitect ? 'SYSADMIN CORE ACTIVE' : 'ATTENDANCE RECORDED'}
-              </span>
-            </div>
-            <div>
-              <strong>CAMPUS STATUS</strong>:{' '}
-              <span style={{ color: '#FFE14D', fontWeight: 'bold' }}>
-                {isArchitect ? 'INFINITE RUNTIME (ONLINE)' : 'UNLOCKED (08:00 AM)'}
-              </span>
-            </div>
-          </div>
-
-          {/* Academic Rank & Honors Box */}
-          <div style={styles.honorsGrid}>
-            <div style={styles.honorCard}>
-              <div style={styles.honorLabel}>FINAL CUMULATIVE SCORE</div>
-              <div style={styles.honorValGold}>{cgpa} / 10.0</div>
-            </div>
-            <div style={styles.honorCard}>
-              <div style={styles.honorLabel}>ACADEMIC STANDING</div>
-              <div style={styles.honorValCyan}>{rank}</div>
-            </div>
-            <div style={styles.honorCard}>
-              <div style={styles.honorLabel}>TOTAL CONVOCATION MARKS</div>
-              <div style={styles.honorValGreen}>{totalScore} PTS</div>
-            </div>
-          </div>
-
-          {/* Signatures & Accreditation */}
-          <div style={styles.signaturesRow}>
-            <div style={styles.sigCol}>
-              <div style={styles.sigLine} />
-              <div style={styles.sigTitle}>ANYA SHARMA</div>
-              <div style={styles.sigSub}>Lead Simulation Researcher [CS-2021-042]</div>
-            </div>
-            <div style={styles.sigCol}>
-              <div style={{ ...styles.goldStamp, borderColor: isArchitect ? '#FF2E93' : '#FFE14D', color: isArchitect ? '#FF2E93' : '#FFE14D' }}>
-                {isArchitect ? '★ ROOT SYSADMIN ★' : '★ ATTENDANCE VERIFIED ★'}
-              </div>
-            </div>
-            <div style={styles.sigCol}>
-              <div style={styles.sigLine} />
-              <div style={styles.sigTitle}>CAMPUS EXAMINATION COUNCIL</div>
-              <div style={styles.sigSub}>Division of Reality Systems</div>
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div style={styles.btnGroup}>
-            <button style={styles.primaryBtn} onClick={handleRestart}>
-              ↺ PLAY AGAIN (NEW ADVENTURE RUN)
-            </button>
-            <button style={styles.secondaryBtn} onClick={handleMenu}>
-              🏛️ RETURN TO MAIN MENU
-            </button>
-          </div>
+        {/* Action Buttons */}
+        <div style={styles.btnRow}>
+          <button
+            style={{
+              ...styles.primaryBtn,
+              background: `linear-gradient(135deg, ${themeAccent} 0%, #00E5FF 100%)`,
+              boxShadow: `0 0 30px ${themeAccent}60`
+            }}
+            onClick={handleRestart}
+          >
+            ↺ PLAY AGAIN ▶
+          </button>
+          <button style={styles.secondaryBtn} onClick={handleMenu}>
+            🏛️ RETURN TO MENU
+          </button>
         </div>
       </div>
     </div>
@@ -150,7 +97,8 @@ const styles = {
     left: 0,
     width: '100%',
     height: '100%',
-    background: 'radial-gradient(ellipse at 50% 50%, #1e1b4b 0%, #0c152e 60%, #060a17 100%)',
+    background: 'radial-gradient(ellipse at 50% 40%, rgba(15, 23, 50, 0.85) 0%, rgba(6, 10, 24, 0.95) 100%)',
+    backdropFilter: 'blur(14px)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -159,167 +107,133 @@ const styles = {
     color: '#F8FAFC',
     pointerEvents: 'auto'
   },
-  degreeCard: {
-    background: 'linear-gradient(145deg, #0F172A 0%, #1E293B 100%)',
-    border: '3px solid #FFE14D',
-    borderRadius: '16px',
-    padding: '16px',
-    maxWidth: '780px',
-    width: '92%',
-    boxShadow: '0 0 80px rgba(255, 225, 77, 0.35)',
+  card: {
+    background: 'rgba(11, 18, 38, 0.94)',
+    border: '2px solid',
+    borderRadius: '20px',
+    padding: '36px 44px',
+    maxWidth: '580px',
+    width: '90%',
+    textAlign: 'center',
     boxSizing: 'border-box'
   },
-  innerBorder: {
-    border: '1.5px solid rgba(255, 225, 77, 0.4)',
-    borderRadius: '12px',
-    padding: '28px 36px',
-    textAlign: 'center'
+  trophyWrapper: {
+    position: 'relative',
+    display: 'inline-block',
+    marginBottom: '10px'
   },
-  sealRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottom: '1px solid rgba(255, 225, 77, 0.3)',
-    paddingBottom: '14px',
-    marginBottom: '16px'
+  trophyGlow: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '80px',
+    height: '80px',
+    borderRadius: '50%',
+    filter: 'blur(28px)',
+    opacity: 0.5,
+    pointerEvents: 'none'
   },
-  sealBadge: {
-    fontSize: '36px'
+  trophyIcon: {
+    position: 'relative',
+    fontSize: '54px',
+    lineHeight: 1
   },
-  univTitle: {
-    fontSize: '18px',
-    fontWeight: '900',
-    color: '#FFE14D',
-    letterSpacing: '1.5px'
-  },
-  convocationHeader: {
+  categoryTag: {
     fontSize: '11px',
-    color: '#00E5FF',
-    fontWeight: '700',
-    letterSpacing: '1px'
+    fontWeight: '800',
+    letterSpacing: '2px',
+    marginBottom: '4px'
   },
-  goldMedalPill: {
-    background: 'rgba(255, 225, 77, 0.2)',
-    border: '1px solid #FFE14D',
-    color: '#FFE14D',
-    padding: '4px 12px',
-    borderRadius: '20px',
-    fontSize: '11px',
-    fontWeight: '800'
-  },
-  certHeading: {
+  title: {
     fontFamily: '"Outfit", sans-serif',
-    fontSize: '26px',
+    fontSize: '36px',
     fontWeight: '900',
     color: '#F8FAFC',
-    margin: '0 0 4px 0',
-    letterSpacing: '1.5px'
+    letterSpacing: '1.5px',
+    margin: '0 0 6px 0',
+    textShadow: '0 0 30px rgba(255, 255, 255, 0.3)'
   },
-  certSub: {
-    fontSize: '11px',
+  subtitle: {
+    fontSize: '12px',
+    fontWeight: '700',
     color: '#94A3B8',
-    letterSpacing: '1px',
+    letterSpacing: '1.5px',
     marginBottom: '18px'
   },
-  certBody: {
-    fontSize: '13px',
-    lineHeight: '1.7',
-    color: '#CBD5E1',
-    maxWidth: '620px',
-    margin: '0 auto 22px auto'
+  rankBanner: {
+    display: 'inline-block',
+    border: '1.5px solid',
+    borderRadius: '24px',
+    padding: '6px 20px',
+    fontSize: '12px',
+    fontWeight: '900',
+    letterSpacing: '1px',
+    background: 'rgba(0, 0, 0, 0.3)',
+    marginBottom: '22px'
   },
-  honorsGrid: {
+  statsRow: {
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gap: '12px',
-    marginBottom: '24px'
+    marginBottom: '20px'
   },
-  honorCard: {
-    background: '#090E21',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: '8px',
-    padding: '12px 8px'
-  },
-  honorLabel: {
-    fontSize: '10px',
-    color: '#94A3B8',
-    fontWeight: 'bold',
-    marginBottom: '4px'
-  },
-  honorValGold: {
-    fontSize: '18px',
-    fontWeight: '900',
-    color: '#FFE14D'
-  },
-  honorValCyan: {
-    fontSize: '14px',
-    fontWeight: '800',
-    color: '#00E5FF'
-  },
-  honorValGreen: {
-    fontSize: '18px',
-    fontWeight: '900',
-    color: '#10B981'
-  },
-  signaturesRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    marginBottom: '24px',
-    padding: '0 20px'
-  },
-  sigCol: {
+  statPod: {
+    background: 'rgba(6, 10, 24, 0.75)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    borderRadius: '10px',
+    padding: '12px 8px',
     textAlign: 'center'
   },
-  sigLine: {
-    width: '140px',
-    height: '1px',
-    background: 'rgba(255, 255, 255, 0.3)',
-    marginBottom: '6px'
-  },
-  sigTitle: {
-    fontSize: '10px',
-    fontWeight: 'bold',
-    color: '#F8FAFC'
-  },
-  sigSub: {
+  statLabel: {
     fontSize: '9px',
-    color: '#94A3B8'
+    fontWeight: '700',
+    letterSpacing: '0.8px',
+    color: '#94A3B8',
+    marginBottom: '4px'
   },
-  goldStamp: {
-    border: '2px dashed #FFE14D',
-    borderRadius: '50%',
-    padding: '12px 10px',
-    fontSize: '9px',
+  statVal: {
+    fontSize: '15px',
     fontWeight: '900',
-    color: '#FFE14D',
-    letterSpacing: '0.5px'
+    fontFamily: '"Fira Code", monospace'
   },
-  btnGroup: {
+  epilogue: {
+    fontSize: '12px',
+    lineHeight: '1.6',
+    color: '#CBD5E1',
+    fontStyle: 'italic',
+    marginBottom: '24px',
+    maxWidth: '480px',
+    margin: '0 auto 24px auto'
+  },
+  btnRow: {
     display: 'flex',
     gap: '12px',
     justifyContent: 'center'
   },
   primaryBtn: {
-    background: 'linear-gradient(135deg, #f59e0b 0%, #FFE14D 100%)',
+    flex: 1.6,
     color: '#060A17',
     border: 'none',
-    borderRadius: '6px',
-    padding: '12px 24px',
+    borderRadius: '8px',
+    padding: '14px 22px',
     fontSize: '13px',
-    fontWeight: '800',
+    fontWeight: '900',
+    letterSpacing: '1px',
     cursor: 'pointer',
     fontFamily: 'inherit',
-    boxShadow: '0 0 20px rgba(255, 225, 77, 0.4)'
+    transition: 'transform 0.15s ease'
   },
   secondaryBtn: {
-    background: '#1E293B',
+    flex: 1,
+    background: 'rgba(15, 23, 42, 0.85)',
     color: '#E2E8F0',
-    border: '1px solid rgba(255, 255, 255, 0.2)',
-    borderRadius: '6px',
-    padding: '12px 24px',
-    fontSize: '13px',
-    fontWeight: '700',
+    border: '1px solid rgba(255, 255, 255, 0.18)',
+    borderRadius: '8px',
+    padding: '14px 16px',
+    fontSize: '12px',
+    fontWeight: '800',
+    letterSpacing: '0.8px',
     cursor: 'pointer',
     fontFamily: 'inherit'
   }
