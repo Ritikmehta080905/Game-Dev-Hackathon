@@ -131,17 +131,28 @@ export default function MainMenu() {
             </div>
 
             <div style={styles.idBody}>
-              {/* Real Student Photograph */}
+              {/* Student Silhouette Badge */}
               <div style={styles.avatarContainer}>
-                <img
-                  src="/assets/avatar.jpg"
-                  alt="Karan Rao"
-                  style={styles.avatarImg}
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
-                <div style={styles.avatarFallback}>👨‍🎓</div>
+                <svg
+                  width="44"
+                  height="44"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  style={{ opacity: 0.85 }}
+                >
+                  <circle cx="12" cy="7" r="4.5" fill="url(#silGrad)" />
+                  <path
+                    d="M4 19.5C4 16.5 7.5 14.5 12 14.5C16.5 14.5 20 16.5 20 19.5V21H4V19.5Z"
+                    fill="url(#silGrad)"
+                  />
+                  <defs>
+                    <linearGradient id="silGrad" x1="12" y1="2.5" x2="12" y2="21" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#CBD5E1" />
+                      <stop offset="1" stopColor="#64748B" />
+                    </linearGradient>
+                  </defs>
+                </svg>
               </div>
 
               {/* Student Academic Metadata */}
@@ -529,27 +540,16 @@ const styles = {
     marginBottom: '16px'
   },
   avatarContainer: {
-    position: 'relative',
-    width: '84px',
-    height: '84px',
+    width: '74px',
+    height: '74px',
     borderRadius: '12px',
-    overflow: 'hidden',
-    border: '1.5px solid rgba(255, 255, 255, 0.2)',
-    background: '#090E21',
+    border: '1.5px solid rgba(255, 255, 255, 0.16)',
+    background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.85) 100%)',
     flexShrink: 0,
-    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)'
-  },
-  avatarImg: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover'
-  },
-  avatarFallback: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    fontSize: '36px'
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 4px 12px rgba(0, 0, 0, 0.25)'
   },
   idFields: {
     display: 'flex',
