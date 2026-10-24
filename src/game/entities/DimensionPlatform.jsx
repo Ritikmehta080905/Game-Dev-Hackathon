@@ -50,7 +50,7 @@ export default function DimensionPlatform({
           color={baseColor}
           roughness={0.3}
           metalness={0.4}
-          transparent
+          transparent={!isActive}
           opacity={isActive ? 1.0 : 0.45}
         />
       </mesh>
@@ -61,7 +61,7 @@ export default function DimensionPlatform({
         <meshStandardMaterial
           color={isActive ? (isRealPlatform ? '#334155' : '#701a75') : '#1e1b4b'}
           roughness={0.3}
-          transparent
+          transparent={!isActive}
           opacity={isActive ? 1.0 : 0.55}
         />
       </mesh>

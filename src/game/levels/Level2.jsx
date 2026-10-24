@@ -76,9 +76,18 @@ export default function Level2({ playerPosRef }) {
         woodTexture={woodTexture}
       />
 
+      {/* Grand Double-Height Mahogany Architectural Colonnade Pillars */}
+      <GrandLibraryColonnade position={[-8.2, 4.5, 12]} woodTexture={woodTexture} />
+      <GrandLibraryColonnade position={[8.2, 4.5, 12]} woodTexture={woodTexture} />
+      <GrandLibraryColonnade position={[-8.2, 4.5, 0]} woodTexture={woodTexture} />
+      <GrandLibraryColonnade position={[8.2, 4.5, 0]} woodTexture={woodTexture} />
+
       {/* University Student Study Carrels with Laptops & Banker Lamps */}
       <StudyCarrel position={[-4, 0.5, 10]} woodTexture={woodTexture} />
       <StudyCarrel position={[4, 0.5, 10]} woodTexture={woodTexture} />
+
+      {/* Librarian Reference Checkout Counter with Stamped Ledgers & Red Barcode Scanner */}
+      <LibrarianCheckoutDesk position={[0, 0, 4.2]} woodTexture={woodTexture} />
 
       {/* Library Mobile Book Return Cart */}
       <BookReturnCart position={[-4, 0.5, 2]} woodTexture={woodTexture} />
@@ -434,6 +443,10 @@ export default function Level2({ playerPosRef }) {
             ]
           },
           paragraphs: [
+            'RECORD INTEGRITY: COMPROMISED.',
+            'ATTENDANCE HISTORY: DELETED.',
+            'ADMINISTRATIVE OVERRIDE: DETECTED.',
+            '',
             'ARCHIVED FACULTY AUDIT LOG #2021-OCT-14:',
             '"Student Anya Sharma discovered that Project ATHARVA, an experimental neural crowd simulation, was capturing and digitizing consciousness fragments of students remaining on campus after curfew."',
             '"She attempted an emergency server shutdown from Computer Engineering Lab 301, but the system quarantined her user credentials and initiated an automated registry purge."',
@@ -483,7 +496,8 @@ function LibraryBookStack({ position, size, department, aisleNo, shelfTexture, w
   const [w, h, d] = size;
 
   return (
-    <group position={position}>
+    <RigidBody type="fixed" colliders={false} position={position}>
+      <CuboidCollider args={[w / 2, h / 2, d / 2]} />
       {/* Main Wood Structure */}
       <mesh receiveShadow castShadow>
         <boxGeometry args={[w, h, d]} />
@@ -534,7 +548,7 @@ function LibraryBookStack({ position, size, department, aisleNo, shelfTexture, w
           emissiveIntensity={1.8}
         />
       </mesh>
-    </group>
+    </RigidBody>
   );
 }
 
@@ -543,7 +557,8 @@ function LibraryBookStack({ position, size, department, aisleNo, shelfTexture, w
  */
 function StudyCarrel({ position, woodTexture }) {
   return (
-    <group position={position}>
+    <RigidBody type="fixed" colliders={false} position={position}>
+      <CuboidCollider args={[1.15, 0.45, 0.7]} position={[0, 0.45, 0]} />
       {/* Table Top with rich teak grain */}
       <mesh position={[0, 0.4, 0]} castShadow receiveShadow>
         <boxGeometry args={[2.2, 0.08, 1.3]} />
@@ -635,7 +650,7 @@ function StudyCarrel({ position, woodTexture }) {
           />
         </mesh>
       </group>
-    </group>
+    </RigidBody>
   );
 }
 
@@ -644,7 +659,8 @@ function StudyCarrel({ position, woodTexture }) {
  */
 function BookReturnCart({ position, woodTexture }) {
   return (
-    <group position={position}>
+    <RigidBody type="fixed" colliders={false} position={position}>
+      <CuboidCollider args={[0.6, 0.45, 0.35]} position={[0, 0.45, 0]} />
       {/* Powder-coated steel cart body */}
       <mesh position={[0, 0.45, 0]} castShadow>
         <boxGeometry args={[1.1, 0.7, 0.6]} />
@@ -667,7 +683,7 @@ function BookReturnCart({ position, woodTexture }) {
           <meshStandardMaterial color="#0f172a" roughness={0.9} />
         </mesh>
       ))}
-    </group>
+    </RigidBody>
   );
 }
 
@@ -676,31 +692,31 @@ function BookReturnCart({ position, woodTexture }) {
  */
 function GlassBalustrade({ position, length, rotation, glassTexture }) {
   return (
-    <group position={position} rotation={rotation}>
-      {/* Polished Glass Panel */}
-      <mesh position={[0, 0, 0]}>
-        <boxGeometry args={[length, 0.9, 0.03]} />
+    <RigidBody type="fixed" colliders={false} position={position} rotation={rotation}>
+      <CuboidCollider args={[length / 2, 0.55, 0.1]} position={[0, 0.45, 0]} />
+      {/* Solid Toughened Architectural Glass Panel */}
+      <mesh position={[0, 0.45, 0]}>
+        <boxGeometry args={[length, 0.9, 0.04]} />
         <meshStandardMaterial
           map={glassTexture}
-          transparent
-          opacity={0.45}
-          roughness={0.1}
-          metalness={0.2}
+          color="#38bdf8"
+          roughness={0.15}
+          metalness={0.7}
         />
       </mesh>
       {/* Stainless Steel Top Handrail */}
-      <mesh position={[0, 0.48, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.03, 0.03, length, 8]} />
-        <meshStandardMaterial color="#cbd5e1" metalness={0.9} roughness={0.2} />
+      <mesh position={[0, 0.95, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.04, 0.04, length, 8]} />
+        <meshStandardMaterial color="#e2e8f0" metalness={0.9} roughness={0.2} />
       </mesh>
       {/* Stainless Steel Posts at Intervals */}
       {[-length * 0.4, 0, length * 0.4].map((x, i) => (
-        <mesh key={i} position={[x, 0, 0]}>
-          <cylinderGeometry args={[0.025, 0.025, 0.95, 8]} />
+        <mesh key={i} position={[x, 0.45, 0]}>
+          <cylinderGeometry args={[0.03, 0.03, 0.95, 8]} />
           <meshStandardMaterial color="#64748b" metalness={0.85} roughness={0.3} />
         </mesh>
       ))}
-    </group>
+    </RigidBody>
   );
 }
 
@@ -747,23 +763,24 @@ function AisleOverheadSign({ position, title, code }) {
  */
 function RfidSecurityGate({ position, warningTexture }) {
   return (
-    <group position={position}>
+    <RigidBody type="fixed" colliders={false} position={position}>
+      <CuboidCollider args={[0.2, 1.2, 0.3]} position={[0, 1.2, 0]} />
       {/* Scanner Pillar Post */}
-      <mesh castShadow>
+      <mesh castShadow position={[0, 1.2, 0]}>
         <boxGeometry args={[0.3, 2.4, 0.5]} />
         <meshStandardMaterial color="#1e293b" metalness={0.7} roughness={0.3} />
       </mesh>
       {/* Hazard Warning Stripe Band */}
-      <mesh position={[0, -0.6, 0.26]}>
+      <mesh position={[0, 0.6, 0.26]}>
         <planeGeometry args={[0.28, 0.4]} />
         <meshBasicMaterial map={warningTexture} />
       </mesh>
       {/* Vertical Laser Emitter Lens */}
-      <mesh position={[0, 0.3, 0]}>
+      <mesh position={[0, 1.5, 0]}>
         <boxGeometry args={[0.08, 1.5, 0.1]} />
         <meshBasicMaterial color="#ff2e93" />
       </mesh>
-    </group>
+    </RigidBody>
   );
 }
 
@@ -785,6 +802,70 @@ function HoloCatalogIndex({ position }) {
         />
       </mesh>
     </group>
+  );
+}
+
+/**
+ * Stately Architectural Double-Height Library Colonnade Pillar.
+ */
+function GrandLibraryColonnade({ position, woodTexture }) {
+  return (
+    <RigidBody type="fixed" colliders={false} position={position}>
+      <CuboidCollider args={[0.5, 4.5, 0.5]} />
+      {/* Plinth Base */}
+      <mesh position={[0, -4.2, 0]} castShadow receiveShadow>
+        <boxGeometry args={[1.2, 0.8, 1.2]} />
+        <meshStandardMaterial color="#334155" roughness={0.7} />
+      </mesh>
+      {/* Main Column Shaft */}
+      <mesh castShadow receiveShadow>
+        <cylinderGeometry args={[0.38, 0.44, 8.8, 16]} />
+        <meshStandardMaterial map={woodTexture} color="#381e0f" roughness={0.5} />
+      </mesh>
+      {/* Capital Header with Bronze Band */}
+      <mesh position={[0, 4.2, 0]}>
+        <boxGeometry args={[1.2, 0.6, 1.2]} />
+        <meshStandardMaterial color="#b45309" metalness={0.8} roughness={0.3} />
+      </mesh>
+    </RigidBody>
+  );
+}
+
+/**
+ * Librarian Issue & Return Checkout Desk.
+ */
+function LibrarianCheckoutDesk({ position, woodTexture }) {
+  return (
+    <RigidBody type="fixed" colliders={false} position={position}>
+      <CuboidCollider args={[1.7, 0.55, 0.65]} position={[0, 0.55, 0]} />
+      {/* Curved Counter Body */}
+      <mesh position={[0, 0.5, 0]} castShadow receiveShadow>
+        <boxGeometry args={[3.2, 1.0, 1.1]} />
+        <meshStandardMaterial map={woodTexture} color="#451a03" roughness={0.5} />
+      </mesh>
+      {/* Dark Granite Countertop */}
+      <mesh position={[0, 1.04, 0]}>
+        <boxGeometry args={[3.4, 0.08, 1.25]} />
+        <meshStandardMaterial color="#0f172a" roughness={0.2} metalness={0.4} />
+      </mesh>
+      {/* Stack of Library Reference Books */}
+      <group position={[-0.8, 1.15, 0]}>
+        {[-0.04, 0, 0.04].map((y, idx) => (
+          <mesh key={idx} position={[0, y, 0]} rotation={[0, idx * 0.15, 0]}>
+            <boxGeometry args={[0.35, 0.04, 0.26]} />
+            <meshStandardMaterial color={['#991b1b', '#1e3a8a', '#065f46'][idx]} roughness={0.6} />
+          </mesh>
+        ))}
+      </group>
+      {/* Barcode Scanner Gun with Red Laser Light */}
+      <group position={[0.7, 1.18, 0.1]} rotation={[0, -0.4, 0]}>
+        <mesh>
+          <boxGeometry args={[0.08, 0.16, 0.14]} />
+          <meshStandardMaterial color="#334155" metalness={0.7} />
+        </mesh>
+        <pointLight position={[0, -0.05, 0.1]} color="#ef4444" intensity={0.5} distance={1.2} />
+      </group>
+    </RigidBody>
   );
 }
 

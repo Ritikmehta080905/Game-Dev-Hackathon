@@ -37,7 +37,13 @@ export default function BootScreen() {
 
         <div style={styles.heroSection}>
           <div style={styles.titleGlitch}>ATHARVA.EXE</div>
-          <div style={styles.campusTag}>THE LAST ATTENDANCE</div>
+          <div style={styles.campusTag}>CAMPUS ZERO</div>
+          <div style={{ color: '#FF2E93', fontSize: '14px', fontWeight: '800', letterSpacing: '4px', margin: '6px 0 2px' }}>
+            THE WORLD IS BROKEN
+          </div>
+          <div style={{ color: '#FFE14D', fontSize: '12px', fontWeight: '700', letterSpacing: '1.5px', marginBottom: '14px' }}>
+            CHAPTER: THE LAST ATTENDANCE
+          </div>
           <div style={styles.eventQuote}>
             “At 7:42 PM, after classes end, the main gate locks. Security logs claim every student has exited, yet campus systems continue marking you present. An erased student's experiment has trapped the university in a repeating loop. Solve the campus backdoors and execute the Master Reboot before the final shutdown.”
           </div>
@@ -99,8 +105,7 @@ const styles = {
     maxWidth: '720px',
     width: '90%',
     textAlign: 'center',
-    boxShadow: '0 0 60px rgba(0, 229, 255, 0.25), 0 20px 40px rgba(0, 0, 0, 0.6)',
-    backdropFilter: 'blur(10px)'
+    boxShadow: '0 0 60px rgba(0, 229, 255, 0.25), 0 20px 40px rgba(0, 0, 0, 0.6)'
   },
   crestRow: {
     display: 'flex',

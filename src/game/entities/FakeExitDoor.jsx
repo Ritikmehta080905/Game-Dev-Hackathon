@@ -3,6 +3,7 @@
 
 import React, { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
+import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import { Text } from '@react-three/drei';
 import { GameState } from '../../systems/GameState';
 import { Sound } from '../../systems/AudioSystem';
@@ -77,26 +78,32 @@ export default function FakeExitDoor({
         triggerFakeExit();
       }}
     >
-      {/* Archway Pillars */}
-      <mesh position={[-1.3, 1.6, 0]}>
-        <boxGeometry args={[0.35, 3.2, 0.4]} />
-        <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.7} />
-      </mesh>
-      <mesh position={[1.3, 1.6, 0]}>
-        <boxGeometry args={[0.35, 3.2, 0.4]} />
-        <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.7} />
-      </mesh>
-
-      {/* Top Header Beam with Golden Glow */}
-      <mesh position={[0, 3.2, 0]}>
-        <boxGeometry args={[3.0, 0.5, 0.5]} />
-        <meshStandardMaterial
-          color="#FFE14D"
-          emissive="#FFE14D"
-          emissiveIntensity={1.2}
-          roughness={0.2}
-        />
-      </mesh>
+      {/* Archway Pillars & Header Beam Solid Colliders */}
+      <RigidBody type="fixed" colliders={false}>
+        <CuboidCollider args={[0.2, 1.6, 0.25]} position={[-1.3, 1.6, 0]} />
+        <CuboidCollider args={[0.2, 1.6, 0.25]} position={[1.3, 1.6, 0]} />
+        <CuboidCollider args={[1.5, 0.25, 0.25]} position={[0, 3.2, 0]} />
+        {/* Left Pillar */}
+        <mesh position={[-1.3, 1.6, 0]}>
+          <boxGeometry args={[0.35, 3.2, 0.4]} />
+          <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.7} />
+        </mesh>
+        {/* Right Pillar */}
+        <mesh position={[1.3, 1.6, 0]}>
+          <boxGeometry args={[0.35, 3.2, 0.4]} />
+          <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.7} />
+        </mesh>
+        {/* Top Header Beam with Golden Glow */}
+        <mesh position={[0, 3.2, 0]}>
+          <boxGeometry args={[3.0, 0.5, 0.5]} />
+          <meshStandardMaterial
+            color="#FFE14D"
+            emissive="#FFE14D"
+            emissiveIntensity={1.2}
+            roughness={0.2}
+          />
+        </mesh>
+      </RigidBody>
 
       {/* Portal Inner Swirl (Luring, bright green wireframe) */}
       <mesh ref={portalRef} position={[0, 1.6, 0]}>

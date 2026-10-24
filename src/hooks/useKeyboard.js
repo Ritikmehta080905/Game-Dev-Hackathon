@@ -56,8 +56,10 @@ export function useKeyboard() {
           setKeys((k) => ({ ...k, interact: true }));
           break;
         case 'KeyC':
-        case 'KeyR':
           setKeys((k) => ({ ...k, echo: true }));
+          break;
+        case 'KeyR':
+          setKeys((k) => ({ ...k, reset: true }));
           break;
         default:
           break;
@@ -98,8 +100,10 @@ export function useKeyboard() {
           setKeys((k) => ({ ...k, interact: false }));
           break;
         case 'KeyC':
-        case 'KeyR':
           setKeys((k) => ({ ...k, echo: false }));
+          break;
+        case 'KeyR':
+          setKeys((k) => ({ ...k, reset: false }));
           break;
         default:
           break;

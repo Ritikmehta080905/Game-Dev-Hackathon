@@ -3,6 +3,7 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
+import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import { Text } from '@react-three/drei';
 import { GameState } from '../../systems/GameState';
 import { Sound } from '../../systems/AudioSystem';
@@ -88,25 +89,31 @@ export default function Terminal({
         triggerTerminal();
       }}
     >
-      {/* Archway Pillars */}
-      <mesh position={[-1.2, 1.5, 0]}>
-        <boxGeometry args={[0.3, 3, 0.4]} />
-        <meshStandardMaterial color="#0B1026" roughness={0.4} />
-      </mesh>
-      <mesh position={[1.2, 1.5, 0]}>
-        <boxGeometry args={[0.3, 3, 0.4]} />
-        <meshStandardMaterial color="#0B1026" roughness={0.4} />
-      </mesh>
-
-      {/* Top Header */}
-      <mesh position={[0, 3.1, 0]}>
-        <boxGeometry args={[2.7, 0.4, 0.5]} />
-        <meshStandardMaterial
-          color={activeColor}
-          emissive={activeColor}
-          emissiveIntensity={emissiveInt}
-        />
-      </mesh>
+      {/* Archway Pillars & Header Solid Colliders */}
+      <RigidBody type="fixed" colliders={false}>
+        <CuboidCollider args={[0.18, 1.5, 0.25]} position={[-1.2, 1.5, 0]} />
+        <CuboidCollider args={[0.18, 1.5, 0.25]} position={[1.2, 1.5, 0]} />
+        <CuboidCollider args={[1.35, 0.2, 0.25]} position={[0, 3.1, 0]} />
+        {/* Left Pillar */}
+        <mesh position={[-1.2, 1.5, 0]}>
+          <boxGeometry args={[0.3, 3, 0.4]} />
+          <meshStandardMaterial color="#0B1026" roughness={0.4} />
+        </mesh>
+        {/* Right Pillar */}
+        <mesh position={[1.2, 1.5, 0]}>
+          <boxGeometry args={[0.3, 3, 0.4]} />
+          <meshStandardMaterial color="#0B1026" roughness={0.4} />
+        </mesh>
+        {/* Top Header */}
+        <mesh position={[0, 3.1, 0]}>
+          <boxGeometry args={[2.7, 0.4, 0.5]} />
+          <meshStandardMaterial
+            color={activeColor}
+            emissive={activeColor}
+            emissiveIntensity={emissiveInt}
+          />
+        </mesh>
+      </RigidBody>
 
       {/* Portal Inner Swirl */}
       <mesh ref={portalRef} position={[0, 1.5, 0]}>

@@ -162,7 +162,8 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
       <GhostClone ghostPosRef={ghostPosRef} />
 
       {/* Firewall Door Industrial Archway Posts with Hazard Stripes */}
-      <group position={[-5.4, 2.6, -3]}>
+      <RigidBody type="fixed" colliders={false} position={[-5.4, 2.6, -3]}>
+        <CuboidCollider args={[0.45, 2.2, 0.45]} position={[0, 0, 0]} />
         <mesh castShadow>
           <boxGeometry args={[0.8, 4.4, 0.8]} />
           <meshStandardMaterial color="#1e293b" metalness={0.8} roughness={0.3} />
@@ -171,8 +172,9 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
           <planeGeometry args={[0.7, 4.2]} />
           <meshBasicMaterial map={warningTexture} />
         </mesh>
-      </group>
-      <group position={[5.4, 2.6, -3]}>
+      </RigidBody>
+      <RigidBody type="fixed" colliders={false} position={[5.4, 2.6, -3]}>
+        <CuboidCollider args={[0.45, 2.2, 0.45]} position={[0, 0, 0]} />
         <mesh castShadow>
           <boxGeometry args={[0.8, 4.4, 0.8]} />
           <meshStandardMaterial color="#1e293b" metalness={0.8} roughness={0.3} />
@@ -181,7 +183,7 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
           <planeGeometry args={[0.7, 4.2]} />
           <meshBasicMaterial map={warningTexture} />
         </mesh>
-      </group>
+      </RigidBody>
 
       {/* ========================================================
           3. PUZZLE 2: FIREWALL APPROACH GANTRY & RAPID SERVER LIFT
@@ -524,7 +526,7 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
           ],
           choices: [
             {
-              label: '1. RESTORE FACTORY BACKUP [19:42:00 IST] (RECOMMENDED) [1]',
+              label: '1. ENDING A — RESET THE LOOP [19:42:00 IST REVERT] [1]',
               color: '#10B981',
               primary: true,
               onSelect: () => {
@@ -536,24 +538,25 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
                   GameState.openStoryModal({
                     id: 'l4_rollback_trap',
                     type: 'terminal',
-                    badge: 'FATAL LOGIC ERROR // CODE-1942',
+                    badge: 'ENDING A: THE RECURSIVE LOOP',
                     badgeColor: '#EF4444',
                     accent: '#EF4444',
-                    title: 'TEMPORAL RECURSION TRAP TRIGGERED!',
+                    title: 'ENDING A — RESET THE LOOP',
                     subtitle: 'THE RESTORATION PARADOX // CYCLE #885 COMMENCED',
                     timestamp: '19:42:00 IST (REBOOTED)',
                     paragraphs: [
-                      'CRITICAL RECURSION FAILURE:',
-                      'You clicked "RESTORE FACTORY BACKUP [19:42:00 IST] (RECOMMENDED)"...',
+                      'ENDING A — RESET THE LOOP (ADMINISTRATIVE REVERT):',
+                      'You accepted the administrative reset...',
+                      'The clock returns to 7:42 PM, and the opening sequence begins again!',
                       'Did you forget? 19:42:00 was the exact second when the campus quarantine lockdown BEGAN three years ago!',
                       'By rolling back to the default 19:42:00 snapshot, you restored the initial lockdown itself from scratch!',
-                      'All collected Pen Drives have been purged. Your daemon memory has been wiped. The university gates have slammed shut again.',
-                      '"Those who blindly click \'Restore Factory Backup\' without reading timestamps are doomed to repeat the semester."',
-                      'Welcome to Cycle #885. Better luck next time, freshman.'
+                      'All collected evidence has been purged. Your daemon memory has been wiped. The university gates have slammed shut again.',
+                      '"Those who blindly accept administrative resets without reading timestamps are doomed to repeat the loop."',
+                      'Welcome to Cycle #885. Re-entering the simulation at the entrance road.'
                     ],
                     actionLabel: 'RE-ENTER CYCLE #885 (RESTART LEVEL 1) [E]',
                     onAction: () => {
-                      GameState.recordDeath('Fell for the 19:42:00 Factory Rollback Trap! Restoring the initial state rebooted the lockdown loop.');
+                      GameState.recordDeath('Accepted administrative reset! Restoring the initial state rebooted the lockdown loop.');
                       GameState.startLevel(1);
                     }
                   });
@@ -561,7 +564,7 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
               }
             },
             {
-              label: '2. SEVER SIMULATION RUNTIME [08:00:00 AM SUNRISE] [2]',
+              label: '2. ENDING B — RESTORE REALITY [08:00:00 AM SUNRISE] [2]',
               color: '#00E5FF',
               primary: false,
               onSelect: () => {
@@ -620,7 +623,8 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
  */
 function DataServerCluster({ position, serverTexture }) {
   return (
-    <group position={position}>
+    <RigidBody type="fixed" colliders={false} position={position}>
+      <CuboidCollider args={[1.7, 4.8, 1.35]} />
       {/* 3 Interlocking 42U Server Racks */}
       {[-1.1, 0, 1.1].map((x, i) => (
         <group key={i} position={[x, 0, 0]}>
@@ -650,7 +654,7 @@ function DataServerCluster({ position, serverTexture }) {
           </mesh>
         </group>
       ))}
-    </group>
+    </RigidBody>
   );
 }
 

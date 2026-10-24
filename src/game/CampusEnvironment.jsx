@@ -85,7 +85,7 @@ export const ENV_SETTINGS = {
   }
 };
 
-export default function CampusEnvironment({ level = 1 }) {
+export default function CampusEnvironment({ level = 1, isHighQuality = true }) {
   const env = ENV_SETTINGS[level] || ENV_SETTINGS[1];
   const paverTexture = useMemo(() => getGranitePaversTexture(), []);
 
@@ -115,14 +115,14 @@ export default function CampusEnvironment({ level = 1 }) {
         intensity={env.ambientIntensity}
       />
 
-      {/* Optimized Campus Directional Sunlight (1024x1024 with tight frustum) */}
+      {/* Optimized Campus Directional Sunlight (conditionally casts shadows on HIGH preset) */}
       <directionalLight
         position={[env.sunPos[0] * 0.7, env.sunPos[1] * 0.7, env.sunPos[2] * 0.7]}
         intensity={env.sunlightIntensity}
         color={env.sunColor}
-        castShadow
-        shadow-mapSize-width={1024}
-        shadow-mapSize-height={1024}
+        castShadow={isHighQuality}
+        shadow-mapSize-width={isHighQuality ? 1024 : 512}
+        shadow-mapSize-height={isHighQuality ? 1024 : 512}
         shadow-camera-far={120}
         shadow-camera-left={-28}
         shadow-camera-right={28}

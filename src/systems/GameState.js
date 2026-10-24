@@ -1,5 +1,7 @@
 // ATHARVA.EXE — Authoritative Global Game State System (Atharva University Campus Edition)
 
+import { Sound } from './AudioSystem';
+
 const SAVE_KEY = 'ATHARVA_EXE_PROGRESS_CAMPUS_V2';
 
 class GameStateManager {
@@ -12,6 +14,7 @@ class GameStateManager {
   reset() {
     this.screen = 'BOOT'; // 'BOOT', 'MENU', 'GAME', 'PAUSE', 'LEVEL_COMPLETE', 'FINAL_CONVOCATION'
     this.currentLevel = 1;
+    this.graphicsPreset = 'HIGH'; // 'HIGH' or 'LOW' (8GB laptop optimization)
     this.gravityInverted = false;
     this.timeFrozen = false;
     this.freezeCooldown = 0;
@@ -25,7 +28,7 @@ class GameStateManager {
     this.totalFragments = 3;
     this.examTimer = 90; // Countdown clock until exam bell
     this.respawns = 0;
-    this.checkpoint = [0, 2, 8];
+    this.checkpoint = [0, 1.2, 31]; // Outside on Campus Arrival Avenue
     this.unlockedLevels = 1;
     this.isDetained = false;
     this.isTimeOut = false;
@@ -63,6 +66,11 @@ class GameStateManager {
     this.panelGlitchActive = false;
     this.lyingAdminHint = null;
     this.trustLevel = 100;
+    this.activeSubtitle = null;
+    this.subtitleTimeout = null;
+    this.firstTimeGravity = true;
+    this.firstTimeDimension = true;
+    this.firstTimeStasis = true;
     this.studentInfo = {
       name: 'Karan Rao',
       role: 'Student Debugger',
@@ -74,6 +82,31 @@ class GameStateManager {
     };
   }
 
+  triggerSubtitle(speaker, text, durationMs = 4500, tag = 'INTERNAL MONOLOGUE', color = '#00E5FF') {
+    if (this.subtitleTimeout) clearTimeout(this.subtitleTimeout);
+    this.activeSubtitle = {
+      id: Date.now(),
+      speaker,
+      text,
+      tag,
+      color,
+      timestamp: new Date().toLocaleTimeString('en-US', { hour12: false })
+    };
+    Sound.playNarrativeBlip();
+    this.notify();
+
+    this.subtitleTimeout = setTimeout(() => {
+      this.activeSubtitle = null;
+      this.notify();
+    }, durationMs);
+  }
+
+  clearSubtitle() {
+    if (this.subtitleTimeout) clearTimeout(this.subtitleTimeout);
+    this.activeSubtitle = null;
+    this.notify();
+  }
+
   setFinalChoice(choice) {
     this.finalChoice = choice;
     this.notify();
@@ -81,6 +114,12 @@ class GameStateManager {
 
   setMouseSensitivity(val) {
     this.mouseSensitivity = Math.max(0.2, Math.min(3.0, val));
+    this.notify();
+  }
+
+  setGraphicsPreset(preset) {
+    this.graphicsPreset = preset === 'LOW' ? 'LOW' : 'HIGH';
+    this.saveProgress();
     this.notify();
   }
 
@@ -121,7 +160,7 @@ class GameStateManager {
     this.isTimeOut = false;
     this.showSectorIntro = true;
     this.detentionReason = '';
-    this.checkpoint = [0, 2, 8];
+    this.checkpoint = levelId === 1 ? [0, 1.2, 31] : [0, 2, 8];
     this.gravityStrength = 9.81;
     this.hyperSprint = false;
     this.isControlsScrambled = false;
@@ -134,6 +173,52 @@ class GameStateManager {
     this.examTimer = timerMap[levelId] || 90;
     this.screen = 'GAME';
     this.notify();
+
+    // Contextual diegetic story monologue on level entrance
+    setTimeout(() => {
+      if (levelId === 1) {
+        this.triggerSubtitle(
+          'ATHARVA // ROLL NO. CS-2024-884',
+          '7:42 PM. You came back to submit your final project.',
+          4800,
+          'CAMPUS ARRIVAL',
+          '#00E5FF'
+        );
+        setTimeout(() => {
+          this.triggerSubtitle(
+            'ATHARVA // ROLL NO. CS-2024-884',
+            'Just one quick visit. Then home.',
+            4500,
+            'CAMPUS ARRIVAL',
+            '#FFE14D'
+          );
+        }, 5100);
+      } else if (levelId === 2) {
+        this.triggerSubtitle(
+          'CAMPUS PA SYSTEM',
+          'Attention students in Reading Hall B: Batch 2021 attendance files have been moved to Cold Storage.',
+          5500,
+          'CENTRAL TANNOY',
+          '#F59E0B'
+        );
+      } else if (levelId === 3) {
+        this.triggerSubtitle(
+          'ATHARVA // ROLL NO. CS-2024-884',
+          'Lab 301... The smell of warm solder. Anya\'s terminal is still compiling in the Glitch layer across the room.',
+          5500,
+          'INTERNAL MONOLOGUE',
+          '#00E5FF'
+        );
+      } else if (levelId === 4) {
+        this.triggerSubtitle(
+          'ATHARVA // ROLL NO. CS-2024-884',
+          'The Central Server Core... This entire college isn\'t real. It\'s a recursive simulation loop repeating 19:42 PM!',
+          5800,
+          'CORE REVELATION',
+          '#A78BFA'
+        );
+      }
+    }, 700);
 
     // Trigger player and camera reset to the start of the level
     if (typeof window !== 'undefined' && window.dispatchEvent) {
@@ -187,7 +272,13 @@ class GameStateManager {
   refillEnergy(amount) {
     if (this.glitchEnergy < 100) {
       this.glitchEnergy = Math.min(100, this.glitchEnergy + amount);
-      this.notify();
+      const now = performance.now();
+      // Throttle notification to ~10Hz (every 100ms) or when fully charged to 100
+      // Eliminates 60-120 React re-renders/sec while grounded, boosting FPS significantly
+      if (!this._lastEnergyNotify || now - this._lastEnergyNotify >= 100 || this.glitchEnergy >= 100) {
+        this._lastEnergyNotify = now;
+        this.notify();
+      }
     }
   }
 
@@ -195,6 +286,20 @@ class GameStateManager {
     if (this.useEnergy(20)) {
       this.gravityInverted = !this.gravityInverted;
       this.notify();
+
+      if (this.firstTimeGravity) {
+        this.firstTimeGravity = false;
+        setTimeout(() => {
+          this.triggerSubtitle(
+            'ATHARVA // ROLL NO. CS-2024-884',
+            'Whoa—! The ceiling has an inverted walkway! The emergency circuit breaker must be up there!',
+            5000,
+            'PHYSICS SURGE',
+            '#00E5FF'
+          );
+        }, 400);
+      }
+
       return true;
     }
     return false;
@@ -204,6 +309,20 @@ class GameStateManager {
     if (this.useEnergy(15)) {
       this.activeDimension = this.activeDimension === 'REAL' ? 'GLITCH' : 'REAL';
       this.notify();
+
+      if (this.firstTimeDimension) {
+        this.firstTimeDimension = false;
+        setTimeout(() => {
+          this.triggerSubtitle(
+            'ATHARVA // ROLL NO. CS-2024-884',
+            'Pressing [Q] reveals the Glitch layer! The phased walls and hidden bridges materialize!',
+            5000,
+            'DIMENSIONAL SHIFT',
+            '#FF2E93'
+          );
+        }, 350);
+      }
+
       return true;
     }
     return false;
@@ -215,6 +334,19 @@ class GameStateManager {
 
     this.timeFrozen = true;
     this.notify();
+
+    if (this.firstTimeStasis) {
+      this.firstTimeStasis = false;
+      setTimeout(() => {
+        this.triggerSubtitle(
+          'ATHARVA // ROLL NO. CS-2024-884',
+          'Time Stasis [F]! The kinetic book stacks freeze in mid-motion for 3 seconds!',
+          4500,
+          'STASIS PROTOCOL',
+          '#10B981'
+        );
+      }, 200);
+    }
 
     setTimeout(() => {
       this.timeFrozen = false;
@@ -327,9 +459,19 @@ class GameStateManager {
 
   tickTimer(seconds = 1) {
     if (this.screen !== 'GAME' || this.isDetained || this.isTimeOut || this.showSectorIntro || this.activeStoryModal) return;
+    const prevTime = this.examTimer;
     this.examTimer = Math.max(0, this.examTimer - seconds);
+
+    // College exam bell audio alerts
+    if (prevTime > 30 && this.examTimer <= 30) {
+      Sound.playExamBell();
+    } else if (prevTime > 10 && this.examTimer <= 10) {
+      Sound.playExamBell();
+    }
+
     if (this.examTimer <= 0) {
       this.isTimeOut = true;
+      Sound.playExamBell();
     }
     this.notify();
   }
@@ -550,13 +692,20 @@ class GameStateManager {
       if (data) {
         const parsed = JSON.parse(data);
         this.unlockedLevels = parsed.unlockedLevels || 1;
+        if (parsed.graphicsPreset) this.graphicsPreset = parsed.graphicsPreset;
       }
     } catch (e) {}
   }
 
   saveProgress() {
     try {
-      localStorage.setItem(SAVE_KEY, JSON.stringify({ unlockedLevels: this.unlockedLevels }));
+      localStorage.setItem(
+        SAVE_KEY,
+        JSON.stringify({
+          unlockedLevels: this.unlockedLevels,
+          graphicsPreset: this.graphicsPreset
+        })
+      );
     } catch (e) {}
   }
 

@@ -453,3 +453,167 @@ export function getWarningStripeTexture() {
   return texture;
 }
 
+/**
+ * Creates authentic college cork notice board with pinned notices and timetables.
+ */
+export function getNoticeBoardTexture() {
+  if (textureCache.has('notice_board')) return textureCache.get('notice_board');
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+
+  // Brown cork background with stippling
+  ctx.fillStyle = '#b45309';
+  ctx.fillRect(0, 0, 512, 512);
+
+  // Cork micro-grain
+  ctx.fillStyle = 'rgba(120, 53, 15, 0.4)';
+  for (let i = 0; i < 600; i++) {
+    const rx = Math.random() * 512;
+    const ry = Math.random() * 512;
+    ctx.fillRect(rx, ry, 2, 2);
+  }
+
+  // Notice 1: University Circular (White Paper)
+  ctx.fillStyle = '#f8fafc';
+  ctx.fillRect(35, 40, 200, 180);
+  ctx.fillStyle = '#0f172a';
+  ctx.fillRect(45, 55, 120, 12);
+  ctx.fillStyle = '#64748b';
+  for (let y = 80; y < 195; y += 14) {
+    ctx.fillRect(45, y, 160 + (Math.sin(y) * 20), 4);
+  }
+  // Red pushpin
+  ctx.fillStyle = '#ef4444';
+  ctx.beginPath();
+  ctx.arc(135, 48, 6, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Notice 2: Tech Fest Poster (Cyan / Purple)
+  ctx.fillStyle = '#1e1b4b';
+  ctx.fillRect(265, 30, 215, 230);
+  ctx.fillStyle = '#00e5ff';
+  ctx.fillRect(280, 50, 180, 20);
+  ctx.fillStyle = '#f43f5e';
+  ctx.fillRect(280, 85, 140, 14);
+  // Matrix grid on poster
+  ctx.strokeStyle = 'rgba(0, 229, 255, 0.3)';
+  for (let x = 280; x < 460; x += 30) {
+    ctx.strokeRect(x, 115, 24, 24);
+  }
+  // Yellow pushpin
+  ctx.fillStyle = '#facc15';
+  ctx.beginPath();
+  ctx.arc(370, 38, 6, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Notice 3: Exam Timetable Sheet (Yellow lined paper)
+  ctx.fillStyle = '#fef08a';
+  ctx.fillRect(50, 260, 220, 210);
+  ctx.fillStyle = '#b45309';
+  ctx.fillRect(65, 280, 160, 10);
+  // Grid lines
+  ctx.strokeStyle = 'rgba(180, 83, 9, 0.35)';
+  ctx.lineWidth = 1;
+  for (let y = 305; y < 450; y += 18) {
+    ctx.beginPath();
+    ctx.moveTo(60, y);
+    ctx.lineTo(250, y);
+    ctx.stroke();
+  }
+  // Cyan pushpin
+  ctx.fillStyle = '#06b6d4';
+  ctx.beginPath();
+  ctx.arc(160, 268, 6, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Notice 4: Emergency Curfew Memo (Pink Memo)
+  ctx.fillStyle = '#fbcfe8';
+  ctx.fillRect(300, 290, 175, 170);
+  ctx.fillStyle = '#9d174d';
+  ctx.fillRect(315, 310, 140, 12);
+  ctx.fillStyle = '#be185d';
+  for (let y = 335; y < 435; y += 14) {
+    ctx.fillRect(315, y, 125, 4);
+  }
+  // Silver pushpin
+  ctx.fillStyle = '#94a3b8';
+  ctx.beginPath();
+  ctx.arc(385, 298, 6, 0, Math.PI * 2);
+  ctx.fill();
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.ClampToEdgeWrapping;
+  texture.wrapT = THREE.ClampToEdgeWrapping;
+  texture.colorSpace = THREE.SRGBColorSpace;
+  textureCache.set('notice_board', texture);
+  return texture;
+}
+
+/**
+ * Creates authentic college wooden classroom door with upper window and metal kickplate.
+ */
+export function getClassroomDoorTexture() {
+  if (textureCache.has('classroom_door')) return textureCache.get('classroom_door');
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 256;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+
+  // Wood door base
+  ctx.fillStyle = '#451a03';
+  ctx.fillRect(0, 0, 256, 512);
+
+  // Outer door frame bevel
+  ctx.strokeStyle = '#78350f';
+  ctx.lineWidth = 8;
+  ctx.strokeRect(4, 4, 248, 504);
+
+  // Upper vision window
+  ctx.fillStyle = '#0ea5e9';
+  ctx.fillRect(38, 50, 180, 170);
+  // Wire mesh inside window glass
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+  ctx.lineWidth = 1;
+  for (let x = 38; x < 218; x += 16) {
+    ctx.beginPath();
+    ctx.moveTo(x, 50);
+    ctx.lineTo(x, 220);
+    ctx.stroke();
+  }
+  for (let y = 50; y < 220; y += 16) {
+    ctx.beginPath();
+    ctx.moveTo(38, y);
+    ctx.lineTo(218, y);
+    ctx.stroke();
+  }
+  ctx.strokeStyle = '#1e293b';
+  ctx.lineWidth = 6;
+  ctx.strokeRect(38, 50, 180, 170);
+
+  // Lower recessed door wood panels
+  ctx.fillStyle = '#291004';
+  ctx.fillRect(38, 250, 180, 110);
+  ctx.fillRect(38, 380, 180, 90);
+  ctx.strokeStyle = '#78350f';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(38, 250, 180, 110);
+  ctx.strokeRect(38, 380, 180, 90);
+
+  // Stainless steel push/pull plate and lever handle
+  ctx.fillStyle = '#cbd5e1';
+  ctx.fillRect(16, 260, 16, 75);
+  ctx.fillStyle = '#94a3b8';
+  ctx.fillRect(8, 290, 28, 8);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.ClampToEdgeWrapping;
+  texture.wrapT = THREE.ClampToEdgeWrapping;
+  texture.colorSpace = THREE.SRGBColorSpace;
+  textureCache.set('classroom_door', texture);
+  return texture;
+}
+

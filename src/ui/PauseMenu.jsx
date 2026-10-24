@@ -8,6 +8,7 @@ import { Sound } from '../systems/AudioSystem';
 export default function PauseMenu() {
   const [isMuted, setIsMuted] = useState(Sound.muted);
   const [sensitivity, setSensitivity] = useState(GameState.mouseSensitivity || 1.0);
+  const [graphicsPreset, setGraphicsPreset] = useState(GameState.graphicsPreset || 'HIGH');
 
   const handleResume = (e) => {
     if (e) e.stopPropagation();
@@ -70,7 +71,7 @@ export default function PauseMenu() {
           fontFamily: '"Fira Code", monospace'
         }}>
           <div style={{ color: '#00E5FF', fontWeight: 'bold', fontSize: '10px', marginBottom: '3px' }}>⌨️ KEYBOARD ASSIGNMENTS:</div>
-          <div><span style={{ color: '#FFE14D' }}>WASD</span> Move • <span style={{ color: '#FFE14D' }}>Space</span> Jump • <span style={{ color: '#FFE14D' }}>[E]</span> Interact</div>
+          <div><span style={{ color: '#FFE14D' }}>WASD</span> Move • <span style={{ color: '#FFE14D' }}>Space</span> Jump • <span style={{ color: '#FFE14D' }}>[E]</span> Interact • <span style={{ color: '#EF4444' }}>[R]</span> Respawn</div>
           <div><span style={{ color: '#00E5FF' }}>[G]</span> Gravity Flip (20) • <span style={{ color: '#10B981' }}>[F]</span> Time Freeze (35)</div>
           <div><span style={{ color: '#FF2E93' }}>[Q]</span> Dimension Switch (15) • <span style={{ color: '#FFE14D' }}>[C]</span> Clone Ghost (40)</div>
         </div>
@@ -103,6 +104,30 @@ export default function PauseMenu() {
             />
             <span style={{ color: '#00E5FF', fontWeight: 'bold' }}>{sensitivity.toFixed(1)}x</span>
           </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px', color: '#94A3B8' }}>
+            <span>GRAPHICS PRESET:</span>
+            <button
+              onClick={() => {
+                const next = graphicsPreset === 'HIGH' ? 'LOW' : 'HIGH';
+                setGraphicsPreset(next);
+                GameState.setGraphicsPreset(next);
+                Sound.playTone(600, 'sine', 0.1, 0.1);
+              }}
+              style={{
+                padding: '4px 10px',
+                borderRadius: '4px',
+                border: `1px solid ${graphicsPreset === 'HIGH' ? '#00E5FF' : '#10B981'}`,
+                background: 'rgba(15, 23, 42, 0.9)',
+                color: graphicsPreset === 'HIGH' ? '#00E5FF' : '#10B981',
+                fontSize: '10px',
+                fontWeight: 'bold',
+                cursor: 'pointer'
+              }}
+            >
+              {graphicsPreset === 'HIGH' ? '🌟 HIGH (SHADOWS & DPR 1.5)' : '⚡ LOW (60 FPS 8GB LAPTOPS)'}
+            </button>
+          </div>
         </div>
 
         <div style={styles.btnGroup}>
@@ -134,8 +159,7 @@ const styles = {
     left: 0,
     width: '100vw',
     height: '100vh',
-    background: 'rgba(15, 23, 42, 0.65)',
-    backdropFilter: 'blur(8px)',
+    background: 'rgba(9, 14, 33, 0.85)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

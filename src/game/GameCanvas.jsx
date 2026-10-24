@@ -26,9 +26,13 @@ export default function GameCanvas() {
   const [gravityInverted, setGravityInverted] = useState(GameState.gravityInverted);
   const [gravityStrength, setGravityStrength] = useState(GameState.gravityStrength || 9.81);
   const [activeDimension, setActiveDimension] = useState(GameState.activeDimension);
+  const [graphicsPreset, setGraphicsPreset] = useState(GameState.graphicsPreset || 'HIGH');
   const [isPaused, setIsPaused] = useState(GameState.screen === 'PAUSE' || Boolean(GameState.activeStoryModal));
+  const [realityPulse, setRealityPulse] = useState(false);
   const playerPosRef = useRef({ x: 0, y: 2, z: 8 });
   const ghostPosRef = useRef(null);
+  const prevDimRef = useRef(activeDimension);
+  const prevGravRef = useRef(gravityInverted);
 
   useEffect(() => {
     return GameState.subscribe((state) => {
@@ -36,6 +40,7 @@ export default function GameCanvas() {
       setGravityInverted(state.gravityInverted);
       setGravityStrength(state.gravityStrength || 9.81);
       setActiveDimension(state.activeDimension);
+      setGraphicsPreset(state.graphicsPreset || 'HIGH');
       setIsPaused(state.screen === 'PAUSE' || Boolean(state.activeStoryModal));
       if (state.timeEchoActive && state.timeEchoPos) {
         ghostPosRef.current = state.timeEchoPos;
@@ -45,30 +50,59 @@ export default function GameCanvas() {
     });
   }, []);
 
+  // Restrained reality glitch pulse on dimension switch or gravity flip
+  useEffect(() => {
+    if (prevDimRef.current !== activeDimension || prevGravRef.current !== gravityInverted) {
+      prevDimRef.current = activeDimension;
+      prevGravRef.current = gravityInverted;
+      setRealityPulse(true);
+      const timer = setTimeout(() => setRealityPulse(false), 220);
+      return () => clearTimeout(timer);
+    }
+  }, [activeDimension, gravityInverted]);
+
   const gVal = gravityStrength || 9.81;
   const gravityVector = gravityInverted ? [0, gVal, 0] : [0, -gVal, 0];
   const LevelComponent = levelMap[currentLevel] || Level1;
   const env = ENV_SETTINGS[currentLevel] || ENV_SETTINGS[1];
+  const isHighQuality = graphicsPreset === 'HIGH';
 
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden' }}>
+      {/* Restrained Chromatic Reality Pulse on Dimension or Gravity Shift */}
+      {realityPulse && (
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            pointerEvents: 'none',
+            zIndex: 6,
+            background: activeDimension === 'GLITCH'
+              ? 'radial-gradient(circle at center, rgba(255, 46, 147, 0.28) 0%, rgba(0, 229, 255, 0.16) 65%, transparent 100%)'
+              : 'radial-gradient(circle at center, rgba(0, 229, 255, 0.28) 0%, rgba(255, 225, 77, 0.16) 65%, transparent 100%)',
+            mixBlendMode: 'screen',
+            transition: 'opacity 0.22s ease-out'
+          }}
+        />
+      )}
+
       <Canvas
-        shadows
-        dpr={[1, 1.5]}
-        gl={{ antialias: true, powerPreference: 'high-performance', stencil: false }}
+        shadows={isHighQuality}
+        dpr={isHighQuality ? [1, 1.25] : 1.0}
+        gl={{ antialias: isHighQuality, powerPreference: 'high-performance', stencil: false }}
         camera={{ position: [0, 4.5, 14.5], fov: 60 }}
         style={{ width: '100%', height: '100%' }}
       >
         <color attach="background" args={[env.skyColor]} />
-        <CampusEnvironment level={currentLevel} />
+        <CampusEnvironment level={currentLevel} isHighQuality={isHighQuality} />
 
         {/* Dynamic Third-Person Follow POV & Orbit Camera */}
-        <CameraController playerPosRef={playerPosRef} gravityInverted={gravityInverted} />
+        <CameraController key={`cam-sector-${currentLevel}`} playerPosRef={playerPosRef} gravityInverted={gravityInverted} />
 
         {/* Rapier Physics World */}
         <Physics gravity={gravityVector} paused={isPaused}>
           <LevelComponent playerPosRef={playerPosRef} ghostPosRef={ghostPosRef} activeDimension={activeDimension} />
-          <Player playerPosRef={playerPosRef} ghostPosRef={ghostPosRef} gravityInverted={gravityInverted} />
+          <Player key={`player-sector-${currentLevel}`} playerPosRef={playerPosRef} ghostPosRef={ghostPosRef} gravityInverted={gravityInverted} />
         </Physics>
       </Canvas>
     </div>

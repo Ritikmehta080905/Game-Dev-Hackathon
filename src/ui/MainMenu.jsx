@@ -8,16 +8,16 @@ import { Sound } from '../systems/AudioSystem';
 const SECTORS = [
   {
     id: 1,
-    name: 'LEVEL 1: AFTER THE LAST BELL',
+    name: 'LEVEL 1: THE LAST BELL',
     code: 'SEC-101',
     mechanic: 'GRAVITY FLIP [G]',
     objective: 'Restore entrance power via inverted maintenance route & audit the 7:42 PM exit log',
-    spots: 'Monument Pylons, Security Cabin, 7:42 PM Gate, Inverted Skywalk Breaker',
+    spots: 'Entrance Avenue, Gate Arch, Security Cabin, Courtyard, Inverted Skywalk Breaker',
     accent: '#00E5FF'
   },
   {
     id: 2,
-    name: 'LEVEL 2: THE LIBRARY OF THINGS UNWRITTEN',
+    name: 'LEVEL 2: THE ATTENDANCE ARCHIVE',
     code: 'LIB-202',
     mechanic: 'TIME FREEZE [F]',
     objective: 'Coordinate moving archive stacks with Time Freeze to uncover missing student Anya Sharma',
@@ -26,7 +26,7 @@ const SECTORS = [
   },
   {
     id: 3,
-    name: 'LEVEL 3: THE LAB THAT NEVER EXISTED',
+    name: 'LEVEL 3: PROJECT ZERO',
     code: 'CAN-303',
     mechanic: 'DIMENSION SWITCH [Q]',
     objective: 'Alternate between Real & Glitch dimensions in Lab 301 to decode the simulation experiment',
@@ -35,7 +35,7 @@ const SECTORS = [
   },
   {
     id: 4,
-    name: 'LEVEL 4: ATTENDANCE: NEVER CLOSED',
+    name: 'LEVEL 4: CAMPUS ZERO',
     code: 'DAT-404',
     mechanic: 'MASTER ALL MECHANICS [C+F+Q+G]',
     objective: 'Use Ghost Echo [C] to hold the safety interlock, cross the core, and execute Master Reboot [E]',
@@ -328,8 +328,7 @@ const styles = {
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    background: 'linear-gradient(135deg, rgba(8, 47, 73, 0.82) 0%, rgba(15, 23, 42, 0.88) 100%)',
-    backdropFilter: 'blur(8px)',
+    background: 'linear-gradient(135deg, rgba(8, 47, 73, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)',
     zIndex: 90,
     fontFamily: '"Plus Jakarta Sans", sans-serif',
     color: '#F8FAFC',
@@ -676,12 +675,11 @@ const styles = {
     left: 0,
     width: '100vw',
     height: '100vh',
-    background: 'rgba(6, 10, 24, 0.85)',
+    background: 'rgba(6, 10, 24, 0.92)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 110,
-    backdropFilter: 'blur(6px)'
+    zIndex: 110
   },
   modalContent: {
     background: '#0F172A',

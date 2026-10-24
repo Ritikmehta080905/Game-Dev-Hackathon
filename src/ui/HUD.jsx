@@ -12,8 +12,8 @@ const LEVEL_THEMES = {
   1: {
     sector: 'LEVEL 01',
     code: 'SEC-101',
-    name: 'AFTER THE LAST BELL',
-    environment: 'Monument Columns • Security Cabin • Paved Courtyard • Inverted Gantry',
+    name: 'THE LAST BELL',
+    environment: 'Main Gate • Security Cabin • Paved Courtyard • Academic Block',
     deptTag: '🏛️ CAMPUS GATE // 19:42 PM LOCKDOWN',
     docRole: 'MAIN GATE ATTENDANCE SCANNER',
     anomaly: 'Entrance power grid offline! Scanner on ceiling skywalk requires emergency breaker activation.',
@@ -63,7 +63,7 @@ const LEVEL_THEMES = {
   4: {
     sector: 'LEVEL 04',
     code: 'DAT-404',
-    name: 'CAMPUS ZERO: CORE REBOOT',
+    name: 'CAMPUS ZERO',
     environment: 'Mainframe Array • Security Blast Door • Pressure Plate • Quantum Root Core',
     deptTag: '⚡ CENTRAL MAINFRAME // MASTER REBOOT',
     docRole: 'SIMULATION CORE DE-ARCHIVE PROTOCOL',
@@ -110,10 +110,13 @@ function getDynamicObjective(state) {
   const catalogCount = state.cataloguesRecovered?.size || 0;
 
   if (lvl === 1) {
-    if (!p1.powerRestored) {
-      return 'Cross courtyard -> Flip Gravity [G] onto ceiling skywalk -> Activate Breaker [E]';
+    if (!state.checkpoint || state.checkpoint[2] > 14) {
+      return 'OBJECTIVE: ENTER CAMPUS — Approach the Main Gate, check Security Terminal [E], and enter courtyard';
     }
-    return 'Power online! Audit the Gate Exit Terminal [E] to verify exit log.';
+    if (!p1.powerRestored) {
+      return 'OBJECTIVE: RESTORE CAMPUS POWER — Flip Gravity [G] to reach Breaker CB-01 on ceiling';
+    }
+    return 'Power restored! Academic entrance unlocked. Proceed to verify credentials at Exit Terminal [E].';
   }
 
   if (lvl === 2) {
@@ -548,7 +551,6 @@ export default function HUD() {
           fontSize: '12px',
           color: '#F8FAFC',
           boxShadow: `0 0 20px ${theme.accentGlow}`,
-          backdropFilter: 'blur(8px)',
           maxWidth: '520px'
         }}>
           <span style={{ fontSize: '18px' }}>🎯</span>
@@ -661,6 +663,26 @@ export default function HUD() {
       </div>
 
       {/* ========================================================
+          2.5. DIEGETIC IN-GAME NARRATIVE SUBTITLE & MONOLOGUE STREAM
+          ======================================================== */}
+      {state.activeSubtitle && (
+        <div style={styles.subtitleContainer}>
+          <div style={{ ...styles.subtitleCard, borderColor: state.activeSubtitle.color || theme.accent }}>
+            <div style={styles.subtitleHeader}>
+              <span style={{ ...styles.subtitleSpeakerBadge, background: state.activeSubtitle.color || theme.accent }}>
+                {state.activeSubtitle.speaker}
+              </span>
+              <span style={styles.subtitleTag}>{state.activeSubtitle.tag || 'RADIO'}</span>
+              <span style={styles.subtitleTime}>{state.activeSubtitle.timestamp}</span>
+            </div>
+            <div style={styles.subtitleText}>
+              "{state.activeSubtitle.text}"
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================
           3. SECTOR BRIEFING MODAL (EXPLAINS ENVIRONMENT & CONTROLS ON ENTER)
           ======================================================== */}
       {state.showSectorIntro && (
@@ -713,7 +735,6 @@ const styles = {
     border: '1.5px solid',
     borderRadius: '10px',
     padding: '10px 18px',
-    backdropFilter: 'blur(10px)',
     pointerEvents: 'auto',
     boxShadow: '0 4px 25px rgba(0, 0, 0, 0.6)',
     transition: 'all 0.3s'
@@ -846,7 +867,6 @@ const styles = {
     minWidth: '310px',
     pointerEvents: 'auto',
     fontFamily: '"Fira Code", monospace',
-    backdropFilter: 'blur(12px)',
     transition: 'all 0.3s'
   },
   realityHeader: {
@@ -920,7 +940,6 @@ const styles = {
     border: '1.5px solid',
     borderRadius: '8px',
     padding: '8px 12px',
-    backdropFilter: 'blur(12px)',
     pointerEvents: 'auto',
     transition: 'all 0.3s'
   },
@@ -1006,7 +1025,6 @@ const styles = {
     border: '1.5px solid #FFE14D',
     borderRadius: '8px',
     padding: '12px 18px',
-    backdropFilter: 'blur(10px)',
     boxShadow: '0 0 30px rgba(255, 225, 77, 0.45)',
     display: 'flex',
     flexDirection: 'column',
@@ -1058,7 +1076,6 @@ const styles = {
     borderRadius: '8px',
     padding: '12px 20px',
     textAlign: 'center',
-    backdropFilter: 'blur(8px)',
     boxShadow: '0 0 30px rgba(255, 46, 147, 0.5)'
   },
   adminBannerTitle: {
@@ -1106,8 +1123,7 @@ const styles = {
     border: '2px solid #EF4444',
     borderRadius: '8px',
     padding: '12px 18px',
-    boxShadow: '0 8px 32px rgba(239, 68, 68, 0.6)',
-    backdropFilter: 'blur(8px)'
+    boxShadow: '0 8px 32px rgba(239, 68, 68, 0.6)'
   },
   deathRoastTag: {
     fontSize: '11px',
@@ -1139,5 +1155,60 @@ const styles = {
     zIndex: 95,
     fontFamily: '"Space Mono", monospace',
     animation: 'pulse 1s infinite alternate'
+  },
+  subtitleContainer: {
+    position: 'absolute',
+    bottom: '92px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    zIndex: 90,
+    width: '90%',
+    maxWidth: '680px',
+    pointerEvents: 'none'
+  },
+  subtitleCard: {
+    background: 'rgba(15, 23, 42, 0.94)',
+    border: '1.5px solid #00E5FF',
+    borderRadius: '10px',
+    padding: '12px 18px',
+    boxShadow: '0 12px 36px rgba(0, 0, 0, 0.6), 0 0 24px rgba(0, 229, 255, 0.25)',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '6px'
+  },
+  subtitleHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px'
+  },
+  subtitleSpeakerBadge: {
+    color: '#0F172A',
+    fontWeight: '900',
+    fontSize: '10.5px',
+    letterSpacing: '1px',
+    padding: '2px 8px',
+    borderRadius: '4px',
+    fontFamily: '"Space Mono", monospace'
+  },
+  subtitleTag: {
+    fontSize: '10px',
+    color: '#94A3B8',
+    fontWeight: 'bold',
+    letterSpacing: '0.8px',
+    fontFamily: '"Space Mono", monospace'
+  },
+  subtitleTime: {
+    fontSize: '9.5px',
+    color: '#64748B',
+    marginLeft: 'auto',
+    fontFamily: '"Space Mono", monospace'
+  },
+  subtitleText: {
+    fontSize: '14px',
+    lineHeight: '1.45',
+    color: '#F8FAFC',
+    fontWeight: '500',
+    fontStyle: 'italic',
+    textShadow: '0 2px 4px rgba(0, 0, 0, 0.8)'
   }
 };

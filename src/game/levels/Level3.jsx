@@ -2,6 +2,7 @@
 // Features cafeteria stalls, college corridor checkered walkways, and Dimension Switch [Q] puzzle!
 
 import React, { useState, useEffect, useMemo } from 'react';
+import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import { Text } from '@react-three/drei';
 import CampusPlatform from '../entities/CampusPlatform';
 import DimensionPlatform from '../entities/DimensionPlatform';
@@ -362,6 +363,10 @@ export default function Level3({ playerPosRef, activeDimension }) {
             ]
           },
           paragraphs: [
+            'PROJECT ZERO: SIMULATION CONTROL.',
+            'ATTENDANCE LOOP: ACTIVE.',
+            'RECORD DELETION: AUTHORIZED BY ADMIN WATCHDOG.',
+            '',
             'LOG 91 (PERSONAL AUDIO TRANSCRIPT):',
             '"The simulation was supposed to be a smart campus flow study. But when the clock strikes 7:42 PM, it doesn\'t shut down—it archives everyone inside into a recursive memory array."',
             '"They revoked my credentials. So I wrote an autonomous attendance recovery thread named Karan Rao (CS-2024-884). If you are reading this, you are not just an ordinary student."',
@@ -409,7 +414,8 @@ export default function Level3({ playerPosRef, activeDimension }) {
  */
 function CampusCanteenCounter({ position, glassTexture }) {
   return (
-    <group position={position}>
+    <RigidBody type="fixed" colliders={false} position={position}>
+      <CuboidCollider args={[1.2, 2.2, 4.0]} position={[0, 2.2, 0]} />
       {/* Main Counter Base Structure */}
       <mesh receiveShadow castShadow>
         <boxGeometry args={[2.4, 4.4, 8]} />
@@ -471,6 +477,35 @@ function CampusCanteenCounter({ position, glassTexture }) {
         ))}
       </group>
 
+      {/* Traditional Cutting Chai Stand (Brass Kettle & 4 Fluted Chai Glasses) */}
+      <group position={[0.4, 2.5, 0]}>
+        {/* Brass / Copper Chai Kettle */}
+        <mesh position={[-0.4, 0.18, 0]}>
+          <cylinderGeometry args={[0.14, 0.18, 0.32, 16]} />
+          <meshStandardMaterial color="#d97706" metalness={0.8} roughness={0.2} />
+        </mesh>
+        {/* Wire Tea Glass Carrier Rack */}
+        <mesh position={[0.2, 0.05, 0]}>
+          <boxGeometry args={[0.5, 0.08, 0.35]} />
+          <meshStandardMaterial color="#64748b" metalness={0.9} />
+        </mesh>
+        {/* 4 Small Cutting Chai Glasses with Steaming Amber Tea */}
+        {[-0.14, 0.14].map((x, xi) => (
+          [-0.09, 0.09].map((z, zi) => (
+            <group key={`${xi}-${zi}`} position={[0.2 + x, 0.15, z]}>
+              <mesh>
+                <cylinderGeometry args={[0.045, 0.035, 0.12, 12]} />
+                <meshStandardMaterial color="#fef08a" transparent opacity={0.65} roughness={0.1} />
+              </mesh>
+              <mesh position={[0, -0.01, 0]}>
+                <cylinderGeometry args={[0.04, 0.03, 0.09, 12]} />
+                <meshStandardMaterial color="#b45309" roughness={0.4} />
+              </mesh>
+            </group>
+          ))
+        ))}
+      </group>
+
       {/* Condiment Dispenser Pumps (Red Sauce & Green Mint Chutney) */}
       <group position={[0.5, 2.45, 2.8]}>
         <mesh position={[0, 0, -0.15]}>
@@ -512,16 +547,17 @@ function CampusCanteenCounter({ position, glassTexture }) {
           </mesh>
         </group>
       ))}
-    </group>
+    </RigidBody>
   );
 }
 
 /**
- * Computer Engineering Lab 301 Entrance & Workstations.
+ * Computer Engineering Lab 301 Entrance, Dual-Monitor Workstations & Oscilloscope.
  */
 function ComputerLab301({ position, glassTexture }) {
   return (
-    <group position={position}>
+    <RigidBody type="fixed" colliders={false} position={position}>
+      <CuboidCollider args={[1.2, 2.2, 4.0]} position={[0, 2.2, 0]} />
       {/* Heavy Classroom Wall Structure */}
       <mesh receiveShadow castShadow>
         <boxGeometry args={[2.4, 4.4, 8]} />
@@ -546,7 +582,7 @@ function ComputerLab301({ position, glassTexture }) {
         </mesh>
       </group>
 
-      {/* Lab 301 Nameplate */}
+      {/* Lab 301 Illuminated Nameplate */}
       <group position={[-1.22, 1.8, 0]} rotation={[0, -Math.PI / 2, 0]}>
         <mesh>
           <planeGeometry args={[2.2, 0.6]} />
@@ -556,26 +592,101 @@ function ComputerLab301({ position, glassTexture }) {
             emissiveIntensity={0.8}
           />
         </mesh>
+        <Text
+          position={[0, 0, 0.02]}
+          fontSize={0.15}
+          color="#0f172a"
+          fontWeight="bold"
+          anchorX="center"
+          anchorY="middle"
+        >
+          LAB 301 // AI & HARDWARE
+        </Text>
       </group>
 
-      {/* Lab Workstation CRT/LCD Display Terminals */}
-      {[-2.4, 2.4].map((z, i) => (
-        <group key={i} position={[-0.8, -0.2, z]}>
-          <mesh position={[0, 0, 0]}>
-            <boxGeometry args={[0.5, 0.38, 0.12]} />
-            <meshStandardMaterial color="#0f172a" metalness={0.6} />
-          </mesh>
-          <mesh position={[-0.26, 0, 0]} rotation={[0, -Math.PI / 2, 0]}>
-            <planeGeometry args={[0.34, 0.28]} />
-            <meshStandardMaterial
-              color="#00e5ff"
-              emissive="#00e5ff"
-              emissiveIntensity={1.5}
-            />
-          </mesh>
+      {/* Dual Monitor Developer Workstation Alpha & Beta */}
+      {[-2.2, 2.2].map((z, i) => (
+        <group key={i} position={[-0.9, -0.3, z]}>
+          {/* Main Monitor (IDE Code) */}
+          <group position={[-0.3, 0.35, -0.3]} rotation={[0, -Math.PI / 2 + 0.15, 0]}>
+            <mesh>
+              <boxGeometry args={[0.65, 0.42, 0.04]} />
+              <meshStandardMaterial color="#0f172a" metalness={0.8} />
+            </mesh>
+            <mesh position={[0, 0, 0.025]}>
+              <planeGeometry args={[0.6, 0.38]} />
+              <meshStandardMaterial
+                color="#00e5ff"
+                emissive="#00e5ff"
+                emissiveIntensity={1.8}
+              />
+            </mesh>
+          </group>
+
+          {/* Secondary Vertical Monitor (Terminal Logs) */}
+          <group position={[-0.3, 0.42, 0.35]} rotation={[0, -Math.PI / 2 - 0.2, 0]}>
+            <mesh>
+              <boxGeometry args={[0.38, 0.58, 0.04]} />
+              <meshStandardMaterial color="#0f172a" metalness={0.8} />
+            </mesh>
+            <mesh position={[0, 0, 0.025]}>
+              <planeGeometry args={[0.34, 0.54]} />
+              <meshStandardMaterial
+                color="#10b981"
+                emissive="#10b981"
+                emissiveIntensity={1.6}
+              />
+            </mesh>
+          </group>
+
+          {/* Cathode Ray Oscilloscope with Glowing Waveform */}
+          <group position={[0.1, 0.2, 0]}>
+            <mesh castShadow>
+              <boxGeometry args={[0.45, 0.35, 0.55]} />
+              <meshStandardMaterial color="#475569" metalness={0.7} roughness={0.3} />
+            </mesh>
+            {/* Round Green Screen */}
+            <mesh position={[-0.23, 0.05, 0]} rotation={[0, -Math.PI / 2, 0]}>
+              <circleGeometry args={[0.12, 24]} />
+              <meshStandardMaterial
+                color="#22c55e"
+                emissive="#22c55e"
+                emissiveIntensity={2.5}
+              />
+            </mesh>
+          </group>
         </group>
       ))}
-    </group>
+
+      {/* Logic Gate Circuit Whiteboard on Side Wall */}
+      <group position={[0, 1.2, 4.02]}>
+        <mesh>
+          <planeGeometry args={[2.2, 1.4]} />
+          <meshStandardMaterial color="#f8fafc" roughness={0.3} />
+        </mesh>
+        <Text
+          position={[0, 0.45, 0.02]}
+          fontSize={0.11}
+          color="#0f172a"
+          fontWeight="bold"
+          anchorX="center"
+          anchorY="middle"
+        >
+          CIRCUIT ARCHITECTURE // SEED-742
+        </Text>
+        <Text
+          position={[0, -0.05, 0.02]}
+          fontSize={0.08}
+          color="#0284c7"
+          anchorX="center"
+          anchorY="middle"
+        >
+          [CLK] ──► [FF-D0] ──► [XOR] ──► ROOT{'\n'}
+          Quarantine overrides: ACTIVE in GLITCH [Q]{'\n'}
+          "Do not execute system backup before Anya exits."
+        </Text>
+      </group>
+    </RigidBody>
   );
 }
 

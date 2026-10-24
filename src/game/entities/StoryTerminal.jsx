@@ -3,6 +3,7 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
+import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import { Text } from '@react-three/drei';
 import { GameState } from '../../systems/GameState';
 import { Sound } from '../../systems/AudioSystem';
@@ -81,36 +82,40 @@ export default function StoryTerminal({
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
     >
-      {/* Terminal Pedestal Base */}
-      <mesh position={[0, 0.45, 0]} castShadow receiveShadow>
-        <boxGeometry args={[0.7, 0.9, 0.5]} />
-        <meshStandardMaterial color="#0F172A" metalness={0.8} roughness={0.3} />
-      </mesh>
-
-      {/* Angled Monitor Head */}
-      <group position={[0, 1.15, 0.05]} rotation={[-0.35, 0, 0]}>
-        {/* Bezel housing */}
-        <mesh castShadow>
-          <boxGeometry args={[0.9, 0.65, 0.2]} />
-          <meshStandardMaterial color="#1E293B" metalness={0.7} roughness={0.4} />
+      {/* Solid Terminal Pedestal Body & Collider */}
+      <RigidBody type="fixed" colliders={false}>
+        <CuboidCollider args={[0.45, 0.7, 0.35]} position={[0, 0.7, 0]} />
+        {/* Terminal Pedestal Base */}
+        <mesh position={[0, 0.45, 0]} castShadow receiveShadow>
+          <boxGeometry args={[0.7, 0.9, 0.5]} />
+          <meshStandardMaterial color="#0F172A" metalness={0.8} roughness={0.3} />
         </mesh>
 
-        {/* Glowing Screen Face */}
-        <mesh position={[0, 0, 0.11]}>
-          <planeGeometry args={[0.78, 0.52]} />
-          <meshStandardMaterial
-            color={displayColor}
-            emissive={displayColor}
-            emissiveIntensity={isActivated ? 1.8 : 1.2}
-          />
-        </mesh>
+        {/* Angled Monitor Head */}
+        <group position={[0, 1.15, 0.05]} rotation={[-0.35, 0, 0]}>
+          {/* Bezel housing */}
+          <mesh castShadow>
+            <boxGeometry args={[0.9, 0.65, 0.2]} />
+            <meshStandardMaterial color="#1E293B" metalness={0.7} roughness={0.4} />
+          </mesh>
 
-        {/* Screen Status Light */}
-        <mesh position={[0.35, 0.24, 0.12]}>
-          <circleGeometry args={[0.03, 12]} />
-          <meshBasicMaterial color={isActivated ? '#10B981' : '#FFE14D'} />
-        </mesh>
-      </group>
+          {/* Glowing Screen Face */}
+          <mesh position={[0, 0, 0.11]}>
+            <planeGeometry args={[0.78, 0.52]} />
+            <meshStandardMaterial
+              color={displayColor}
+              emissive={displayColor}
+              emissiveIntensity={isActivated ? 1.8 : 1.2}
+            />
+          </mesh>
+
+          {/* Screen Status Light */}
+          <mesh position={[0.35, 0.24, 0.12]}>
+            <circleGeometry args={[0.03, 12]} />
+            <meshBasicMaterial color={isActivated ? '#10B981' : '#FFE14D'} />
+          </mesh>
+        </group>
+      </RigidBody>
 
       {/* Floor Cable Conduit */}
       <mesh position={[0, 0.02, 0.4]} rotation={[Math.PI / 2, 0, 0]}>

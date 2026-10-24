@@ -7,7 +7,18 @@ import { RigidBody, CapsuleCollider, useRapier } from '@react-three/rapier';
 import * as THREE from 'three';
 import { useKeyboard } from '../../hooks/useKeyboard';
 import { GameState } from '../../systems/GameState';
-import { Sound } from '../../systems/AudioSystem';
+// Reusable module-scoped scratch instances to eliminate all per-frame garbage collection
+const _camDir = new THREE.Vector3();
+const _camRight = new THREE.Vector3();
+const _moveDir = new THREE.Vector3();
+const _upVec = new THREE.Vector3(0, 1, 0);
+const _sampleOffsets = [
+  [0, 0],
+  [0.22, 0],
+  [-0.22, 0],
+  [0, 0.22],
+  [0, -0.22]
+];
 
 export default function Player({ playerPosRef, ghostPosRef, gravityInverted }) {
   const rbRef = useRef();
@@ -23,6 +34,7 @@ export default function Player({ playerPosRef, ghostPosRef, gravityInverted }) {
   const dimensionPressedRef = useRef(false);
   const echoPressedRef = useRef(false);
   const wasGroundedRef = useRef(false);
+  const lastFootstepTimeRef = useRef(0);
 
   const targetRotationZ = gravityInverted ? Math.PI : 0;
 
@@ -63,7 +75,7 @@ export default function Player({ playerPosRef, ghostPosRef, gravityInverted }) {
       dimensionPressedRef.current = true;
       const success = GameState.toggleDimension();
       if (success) {
-        Sound.playTone(350, 'sawtooth', 0.12, 0.15);
+        Sound.playDimensionGlitchPulse();
       } else {
         Sound.playTone(180, 'sawtooth', 0.1, 0.1);
       }
@@ -118,12 +130,20 @@ export default function Player({ playerPosRef, ghostPosRef, gravityInverted }) {
 
   const respawnPlayer = () => {
     if (!rbRef.current) return;
-    const cp = GameState.checkpoint || [0, 2, 8];
+    const cp = GameState.checkpoint || [0, 1.2, 31];
     rbRef.current.setTranslation({ x: cp[0], y: cp[1] + 1.2, z: cp[2] }, true);
     rbRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true);
     rbRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true);
     if (playerPosRef) {
-      playerPosRef.current = { x: cp[0], y: cp[1] + 1.2, z: cp[2] };
+      playerPosRef.current = {
+        x: cp[0],
+        y: cp[1] + 1.2,
+        z: cp[2],
+        vx: 0,
+        vy: 0,
+        vz: 0,
+        angle: 0
+      };
     }
     Sound.playDeath();
   };
@@ -141,7 +161,15 @@ export default function Player({ playerPosRef, ghostPosRef, gravityInverted }) {
     const linvel = rbRef.current.linvel();
 
     if (playerPosRef) {
-      playerPosRef.current = translation;
+      playerPosRef.current = {
+        x: translation.x,
+        y: translation.y,
+        z: translation.z,
+        vx: linvel.x,
+        vy: linvel.y,
+        vz: linvel.z,
+        angle: visualRef.current ? visualRef.current.rotation.y : 0
+      };
     }
 
     // Fall Detection Boundary
@@ -157,39 +185,54 @@ export default function Player({ playerPosRef, ghostPosRef, gravityInverted }) {
     const forward = (keys.forward ? 1 : 0) - (keys.backward ? 1 : 0);
     const side = (keys.right ? 1 : 0) - (keys.left ? 1 : 0);
 
-    const cameraDirection = new THREE.Vector3();
-    state.camera.getWorldDirection(cameraDirection);
-    cameraDirection.y = 0;
-    cameraDirection.normalize();
+    state.camera.getWorldDirection(_camDir);
+    _camDir.y = 0;
+    _camDir.normalize();
 
-    const cameraRight = new THREE.Vector3();
-    cameraRight.crossVectors(cameraDirection, new THREE.Vector3(0, 1, 0)).normalize();
+    _camRight.crossVectors(_camDir, _upVec).normalize();
 
-    const moveDir = new THREE.Vector3()
-      .addScaledVector(cameraDirection, forward)
-      .addScaledVector(cameraRight, side);
+    _moveDir.set(0, 0, 0)
+      .addScaledVector(_camDir, forward)
+      .addScaledVector(_camRight, side);
 
-    if (moveDir.lengthSq() > 0.001) {
-      moveDir.normalize();
+    const dt = Math.min(0.08, delta);
+
+    if (_moveDir.lengthSq() > 0.001) {
+      _moveDir.normalize();
+      const targetVx = _moveDir.x * moveSpeed;
+      const targetVz = _moveDir.z * moveSpeed;
+      // Critically-damped acceleration for responsive yet silky-smooth movement
+      const accel = 1 - Math.exp(-20.0 * dt);
+      const newVx = THREE.MathUtils.lerp(linvel.x, targetVx, accel);
+      const newVz = THREE.MathUtils.lerp(linvel.z, targetVz, accel);
+
       rbRef.current.setLinvel(
         {
-          x: moveDir.x * moveSpeed,
+          x: newVx,
           y: linvel.y,
-          z: moveDir.z * moveSpeed
+          z: newVz
         },
         true
       );
 
       if (visualRef.current) {
-        const angle = Math.atan2(moveDir.x, moveDir.z);
-        visualRef.current.rotation.y = angle;
+        const targetAngle = Math.atan2(_moveDir.x, _moveDir.z);
+        const curAngle = visualRef.current.rotation.y;
+        let diff = targetAngle - curAngle;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+        while (diff > Math.PI) diff -= Math.PI * 2;
+        visualRef.current.rotation.y = curAngle + diff * (1 - Math.exp(-22.0 * dt));
       }
     } else {
+      // Smooth deceleration without sliding
+      const decel = 1 - Math.exp(-16.0 * dt);
+      const newVx = THREE.MathUtils.lerp(linvel.x, 0, decel);
+      const newVz = THREE.MathUtils.lerp(linvel.z, 0, decel);
       rbRef.current.setLinvel(
         {
-          x: linvel.x * 0.82,
+          x: Math.abs(newVx) < 0.04 ? 0 : newVx,
           y: linvel.y,
-          z: linvel.z * 0.82
+          z: Math.abs(newVz) < 0.04 ? 0 : newVz
         },
         true
       );
@@ -201,17 +244,8 @@ export default function Player({ playerPosRef, ghostPosRef, gravityInverted }) {
       const dir = gravityInverted ? { x: 0, y: 1, z: 0 } : { x: 0, y: -1, z: 0 };
       const maxDistance = 1.18; // Capsule radius(0.45) + halfHeight(0.55) = 1.0; 1.18 gives 0.18m threshold
 
-      // Sample points: Center + 4 perimeter offsets for stable ledge standing
-      const sampleOffsets = [
-        [0, 0],
-        [0.22, 0],
-        [-0.22, 0],
-        [0, 0.22],
-        [0, -0.22]
-      ];
-
-      for (let i = 0; i < sampleOffsets.length; i++) {
-        const [ox, oz] = sampleOffsets[i];
+      for (let i = 0; i < _sampleOffsets.length; i++) {
+        const [ox, oz] = _sampleOffsets[i];
         const rayOrigin = {
           x: translation.x + ox,
           y: translation.y,
@@ -247,6 +281,17 @@ export default function Player({ playerPosRef, ghostPosRef, gravityInverted }) {
       GameState.refillEnergy(delta * 16);
       if (!wasGroundedRef.current) {
         Sound.playLand();
+      }
+
+      // Procedural Campus Footstep Audio
+      const horizSpeed = Math.hypot(linvel.x, linvel.z);
+      if (horizSpeed > 1.0) {
+        const isSprint = GameState.hyperSprint || GameState.speedBoostActive;
+        const stepInterval = isSprint ? 200 : 310;
+        if (now - lastFootstepTimeRef.current > stepInterval) {
+          Sound.playFootstep(isSprint);
+          lastFootstepTimeRef.current = now;
+        }
       }
     }
     wasGroundedRef.current = isGrounded;
@@ -293,7 +338,7 @@ export default function Player({ playerPosRef, ghostPosRef, gravityInverted }) {
     <RigidBody
       ref={rbRef}
       colliders={false}
-      position={[0, 2, 8]}
+      position={GameState.checkpoint || [0, 1.2, 31]}
       lockRotations
       friction={0.2}
       linearDamping={0.2}
