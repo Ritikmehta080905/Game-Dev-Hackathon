@@ -9,6 +9,7 @@ export function useKeyboard() {
     left: false,
     right: false,
     jump: false,
+    sprint: false,
     flip: false,
     freeze: false,
     dimension: false,
@@ -42,6 +43,10 @@ export function useKeyboard() {
           break;
         case 'Space':
           setKeys((k) => ({ ...k, jump: true }));
+          break;
+        case 'ShiftLeft':
+        case 'ShiftRight':
+          setKeys((k) => ({ ...k, sprint: true }));
           break;
         case 'KeyG':
           setKeys((k) => ({ ...k, flip: true }));
@@ -86,6 +91,10 @@ export function useKeyboard() {
           break;
         case 'Space':
           setKeys((k) => ({ ...k, jump: false }));
+          break;
+        case 'ShiftLeft':
+        case 'ShiftRight':
+          setKeys((k) => ({ ...k, sprint: false }));
           break;
         case 'KeyG':
           setKeys((k) => ({ ...k, flip: false }));

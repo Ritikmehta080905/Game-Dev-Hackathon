@@ -566,9 +566,17 @@ export default function HUD() {
 
         {/* Authoritative Quick Action & Hotkeys Bar */}
         <div style={{ ...styles.hotkeysBar, borderColor: theme.accent }}>
+          <div style={styles.hotkeyItem} title="Click anywhere on canvas to lock camera and look freely with mouse!">
+            <kbd style={{ ...styles.kbd, color: '#00E5FF', borderColor: '#00E5FF' }}>🖱️ Click</kbd>
+            <span>Look</span>
+          </div>
           <div style={styles.hotkeyItem}>
             <kbd style={styles.kbd}>W A S D</kbd>
             <span>Move</span>
+          </div>
+          <div style={styles.hotkeyItem} title="Hold Shift to sprint fast!">
+            <kbd style={styles.kbd}>Shift</kbd>
+            <span>Sprint</span>
           </div>
           <div style={styles.hotkeyItem}>
             <kbd style={styles.kbd}>Space</kbd>

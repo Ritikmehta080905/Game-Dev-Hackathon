@@ -1,51 +1,40 @@
-// ATHARVA.EXE — CameraController: AAA Third-Person Dynamic Follow & Movement-Focus Camera
-// Features frame-rate independent critically-damped spring follow, dynamic movement-angle anticipation,
-// smooth gravity inversion arcs, auto-follow re-centering, and precision pointer-lock & drag controls.
+// ATHARVA.EXE — CameraController: AAA Third-Person Smooth Orbit & Follow Camera
+// Clean, rock-solid, 60 FPS follow camera with zero feedback loops,
+// seamless mouse look & pointer-lock, and smooth gravity flip vertical arcs.
 
 import React, { useRef, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { GameState } from '../../systems/GameState';
 
-// Reusable module-scoped scratch vectors to eliminate 60/120 FPS garbage collection pauses
+// Module-scoped scratch vectors to eliminate garbage collection stutters
 const _tempDesiredTarget = new THREE.Vector3();
 const _tempOffset = new THREE.Vector3();
 const _tempDesiredCamPos = new THREE.Vector3();
-const _tempLookTarget = new THREE.Vector3();
 
 export default function CameraController({ playerPosRef, gravityInverted }) {
   const { camera, gl } = useThree();
-  const initialCp = GameState.checkpoint || [0, 1.2, 31];
 
-  const currentTargetRef = useRef(new THREE.Vector3(initialCp[0], initialCp[1] + 1.25, initialCp[2]));
-  const currentCamPosRef = useRef(new THREE.Vector3(initialCp[0], initialCp[1] + 2.8, initialCp[2] + 6.2));
-  const currentLookRef = useRef(new THREE.Vector3(initialCp[0], initialCp[1] + 1.25, initialCp[2] - 1.5));
-  
-  const sphericalRef = useRef(new THREE.Spherical(6.2, Math.PI / 2.7, 0)); // radius, phi, theta
+  const sphericalRef = useRef(new THREE.Spherical(5.8, Math.PI / 2.8, 0)); // radius, phi, theta
   const gravFactorRef = useRef(gravityInverted ? -1.0 : 1.0);
   const isDraggingRef = useRef(false);
   const prevMouseRef = useRef({ x: 0, y: 0 });
-  const lastMouseTimeRef = useRef(0);
 
-  // Initial snap & Respawn camera alignment
+  // Snap camera behind player immediately on mount or respawn
   useEffect(() => {
     const snapCameraToPlayer = () => {
       const defaultPos = GameState.checkpoint
         ? { x: GameState.checkpoint[0], y: GameState.checkpoint[1], z: GameState.checkpoint[2] }
         : { x: 0, y: 1.2, z: 31 };
       const p = playerPosRef.current || defaultPos;
-      const targetY = p.y + (gravityInverted ? -0.7 : 1.25);
-      currentTargetRef.current.set(p.x, targetY, p.z);
       gravFactorRef.current = gravityInverted ? -1.0 : 1.0;
+      const pivotY = p.y + (gravFactorRef.current < 0 ? -0.8 : 1.25);
 
       _tempOffset.setFromSpherical(sphericalRef.current);
       _tempOffset.y = Math.abs(_tempOffset.y) * gravFactorRef.current;
 
-      currentCamPosRef.current.copy(currentTargetRef.current).add(_tempOffset);
-      camera.position.copy(currentCamPosRef.current);
-
-      currentLookRef.current.set(p.x, targetY, p.z - 1.5);
-      camera.lookAt(currentLookRef.current);
+      camera.position.set(p.x + _tempOffset.x, pivotY + _tempOffset.y, p.z + _tempOffset.z);
+      camera.lookAt(p.x, pivotY, p.z);
     };
 
     snapCameraToPlayer();
@@ -53,22 +42,46 @@ export default function CameraController({ playerPosRef, gravityInverted }) {
     return () => window.removeEventListener('player-respawn', snapCameraToPlayer);
   }, [camera, playerPosRef, gravityInverted]);
 
-  // Mouse orbit, drag, and pointer-lock controls
+  // Release pointer lock when leaving game screen or entering modal
+  useEffect(() => {
+    return GameState.subscribe((state) => {
+      if (state.screen !== 'GAME' || state.activeStoryModal || state.showSectorIntro || state.isDetained) {
+        if (document.pointerLockElement) {
+          document.exitPointerLock?.();
+        }
+      }
+    });
+  }, []);
+
+  // Mouse orbit, drag, wheel zoom, and pointer lock
   useEffect(() => {
     const dom = gl.domElement;
 
     const onPointerDown = (e) => {
-      if (GameState.screen !== 'GAME' || GameState.activeStoryModal || GameState.showSectorIntro) return;
+      if (GameState.screen !== 'GAME' || GameState.activeStoryModal || GameState.showSectorIntro || GameState.isDetained) return;
+
+      // Middle click: snap camera behind player
+      if (e.button === 1) {
+        e.preventDefault();
+        sphericalRef.current.theta = 0;
+        sphericalRef.current.phi = Math.PI / 2.8;
+        return;
+      }
+
       if (e.button === 0 || e.button === 2) {
         isDraggingRef.current = true;
         prevMouseRef.current = { x: e.clientX, y: e.clientY };
-        lastMouseTimeRef.current = performance.now();
+
+        // Request pointer lock for seamless mouse-look (swallow any rejection)
+        if (document.pointerLockElement !== dom) {
+          dom.requestPointerLock?.()?.catch?.(() => {});
+        }
       }
     };
 
     const onPointerMove = (e) => {
-      if (GameState.screen !== 'GAME' || GameState.activeStoryModal || GameState.showSectorIntro) return;
-      
+      if (GameState.screen !== 'GAME' || GameState.activeStoryModal || GameState.showSectorIntro || GameState.isDetained) return;
+
       let dx = 0;
       let dy = 0;
 
@@ -83,14 +96,13 @@ export default function CameraController({ playerPosRef, gravityInverted }) {
         return;
       }
 
-      lastMouseTimeRef.current = performance.now();
-      const rotSpeed = 0.0042 * (GameState.mouseSensitivity || 1.0);
-
-      // Invert horizontal rotation if gravity is inverted for natural camera control
+      // Smooth mouse rotation with user sensitivity
+      const rotSpeed = 0.0032 * (GameState.mouseSensitivity || 1.0);
       const hSign = gravFactorRef.current < 0 ? -1 : 1;
+
       sphericalRef.current.theta -= dx * rotSpeed * hSign;
       sphericalRef.current.phi = Math.max(
-        0.22,
+        0.18,
         Math.min(Math.PI * 0.48, sphericalRef.current.phi - dy * rotSpeed)
       );
     };
@@ -99,86 +111,71 @@ export default function CameraController({ playerPosRef, gravityInverted }) {
       isDraggingRef.current = false;
     };
 
+    const onPointerLockChange = () => {
+      if (document.pointerLockElement !== dom) {
+        isDraggingRef.current = false;
+      }
+    };
+
+    const onContextMenu = (e) => {
+      e.preventDefault();
+    };
+
     const onWheel = (e) => {
-      // Smooth zoom distance clamp between 4.2m and 9.5m
       sphericalRef.current.radius = Math.max(
-        4.2,
-        Math.min(9.5, sphericalRef.current.radius + e.deltaY * 0.005)
+        3.5,
+        Math.min(9.0, sphericalRef.current.radius + e.deltaY * 0.004)
       );
     };
 
     dom.addEventListener('pointerdown', onPointerDown);
+    dom.addEventListener('contextmenu', onContextMenu);
     window.addEventListener('pointermove', onPointerMove);
     window.addEventListener('pointerup', onPointerUp);
+    document.addEventListener('pointerlockchange', onPointerLockChange);
     dom.addEventListener('wheel', onWheel, { passive: true });
 
     return () => {
       dom.removeEventListener('pointerdown', onPointerDown);
+      dom.removeEventListener('contextmenu', onContextMenu);
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
+      document.removeEventListener('pointerlockchange', onPointerLockChange);
       dom.removeEventListener('wheel', onWheel);
     };
   }, [gl]);
 
-  // Per-frame camera simulation with frame-rate independent critically-damped spring follow
+  // Frame simulation: Silky smooth 60 FPS character follow & torso focus
   useFrame((state, delta) => {
     const p = playerPosRef.current;
     if (!p) return;
 
-    // Clamp delta to prevent time-step blowups on tab-switch
-    const dt = Math.min(0.08, delta);
+    const dt = Math.min(0.06, Math.max(0.001, delta));
 
     // 1. Smooth Gravity Inversion Arc Transition
     const targetGrav = gravityInverted ? -1.0 : 1.0;
-    gravFactorRef.current += (targetGrav - gravFactorRef.current) * (1 - Math.exp(-9.0 * dt));
+    gravFactorRef.current += (targetGrav - gravFactorRef.current) * (1 - Math.exp(-12.0 * dt));
 
-    // 2. Student Movement Velocity & Heading
-    const vx = p.vx || 0;
-    const vz = p.vz || 0;
-    const speed = Math.hypot(vx, vz);
+    // 2. Character Upper Torso Pivot Point
+    const pivotY = p.y + (gravFactorRef.current < 0 ? -0.8 : 1.25);
+    _tempDesiredTarget.set(p.x, pivotY, p.z);
 
-    // 3. Gentle Auto-Follow Camera Alignment when player moves without mouse dragging
-    const timeSinceMouse = performance.now() - lastMouseTimeRef.current;
-    if (!isDraggingRef.current && timeSinceMouse > 800 && speed > 1.2) {
-      // Find character travel heading in radians
-      const moveAngle = Math.atan2(vx, vz);
-      let thetaDiff = moveAngle - sphericalRef.current.theta;
-      while (thetaDiff < -Math.PI) thetaDiff += Math.PI * 2;
-      while (thetaDiff > Math.PI) thetaDiff -= Math.PI * 2;
-
-      // Soft, subtle auto-alignment behind the student
-      sphericalRef.current.theta += thetaDiff * (1 - Math.exp(-2.2 * dt));
-    }
-
-    // 4. Smooth Focus Target (Character Upper Torso)
-    const targetY = p.y + (gravFactorRef.current < 0 ? -0.7 : 1.25);
-    _tempDesiredTarget.set(p.x, targetY, p.z);
-    currentTargetRef.current.lerp(_tempDesiredTarget, 1 - Math.exp(-18.0 * dt));
-
-    // 5. Spherical Offset with Smooth Vertical Inversion
+    // 3. Spherical Camera Orbit Offset with Smooth Inversion
     _tempOffset.setFromSpherical(sphericalRef.current);
     _tempOffset.y = Math.abs(_tempOffset.y) * gravFactorRef.current;
 
-    _tempDesiredCamPos.copy(currentTargetRef.current).add(_tempOffset);
-    currentCamPosRef.current.lerp(_tempDesiredCamPos, 1 - Math.exp(-14.0 * dt));
-    camera.position.copy(currentCamPosRef.current);
-
-    // 6. Dynamic Movement-Angle Anticipation & Look-Ahead
-    // When running forward, lead slightly ahead along facing angle; center when stopped
-    const leadDist = Math.min(2.4, speed * 0.16);
-    const facingAngle = p.angle || 0;
-    const forwardX = Math.sin(facingAngle);
-    const forwardZ = Math.cos(facingAngle);
-
-    _tempLookTarget.set(
-      currentTargetRef.current.x + forwardX * leadDist,
-      currentTargetRef.current.y,
-      currentTargetRef.current.z + forwardZ * leadDist
+    _tempDesiredCamPos.set(
+      _tempDesiredTarget.x + _tempOffset.x,
+      _tempDesiredTarget.y + _tempOffset.y,
+      _tempDesiredTarget.z + _tempOffset.z
     );
 
-    // Silky smooth camera orientation tracking
-    currentLookRef.current.lerp(_tempLookTarget, 1 - Math.exp(-16.0 * dt));
-    camera.lookAt(currentLookRef.current);
+    // 4. Smooth camera follow (critically damped 32.0, zero elastic lag, rock steady)
+    camera.position.lerp(_tempDesiredCamPos, 1 - Math.exp(-32.0 * dt));
+
+    // 5. Look target is ALWAYS anchored directly to the student's torso pivot
+    // Eliminates all feedback oscillation, rubber-banding, and drifting
+    camera.lookAt(_tempDesiredTarget.x, _tempDesiredTarget.y, _tempDesiredTarget.z);
   });
 
   return null;

@@ -179,66 +179,7 @@ export default function Player({ playerPosRef, ghostPosRef, gravityInverted }) {
       return;
     }
 
-    // Movement speed supporting Hyper-Sprint recompiled simulation constant
-    const baseSpeed = GameState.hyperSprint ? 16.0 : (GameState.speedBoostActive ? 13.5 : 9.0);
-    const moveSpeed = baseSpeed;
-    const forward = (keys.forward ? 1 : 0) - (keys.backward ? 1 : 0);
-    const side = (keys.right ? 1 : 0) - (keys.left ? 1 : 0);
-
-    state.camera.getWorldDirection(_camDir);
-    _camDir.y = 0;
-    _camDir.normalize();
-
-    _camRight.crossVectors(_camDir, _upVec).normalize();
-
-    _moveDir.set(0, 0, 0)
-      .addScaledVector(_camDir, forward)
-      .addScaledVector(_camRight, side);
-
-    const dt = Math.min(0.08, delta);
-
-    if (_moveDir.lengthSq() > 0.001) {
-      _moveDir.normalize();
-      const targetVx = _moveDir.x * moveSpeed;
-      const targetVz = _moveDir.z * moveSpeed;
-      // Critically-damped acceleration for responsive yet silky-smooth movement
-      const accel = 1 - Math.exp(-20.0 * dt);
-      const newVx = THREE.MathUtils.lerp(linvel.x, targetVx, accel);
-      const newVz = THREE.MathUtils.lerp(linvel.z, targetVz, accel);
-
-      rbRef.current.setLinvel(
-        {
-          x: newVx,
-          y: linvel.y,
-          z: newVz
-        },
-        true
-      );
-
-      if (visualRef.current) {
-        const targetAngle = Math.atan2(_moveDir.x, _moveDir.z);
-        const curAngle = visualRef.current.rotation.y;
-        let diff = targetAngle - curAngle;
-        while (diff < -Math.PI) diff += Math.PI * 2;
-        while (diff > Math.PI) diff -= Math.PI * 2;
-        visualRef.current.rotation.y = curAngle + diff * (1 - Math.exp(-22.0 * dt));
-      }
-    } else {
-      // Smooth deceleration without sliding
-      const decel = 1 - Math.exp(-16.0 * dt);
-      const newVx = THREE.MathUtils.lerp(linvel.x, 0, decel);
-      const newVz = THREE.MathUtils.lerp(linvel.z, 0, decel);
-      rbRef.current.setLinvel(
-        {
-          x: Math.abs(newVx) < 0.04 ? 0 : newVx,
-          y: linvel.y,
-          z: Math.abs(newVz) < 0.04 ? 0 : newVz
-        },
-        true
-      );
-    }
-
-    // Precise Multi-Ray Ground & Ceiling Detection
+    // 1. Precise Multi-Ray Ground & Ceiling Detection
     let isGrounded = false;
     if (world && rapier && rbRef.current) {
       const dir = gravityInverted ? { x: 0, y: 1, z: 0 } : { x: 0, y: -1, z: 0 };
@@ -274,6 +215,75 @@ export default function Player({ playerPosRef, ghostPosRef, gravityInverted }) {
     const vy = linvel.y;
     if (!gravityInverted && vy > 1.2) isGrounded = false;
     if (gravityInverted && vy < -1.2) isGrounded = false;
+
+    // 2. Movement speed with sprint key [Shift] & simulation boosts
+    const isSprinting = keys.sprint || GameState.hyperSprint || GameState.speedBoostActive;
+    const moveSpeed = isSprinting ? 13.5 : 8.8;
+    const forward = (keys.forward ? 1 : 0) - (keys.backward ? 1 : 0);
+    const side = (keys.right ? 1 : 0) - (keys.left ? 1 : 0);
+
+    state.camera.getWorldDirection(_camDir);
+    _camDir.y = 0;
+    _camDir.normalize();
+
+    _camRight.crossVectors(_camDir, _upVec).normalize();
+
+    _moveDir.set(0, 0, 0)
+      .addScaledVector(_camDir, forward)
+      .addScaledVector(_camRight, side);
+
+    const dt = Math.min(0.08, delta);
+
+    if (_moveDir.lengthSq() > 0.001) {
+      _moveDir.normalize();
+      const targetVx = _moveDir.x * moveSpeed;
+      const targetVz = _moveDir.z * moveSpeed;
+
+      // Direct, crisp velocity: 0ms input lag, instantaneous 60 FPS response
+      rbRef.current.setLinvel(
+        {
+          x: targetVx,
+          y: linvel.y,
+          z: targetVz
+        },
+        true
+      );
+
+      // Smooth visual mesh rotation towards heading
+      if (visualRef.current) {
+        const targetAngle = Math.atan2(_moveDir.x, _moveDir.z);
+        const curAngle = visualRef.current.rotation.y;
+        let diff = targetAngle - curAngle;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+        while (diff > Math.PI) diff -= Math.PI * 2;
+        visualRef.current.rotation.y = curAngle + diff * (1 - Math.exp(-24.0 * dt));
+      }
+    } else {
+      if (isGrounded) {
+        // Immediate stop on ground: zero sliding off platforms or into hazards
+        rbRef.current.setLinvel(
+          {
+            x: 0,
+            y: linvel.y,
+            z: 0
+          },
+          true
+        );
+      } else {
+        // Air resistance damping when airborne without input
+        const airDamp = 1 - Math.exp(-6.0 * dt);
+        const newVx = THREE.MathUtils.lerp(linvel.x, 0, airDamp);
+        const newVz = THREE.MathUtils.lerp(linvel.z, 0, airDamp);
+        rbRef.current.setLinvel(
+          {
+            x: Math.abs(newVx) < 0.05 ? 0 : newVx,
+            y: linvel.y,
+            z: Math.abs(newVz) < 0.05 ? 0 : newVz
+          },
+          true
+        );
+      }
+    }
 
     const now = performance.now();
     if (isGrounded) {
