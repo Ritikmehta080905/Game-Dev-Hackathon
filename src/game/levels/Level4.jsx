@@ -501,40 +501,73 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
         storyRevealData={{
           id: 'l4_story_reveal',
           type: 'story',
-          badge: 'QUANTUM MAINFRAME // ROOT PROTOCOL',
-          badgeColor: '#10B981',
-          title: 'THE FINAL CHOICE: ATHARVA.EXE',
-          subtitle: 'CAMPUS REALITY OR DIGITAL ETERNITY',
-          timestamp: '24-OCT 08:00:00 IST',
+          badge: 'QUANTUM MAINFRAME // ROOT AUDIT CONSOLE',
+          badgeColor: '#00E5FF',
+          title: 'THE FINAL DIRECTIVE: ATHARVA.EXE',
+          subtitle: 'AWAITING SYSADMIN INPUT // CHOOSE EXECUTION PATH',
+          timestamp: '24-OCT 19:42:00 IST',
           attendanceData: [
-            { id: 'CS-2021-042', name: 'Anya Sharma', exitTime: '19:42:00 (Oct 14 2021)', status: 'WAITING IN CACHE', color: '#10B981' },
+            { id: 'CS-2021-042', name: 'Anya Sharma', exitTime: '19:42:00 (Oct 14 2021)', status: 'QUARANTINE ANCHOR', color: '#EF4444' },
             { id: 'CS-2024-884', name: 'Karan Rao', exitTime: '19:42:00 (Today)', status: 'RECOVERY DAEMON', color: '#00E5FF' },
-            { id: 'ROOT-CORE', name: 'Project ATHARVA', exitTime: 'CYCLE #884', status: 'AWAITING DIRECTIVE', color: '#FFE14D' }
+            { id: 'ROOT-CORE', name: 'Project ATHARVA', exitTime: 'CYCLE #884', status: 'READY FOR DISCHARGE', color: '#FFE14D' }
           ],
           paragraphs: [
             'YOU HAVE REACHED THE SUSPENDED QUANTUM CORE.',
             'Karan Rao... your student profile was compiled from Anya Sharma\'s final memory before the security lockdown quarantined her three years ago. You are the autonomous recovery daemon.',
-            'By coordinating the gravity vector, temporal stasis, and dimensional phase bridges, you have defeated the corrupted watchdog and unlocked the root console.',
-            'Now, you hold the definitive power over the university campus fate. Choose your resolution:'
+            'By coordinating the gravity vector, temporal stasis, and dimensional phase bridges, you have unlocked the central root console. Two contradictory recovery protocols are presented on the display:',
+            '',
+            '• PROTOCOL ALPHA: "Restore Factory Backup" — Rolls back simulation memory to the pristine baseline snapshot recorded at [19:42:00 IST]. Cleans cache and reboots campus controllers.',
+            '• PROTOCOL OMEGA: "Sever Simulation Runtime" — Hard-purges the virtual kernel entirely, dissolving the lockdown and advancing university clock forward to [08:00:00 AM].',
+            '',
+            '⚠️ ARCHIVE FOOTNOTE [ANYA\'S HANDWRITTEN POST-IT #04]:',
+            '"Karan, think carefully before you click! 19:42:00 is not a clean state—it is the exact second when the lockdown began. A closed time loop cannot be escaped by restoring the moment it started. To truly walk out of campus, you must reject the past and step into 08:00 AM."'
           ],
           choices: [
             {
-              label: '1. RESTORE REALITY (MASTER REBOOT) [1]',
+              label: '1. RESTORE FACTORY BACKUP [19:42:00 IST] (RECOMMENDED) [1]',
               color: '#10B981',
               primary: true,
               onSelect: () => {
-                GameState.setFinalChoice('RESTORE_REALITY');
-                Sound.playLevelComplete();
-                GameState.completeLevel();
+                Sound.playDeath();
+                setTimeout(() => Sound.playTone(120, 'sawtooth', 0.5, 0.4), 180);
+
+                // Trigger the Psychological Rollback Trap Dialog!
+                setTimeout(() => {
+                  GameState.openStoryModal({
+                    id: 'l4_rollback_trap',
+                    type: 'terminal',
+                    badge: 'FATAL LOGIC ERROR // CODE-1942',
+                    badgeColor: '#EF4444',
+                    accent: '#EF4444',
+                    title: 'TEMPORAL RECURSION TRAP TRIGGERED!',
+                    subtitle: 'THE RESTORATION PARADOX // CYCLE #885 COMMENCED',
+                    timestamp: '19:42:00 IST (REBOOTED)',
+                    paragraphs: [
+                      'CRITICAL RECURSION FAILURE:',
+                      'You clicked "RESTORE FACTORY BACKUP [19:42:00 IST] (RECOMMENDED)"...',
+                      'Did you forget? 19:42:00 was the exact second when the campus quarantine lockdown BEGAN three years ago!',
+                      'By rolling back to the default 19:42:00 snapshot, you restored the initial lockdown itself from scratch!',
+                      'All collected Pen Drives have been purged. Your daemon memory has been wiped. The university gates have slammed shut again.',
+                      '"Those who blindly click \'Restore Factory Backup\' without reading timestamps are doomed to repeat the semester."',
+                      'Welcome to Cycle #885. Better luck next time, freshman.'
+                    ],
+                    actionLabel: 'RE-ENTER CYCLE #885 (RESTART LEVEL 1) [E]',
+                    onAction: () => {
+                      GameState.recordDeath('Fell for the 19:42:00 Factory Rollback Trap! Restoring the initial state rebooted the lockdown loop.');
+                      GameState.startLevel(1);
+                    }
+                  });
+                }, 150);
               }
             },
             {
-              label: '2. DIGITAL ARCHITECT (ASSIMILATE) [2]',
-              color: '#FF2E93',
+              label: '2. SEVER SIMULATION RUNTIME [08:00:00 AM SUNRISE] [2]',
+              color: '#00E5FF',
               primary: false,
               onSelect: () => {
-                GameState.setFinalChoice('BECOME_ARCHITECT');
-                Sound.playLevelComplete();
+                GameState.setFinalChoice('RESTORE_REALITY');
+                Sound.playPowerRestored();
+                setTimeout(() => Sound.playLevelComplete(), 300);
                 GameState.completeLevel();
               }
             }

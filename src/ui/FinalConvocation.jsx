@@ -47,6 +47,25 @@ export default function FinalConvocation() {
             {isArchitect ? 'CAMPUS ZERO ROOT QUANTUM CONSORTIUM' : 'CAMPUS ZERO CENTRAL EXAMINATION & DATA SECURITY COUNCIL'}
           </div>
 
+          {/* Intelligence Distinction Badge for avoiding the 19:42 Rollback Trap */}
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            backgroundColor: 'rgba(255, 225, 77, 0.12)',
+            border: '1px solid #FFE14D',
+            borderRadius: '20px',
+            padding: '6px 14px',
+            margin: '12px 0 16px',
+            fontSize: '11px',
+            fontWeight: 'bold',
+            color: '#FFE14D',
+            letterSpacing: '0.05em'
+          }}>
+            <span>💡 INTELLIGENCE DISTINCTION:</span>
+            <span style={{ color: '#00E5FF' }}>You saw through the 19:42 Rollback Trap and severed the recursive cycle!</span>
+          </div>
+
           <p style={styles.certBody}>
             {isArchitect ? (
               <>
