@@ -184,66 +184,73 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
       </group>
 
       {/* ========================================================
-          3. PUZZLE 2: COLLAPSING FIREWALL BRIDGE & RAPID SERVER LIFT
+          3. PUZZLE 2: FIREWALL APPROACH GANTRY & RAPID SERVER LIFT
           ======================================================== */}
-      {/* Holographic warning sign above firewall exit */}
-      <group position={[0, 3.8, -4.5]}>
+      {/* Solid doorway approach walkway extending seamlessly through the blast door */}
+      <CampusPlatform
+        position={[0, -0.4, -3.5]}
+        size={[10, 0.8, 5]}
+        pavementColor="#0f172a"
+        curbColor="#FFE14D"
+        accentColor="#00E5FF"
+        hasGuideArrows={true}
+      />
+
+      {/* Holographic bridge guide sign beyond doorway */}
+      <group position={[0, 2.8, -5.5]}>
         <mesh>
-          <planeGeometry args={[4.4, 0.6]} />
+          <planeGeometry args={[5.2, 0.6]} />
           <meshBasicMaterial color="#090E21" />
         </mesh>
         <Text
           position={[0, 0.08, 0.02]}
           fontSize={0.16}
-          color="#FF2E93"
-          fontWeight="bold"
-          anchorX="center"
-          anchorY="middle"
-        >
-          ⚠ COLLAPSING FIREWALL BRIDGE ⚠
-        </Text>
-        <Text
-          position={[0, -0.1, 0.02]}
-          fontSize={0.12}
           color="#00E5FF"
           fontWeight="bold"
           anchorX="center"
           anchorY="middle"
         >
-          SPRINT FAST [HYPER] OR TIME FREEZE [F]
+          ▲ SERVER LIFT TRANSIT CORRIDOR ▲
+        </Text>
+        <Text
+          position={[0, -0.1, 0.02]}
+          fontSize={0.12}
+          color="#FFE14D"
+          fontWeight="bold"
+          anchorX="center"
+          anchorY="middle"
+        >
+          HOP ACROSS TERRACES • TIME FREEZE [F] TO BOARD LIFT
         </Text>
       </group>
 
-      {/* 3 Sequential Falling Trap Platform Tiles across the breach */}
-      <TrapPlatform
-        position={[0, 0.8, -5.6]}
-        size={[3.2, 0.4, 1.8]}
-        collapseDelay={0.4}
-        color="#ff2e93"
-        playerPosRef={playerPosRef}
+      {/* Terrace Step 1 (Wide, solid, illuminated platform) */}
+      <CampusPlatform
+        position={[0, 0.5, -8.0]}
+        size={[6, 0.8, 3.8]}
+        pavementColor="#1e293b"
+        curbColor="#00E5FF"
+        accentColor="#7B4BFF"
+        hasGuideArrows={true}
       />
-      <TrapPlatform
-        position={[0, 1.6, -7.8]}
-        size={[3.2, 0.4, 1.8]}
-        collapseDelay={0.4}
-        color="#ffe14d"
-        playerPosRef={playerPosRef}
-      />
-      <TrapPlatform
-        position={[0, 2.4, -10.0]}
-        size={[3.2, 0.4, 1.8]}
-        collapseDelay={0.4}
-        color="#00e5ff"
-        playerPosRef={playerPosRef}
+
+      {/* Terrace Step 2 (Wide, solid, illuminated platform leading to lift) */}
+      <CampusPlatform
+        position={[0, 1.5, -11.5]}
+        size={[6, 0.8, 3.6]}
+        pavementColor="#1e293b"
+        curbColor="#FFE14D"
+        accentColor="#00E5FF"
+        hasGuideArrows={true}
       />
 
       {/* Rapid Server Lift Moving Platform (Time Freeze [F] Puzzle) */}
       <MovingPlatform
-        position={[0, 3.4, -15]}
+        position={[0, 2.5, -16.0]}
         axis="x"
-        distance={14}
-        speed={4.8}
-        size={[6, 0.8, 6]}
+        distance={10}
+        speed={3.4}
+        size={[7, 0.8, 5.5]}
         glowColor="#00E5FF"
       />
 
@@ -251,7 +258,7 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
           4. MIDWAY CHECKPOINT DATA BALCONY
           ======================================================== */}
       <CampusPlatform
-        position={[0, 4.8, -23]}
+        position={[0, 3.4, -22.5]}
         size={[9, 0.8, 7]}
         pavementColor="#1e293b"
         curbColor="#00E5FF"
@@ -259,10 +266,10 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
         hasLamps={true}
         hasGuideArrows={true}
       />
-      <Checkpoint position={[0, 5.3, -23]} playerPosRef={playerPosRef} />
+      <Checkpoint position={[0, 3.9, -22.5]} playerPosRef={playerPosRef} />
 
       {/* Auxiliary Backup Rack & Story Terminal on Checkpoint Platform */}
-      <group position={[-3.6, 6.2, -23]}>
+      <group position={[-3.6, 4.8, -22.5]}>
         <mesh castShadow>
           <boxGeometry args={[1.2, 2.8, 1.2]} />
           <meshStandardMaterial map={serverRackTexture} roughness={0.4} />
@@ -271,7 +278,7 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
 
       {/* Anya's Recovery Archive Terminal on Midway Balcony */}
       <StoryTerminal
-        position={[-2.4, 5.2, -22.5]}
+        position={[-2.4, 3.8, -22.0]}
         rotation={[0, Math.PI / 4, 0]}
         label="ANYA'S RECOVERY ARCHIVE // LOG #884"
         promptText="[E] ACCESS RECOVERY LOG #884"
@@ -299,7 +306,7 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
           5. PUZZLE 3: THE QUANTUM GAUNTLET (MID-AIR DIMENSION JUMPS & PHASED LASERS)
           ======================================================== */}
       {/* In-world Quantum Gauntlet Direction Sign */}
-      <group position={[0, 6.6, -26]}>
+      <group position={[0, 5.2, -25.5]}>
         <mesh>
           <planeGeometry args={[6.8, 0.8]} />
           <meshBasicMaterial color="#090E21" />
@@ -328,7 +335,7 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
 
       {/* Step 1: Real Dimension Step (Cyan) */}
       <DimensionPlatform
-        position={[-3.5, 6.0, -29]}
+        position={[-3.5, 4.6, -28.5]}
         size={[5, 0.8, 4.5]}
         dimension="REAL"
         activeDimension={activeDimension}
@@ -336,7 +343,7 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
 
       {/* Phased Laser 1: Active ONLY in REAL dimension */}
       <Hazard
-        position={[0, 6.8, -32]}
+        position={[0, 5.4, -31.5]}
         axis="x"
         range={6}
         speed={2.8}
@@ -347,7 +354,7 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
 
       {/* Step 2: Glitch Dimension Step (Magenta) */}
       <DimensionPlatform
-        position={[3.5, 7.5, -35]}
+        position={[3.5, 5.8, -34.5]}
         size={[5, 0.8, 4.5]}
         dimension="GLITCH"
         activeDimension={activeDimension}
@@ -355,7 +362,7 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
 
       {/* Phased Laser 2: Active ONLY in GLITCH dimension */}
       <Hazard
-        position={[0, 8.4, -38]}
+        position={[0, 6.6, -37.5]}
         axis="x"
         range={6}
         speed={2.8}
@@ -366,7 +373,7 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
 
       {/* Step 3: Real Dimension Step (Cyan) */}
       <DimensionPlatform
-        position={[-3.5, 9.0, -41]}
+        position={[-3.5, 7.0, -40.5]}
         size={[5, 0.8, 4.5]}
         dimension="REAL"
         activeDimension={activeDimension}
@@ -374,7 +381,7 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
 
       {/* Core Launch Pad Platform (Neutral - safe stepping base before Ceiling Inversion) */}
       <CampusPlatform
-        position={[0, 10.4, -48]}
+        position={[0, 8.2, -47.0]}
         size={[10, 0.8, 8]}
         pavementColor="#0f172a"
         curbColor="#00E5FF"
@@ -384,7 +391,7 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
       />
 
       {/* In-world Launch Catapult Sign pointing UP */}
-      <group position={[0, 12.0, -48]}>
+      <group position={[0, 9.8, -47.0]}>
         <mesh>
           <planeGeometry args={[5.2, 0.8]} />
           <meshBasicMaterial color="#090E21" />
@@ -539,14 +546,14 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
           7. 3 DATA FRAGMENTS (COLLEGE PEN DRIVES)
           ======================================================== */}
       <Collectible position={[-4, 1.4, 7]} id="l4_frag_1" playerPosRef={playerPosRef} />
-      <Collectible position={[0, 4.6, -15]} id="l4_frag_2" playerPosRef={playerPosRef} />
-      <Collectible position={[0, 15.6, -48]} id="l4_frag_3" playerPosRef={playerPosRef} />
+      <Collectible position={[0, 3.8, -16]} id="l4_frag_2" playerPosRef={playerPosRef} />
+      <Collectible position={[0, 15.6, -47]} id="l4_frag_3" playerPosRef={playerPosRef} />
 
       {/* ========================================================
           8. CANTEEN COFFEE BOOST & HIDDEN EXAM CHEATSHEET NOTE (DOC §4)
           ======================================================== */}
       {/* Canteen Coffee Cup on Midway Backup Terminal (Refills 100% Glitch Energy + Sprint Boost) */}
-      <CoffeeCup position={[0, 5.6, -22]} id="l4_coffee_1" playerPosRef={playerPosRef} />
+      <CoffeeCup position={[0, 4.2, -21.5]} id="l4_coffee_1" playerPosRef={playerPosRef} />
 
       {/* Hidden Exam Cheatsheet Note behind the Datacenter Server Racks */}
       <ExamNote
