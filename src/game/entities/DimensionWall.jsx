@@ -84,40 +84,42 @@ export default function DimensionWall({
       ) : (
         // PHASED GLITCH-DIMENSION HOLOGRAPHIC WALL (WALK-THROUGH!)
         <group>
-          {/* Luminous Magenta Translucent Hologram Field */}
+          {/* Light Pink Crystal-Clear Translucent Hologram Field */}
           <mesh>
             <boxGeometry args={[w, h, d]} />
             <meshStandardMaterial
-              color="#FF2E93"
-              emissive="#FF2E93"
-              emissiveIntensity={0.8}
+              color="#f472b6"
+              emissive="#f472b6"
+              emissiveIntensity={0.25}
               transparent
-              opacity={0.32}
+              opacity={0.2}
+              depthWrite={false}
               roughness={0.1}
             />
           </mesh>
 
-          {/* Cyan Cybernetic Wireframe Lattice */}
+          {/* Soft Cybernetic Wireframe Lattice */}
           <mesh>
-            <boxGeometry args={[w * 1.01, h * 1.01, d * 1.05]} />
+            <boxGeometry args={[w * 1.005, h * 1.005, d * 1.02]} />
             <meshBasicMaterial
-              color="#00E5FF"
+              color="#fbcfe8"
               wireframe
               transparent
-              opacity={0.7}
+              opacity={0.35}
+              depthWrite={false}
             />
           </mesh>
 
-          {/* Horizontal Laser Scanning Beams */}
+          {/* Subtle Horizontal Laser Scanning Beams */}
           {[-1.8, -0.6, 0.6, 1.8].map((y, i) => (
             <mesh key={i} position={[0, y, d / 2 + 0.03]}>
-              <planeGeometry args={[w * 0.96, 0.08]} />
-              <meshBasicMaterial color="#00E5FF" transparent opacity={0.8} />
+              <planeGeometry args={[w * 0.96, 0.05]} />
+              <meshBasicMaterial color="#f9a8d4" transparent opacity={0.45} depthWrite={false} />
             </mesh>
           ))}
 
-          {/* Ground Projection Aura */}
-          <pointLight position={[0, 0, 0]} color="#FF2E93" intensity={3.5} distance={8} />
+          {/* Soft Ambient Glow Aura */}
+          <pointLight position={[0, 0, 0]} color="#f472b6" intensity={1.2} distance={6} />
         </group>
       )}
 
@@ -135,14 +137,14 @@ export default function DimensionWall({
         <Text
           position={[0, 0.22, 0.02]}
           fontSize={0.25}
-          color={isReal ? '#EF4444' : '#00E5FF'}
+          color={isReal ? '#EF4444' : '#f472b6'}
           fontWeight="bold"
           anchorX="center"
           anchorY="middle"
         >
           {isReal
             ? '🛑 ATHARVA SECURITY WALL [REAL LAYER: SOLID]'
-            : '⚡ PHASE SHIFT ACTIVE [GLITCH LAYER: PASSABLE]'}
+            : '⚡ PHASE SHIFT ACTIVE [HOLOGRAPHIC // PASSABLE]'}
         </Text>
 
         <Text
@@ -155,7 +157,7 @@ export default function DimensionWall({
         >
           {isReal
             ? 'PRESS [Q] TO PHASE SHIFT & WALK THROUGH'
-            : '✓ WALK RIGHT THROUGH THE WALL NOW ▶'}
+            : '✓ WALK STRAIGHT THROUGH THE LIGHT PINK WALL ▶'}
         </Text>
       </group>
     </group>
