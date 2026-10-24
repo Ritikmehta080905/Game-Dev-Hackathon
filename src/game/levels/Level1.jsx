@@ -11,6 +11,8 @@ import ExamNote from '../entities/ExamNote';
 import Checkpoint from '../entities/Checkpoint';
 import Terminal from '../entities/Terminal';
 import StoryTerminal from '../entities/StoryTerminal';
+import TrapPlatform from '../entities/TrapPlatform';
+import FakeExitDoor from '../entities/FakeExitDoor';
 import { GameState } from '../../systems/GameState';
 import { Sound } from '../../systems/AudioSystem';
 import {
@@ -255,6 +257,38 @@ export default function Level1({ playerPosRef }) {
         circuitTex={circuitTex}
       />
       <WaypointBeacon position={[0, 3.2, -7]} label="JUMP 01" color="#00E5FF" />
+
+      {/* ========================================================
+          LEVEL 1 TROLL CHALLENGE: DECEPTIVE SHORTCUT & TRAP TILES
+          Tempting side-branch promising an instant hostel bypass!
+          Contains a collapsing trap floor and a 404 fake exit door.
+          ======================================================== */}
+      {/* Trap Platform: Looks like a solid bypass bridge, but vanishes on step! */}
+      <TrapPlatform
+        position={[-7.5, 1.2, -7]}
+        size={[4.8, 0.8, 4.8]}
+        label="HOSTEL SHORTCUT"
+        playerPosRef={playerPosRef}
+        collapseDelay={380}
+        respawnDelay={3200}
+      />
+
+      {/* Destination Pad for the Fake Exit Door */}
+      <CampusPlatform
+        position={[-7.5, 1.2, -13]}
+        size={[4.8, 0.8, 4.8]}
+        pavementColor="#1e293b"
+        curbColor="#EF4444"
+        accentColor="#FFE14D"
+        hasLamps={false}
+        hasGuideArrows={false}
+      />
+
+      {/* Fake Exit Door: Seductive portal that triggers 404 roast and teleports player back */}
+      <FakeExitDoor
+        position={[-7.5, 1.6, -13]}
+        playerPosRef={playerPosRef}
+      />
 
       {/* Platform 2: Step right over the void */}
       <FracturedPlatform

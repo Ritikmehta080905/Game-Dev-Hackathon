@@ -29,61 +29,50 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
   const warningTexture = useMemo(() => getWarningStripeTexture(), []);
   const circuitTexture = useMemo(() => getGlitchCircuitTexture(), []);
 
-  // Corrupted Admin Boss Glitch Twist (Doc §9):
-  // Every 28 seconds, the Corrupted Admin attempts to override reality!
+  // LEVEL 4 TROLL CHALLENGE: Reality Panel Glitches & Lying Admin Hints
+  // The Corrupted Atharva AI actively falsifies HUD values and broadcasts malicious "ADMIN HINTS"!
   useEffect(() => {
     let warningTimeout = null;
-    let glitchTimeout = null;
     let restoreTimeout = null;
+    let hintIndex = 0;
+
+    const LYING_HINTS = [
+      "ADMIN HINT: Red firewall lasers grant +500 Exam Marks on contact. Walk right into them!",
+      "ADMIN HINT: Inverting gravity [G] while airborne causes permanent expulsion. Stay grounded!",
+      "ADMIN HINT: Time Freeze [F] is currently offline due to university energy rationing.",
+      "ADMIN HINT: Stepping into the void gap fast-tracks your graduation directly to Sector 05!"
+    ];
+
+    // Initialize low trust level
+    GameState.setTrustLevel(14);
 
     const interval = setInterval(() => {
       if (GameState.screen !== 'GAME' || GameState.showSectorIntro) return;
 
-      // 1. Advance Warning (2.5s before override)
-      GameState.setAdminGlitchWarning({
-        title: '⚠️ CORRUPTED ADMIN OVERRIDE DETECTED',
-        detail: 'FIREWALL BREACH // GRAVITY VECTOR INVERSION INCOMING IN 3s...',
-        color: '#FF2E93'
-      });
-      Sound.playAdminGlitchAlarm();
+      // 1. Trigger Reality Panel Glitch (HUD values falsified for 3s)
+      GameState.setPanelGlitchActive(true);
+      GameState.setTrustLevel(Math.floor(8 + Math.random() * 12));
 
-      warningTimeout = setTimeout(() => {
-        // 2. Trigger Glitch Anomaly
-        GameState.setAdminGlitchWarning({
-          title: '⚡ SYSTEM OVERLOAD: GRAVITY OVERRIDE ACTIVE!',
-          detail: 'REALITY INVERTED // HOLD STEADY & ADAPT!',
-          color: '#FFE14D'
-        });
-        GameState.setAdminGlitchActive(true);
-        GameState.toggleGravity();
-        Sound.playGravityFlip();
+      // 2. Broadcast a Lying Admin Hint
+      const currentHint = LYING_HINTS[hintIndex % LYING_HINTS.length];
+      hintIndex++;
+      GameState.setLyingAdminHint(currentHint);
+      Sound.playTone(200, 'square', 0.2, 0.2);
 
-        restoreTimeout = setTimeout(() => {
-          // 3. Clear Anomaly after 3.5 seconds
-          GameState.setAdminGlitchActive(false);
-          GameState.toggleGravity();
-          GameState.setAdminGlitchWarning({
-            title: '✔ ADMIN OVERRIDE REPELLED // SYSTEM STABILIZED',
-            detail: 'PROCEED TO QUANTUM ROOT CORE',
-            color: '#10B981'
-          });
+      // 3. Clear Panel Glitch and Hint after 3.2 seconds
+      restoreTimeout = setTimeout(() => {
+        GameState.setPanelGlitchActive(false);
+        GameState.setLyingAdminHint(null);
+      }, 3200);
 
-          setTimeout(() => {
-            GameState.setAdminGlitchWarning(null);
-          }, 2500);
-        }, 3500);
-
-      }, 2500);
-
-    }, 28000); // Fires every 28 seconds
+    }, 16000); // Triggers every 16 seconds
 
     return () => {
       clearInterval(interval);
       if (warningTimeout) clearTimeout(warningTimeout);
-      if (glitchTimeout) clearTimeout(glitchTimeout);
       if (restoreTimeout) clearTimeout(restoreTimeout);
-      GameState.setAdminGlitchWarning(null);
-      GameState.setAdminGlitchActive(false);
+      GameState.setPanelGlitchActive(false);
+      GameState.setLyingAdminHint(null);
     };
   }, []);
 

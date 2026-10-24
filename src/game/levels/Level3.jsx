@@ -13,6 +13,7 @@ import ExamNote from '../entities/ExamNote';
 import Checkpoint from '../entities/Checkpoint';
 import Terminal from '../entities/Terminal';
 import StoryTerminal from '../entities/StoryTerminal';
+import CursedZone from '../entities/CursedZone';
 import { GameState } from '../../systems/GameState';
 import { Sound } from '../../systems/AudioSystem';
 import {
@@ -247,6 +248,25 @@ export default function Level3({ playerPosRef, activeDimension }) {
           PRESS [Q] TO SWITCH TO REAL &amp; DEACTIVATE LASER
         </Text>
       </group>
+
+      {/* ========================================================
+          LEVEL 3 TROLL CHALLENGE: CURSED HARD DRIVE BIT-FLIP FIELD
+          Corridor walkway where magnetic interference inverts [A] ⇄ [D] steering!
+          ======================================================== */}
+      <CampusPlatform
+        position={[0, 5.8, -37.5]}
+        size={[8.0, 0.8, 6.0]}
+        pavementColor="#1e293b"
+        curbColor="#FF2E93"
+        accentColor="#FFE14D"
+        hasLamps={false}
+        hasGuideArrows={true}
+      />
+      <CursedZone
+        position={[0, 5.8, -37.5]}
+        size={[8.5, 3.5, 6.5]}
+        playerPosRef={playerPosRef}
+      />
 
       {/* ========================================================
           5. PUZZLE 3: GLITCH-ONLY SECURITY SCANNER LASER

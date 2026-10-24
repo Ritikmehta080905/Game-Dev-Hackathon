@@ -1,7 +1,8 @@
 // ATHARVA.EXE — Level 2: The Infinite Library (University Central Library & Reading Hall)
 // Features realistic academic book stacks, student study carrels, glass balustrades, and Time Freeze [F] puzzle!
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { useFrame } from '@react-three/fiber';
 import { RigidBody, CuboidCollider } from '@react-three/rapier';
 import CampusPlatform from '../entities/CampusPlatform';
 import MovingPlatform from '../entities/MovingPlatform';
@@ -39,6 +40,67 @@ export default function Level2({ playerPosRef }) {
   const woodTexture = useMemo(() => getWoodGrainTexture(), []);
   const glassTexture = useMemo(() => getWindowGlassTexture(), []);
   const warningTexture = useMemo(() => getWarningStripeTexture(), []);
+
+  // LEVEL 2 TROLL CHALLENGE: Fake System Popups that strike during platforming
+  const popup1TriggeredRef = useRef(false);
+  const popup2TriggeredRef = useRef(false);
+  const popup3TriggeredRef = useRef(false);
+
+  useEffect(() => {
+    return () => {
+      GameState.dismissFakePopup(true);
+    };
+  }, []);
+
+  useFrame(() => {
+    if (!playerPosRef || !playerPosRef.current) return;
+    const p = playerPosRef.current;
+
+    // Trigger 1: When player ventures onto the first moving bookstack (z < -10)
+    if (!popup1TriggeredRef.current && p.z < -10) {
+      popup1TriggeredRef.current = true;
+      GameState.triggerFakePopup({
+        id: 'l2_troll_attendance',
+        title: 'CRITICAL ATTENDANCE DEFICIT',
+        subtitle: 'ATHARVA REGISTRAR ERP // PORTAL AUDIT',
+        message: 'Your CS-202 Attendance is 64.8% (< 75% MINIMUM). Debarment imminent! Press [X] immediately to forge medical certificate!',
+        actionKey: 'X',
+        actionLabel: 'FORGE MEDICAL LEAVE [X]',
+        timeLimit: 7,
+        penalty: 15
+      });
+    }
+
+    // Trigger 2: When player lands on the midway checkpoint balcony (z < -28)
+    if (!popup2TriggeredRef.current && p.z < -28) {
+      popup2TriggeredRef.current = true;
+      GameState.triggerFakePopup({
+        id: 'l2_troll_windows',
+        title: 'MANDATORY SIMULATION UPDATE',
+        subtitle: 'CAMPUS IT INFRASTRUCTURE // OS-RELOAD',
+        message: 'Workstation scheduled for automated reboot in 6s to install examination monitoring spyware. Press [Z] to postpone!',
+        actionKey: 'Z',
+        actionLabel: 'POSTPONE UPDATE [Z]',
+        timeLimit: 6,
+        penalty: 10
+      });
+    }
+
+    // Trigger 3: When ascending toward the upper mezzanine deck (z < -36)
+    if (!popup3TriggeredRef.current && p.z < -36) {
+      popup3TriggeredRef.current = true;
+      GameState.triggerFakePopup({
+        id: 'l2_troll_wifi',
+        title: 'CAMPUS WI-FI EXPIRED',
+        subtitle: 'FIREWALL CAPTIVE PORTAL // 19:42',
+        message: 'Your 2-hour student guest session expired. Press [C] immediately to re-authenticate proxy credentials!',
+        actionKey: 'C',
+        actionLabel: 'BYPASS FIREWALL [C]',
+        timeLimit: 6,
+        penalty: 10
+      });
+    }
+  });
 
   return (
     <group>

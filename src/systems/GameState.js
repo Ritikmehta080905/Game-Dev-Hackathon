@@ -53,6 +53,14 @@ class GameStateManager {
     this.finalChoice = null; // 'RESTORE_REALITY' or 'BECOME_ARCHITECT'
     this.mouseSensitivity = 1.0;
     this.cataloguesRecovered = new Set();
+    // TROLL CHALLENGE SYSTEMS (CAMPUS ZERO HACKATHON EDITION)
+    this.latestDeathRoast = null;
+    this.deathRoastTimeout = null;
+    this.isControlsScrambled = false; // Level 3 Cursed Zone (A ⇄ D inverted)
+    this.fakePopup = null; // Level 2 Fake System / ERP Attendance Popups
+    this.panelGlitchActive = false; // Level 4 Reality Panel Glitch
+    this.lyingAdminHint = null; // Level 4 Deceptive Admin Hints
+    this.trustLevel = 88; // Level 4 System Trust Meter
     this.studentInfo = {
       name: 'Karan Rao',
       role: 'Student Debugger',
@@ -381,6 +389,93 @@ class GameStateManager {
   recordDeath() {
     this.respawns++;
     this.score = Math.max(0, this.score - 20);
+
+    const DEATH_ROASTS = [
+      "Even the campus Wi-Fi has a higher uptime than your footing.",
+      "Your attendance record is dropping faster than your semester CGPA.",
+      "That jump had less preparation than a student walking into an 8 AM surprise exam.",
+      "Security guards didn't even need to intervene—the void did the job.",
+      "Have you considered enrolling in Remedial Platforming 101?",
+      "Professor marked you absent from this dimensional plane.",
+      "Even your proxy attendance was more convincing than that landing.",
+      "404: Platforming aptitude not found in student transcripts.",
+      "The college server logged that fall as an unhandled user exception.",
+      "At this rate, your convocation ceremony is scheduled for 2038.",
+      "Gravity didn't glitch, your spatial awareness did.",
+      "You are now an honorary campus ghost. Welcome to Batch 2021."
+    ];
+
+    const roastIndex = Math.min(this.respawns - 1, DEATH_ROASTS.length - 1);
+    const roast = DEATH_ROASTS[roastIndex % DEATH_ROASTS.length];
+    this.latestDeathRoast = {
+      count: this.respawns,
+      text: roast
+    };
+
+    if (this.deathRoastTimeout) clearTimeout(this.deathRoastTimeout);
+    this.deathRoastTimeout = setTimeout(() => {
+      this.latestDeathRoast = null;
+      this.notify();
+    }, 4500);
+
+    this.notify();
+  }
+
+  clearDeathRoast() {
+    this.latestDeathRoast = null;
+    this.notify();
+  }
+
+  // LEVEL 2 TROLL: Fake System / ERP Attendance Popups
+  triggerFakePopup(popupData) {
+    this.fakePopup = {
+      id: popupData.id || 'fake_popup_' + Date.now(),
+      title: popupData.title || 'CRITICAL ACADEMIC NOTICE',
+      subtitle: popupData.subtitle || 'ATHARVA ERP // 19:42 AUDIT',
+      message: popupData.message || 'Attention required immediately!',
+      actionKey: popupData.actionKey || 'X',
+      actionLabel: popupData.actionLabel || 'DISMISS [X]',
+      timeLimit: popupData.timeLimit || 6,
+      penalty: popupData.penalty || 10,
+      onDismiss: popupData.onDismiss || null
+    };
+    this.notify();
+  }
+
+  dismissFakePopup(success = true) {
+    if (!this.fakePopup) return;
+    const cb = this.fakePopup.onDismiss;
+    if (!success) {
+      this.attendance = Math.max(0, this.attendance - (this.fakePopup.penalty || 10));
+    }
+    this.fakePopup = null;
+    this.notify();
+    if (cb) cb(success);
+  }
+
+  // LEVEL 3 TROLL: Controls Scramble Zone (A ⇄ D Inverted)
+  setControlsScrambled(val) {
+    if (this.isControlsScrambled !== val) {
+      this.isControlsScrambled = val;
+      this.notify();
+    }
+  }
+
+  // LEVEL 4 TROLL: Reality Panel Glitch & Lying Admin Hints
+  setPanelGlitchActive(active) {
+    if (this.panelGlitchActive !== active) {
+      this.panelGlitchActive = active;
+      this.notify();
+    }
+  }
+
+  setLyingAdminHint(hint) {
+    this.lyingAdminHint = hint;
+    this.notify();
+  }
+
+  setTrustLevel(level) {
+    this.trustLevel = Math.max(0, Math.min(100, level));
     this.notify();
   }
 

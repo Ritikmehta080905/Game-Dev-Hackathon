@@ -7,6 +7,7 @@ import { Sound } from '../systems/AudioSystem';
 import DetainedModal from './DetainedModal';
 import SectorBriefingModal from './SectorBriefingModal';
 import StoryTerminalModal from './StoryTerminalModal';
+import FakeSystemPopup from './FakeSystemPopup';
 
 const LEVEL_THEMES = {
   1: {
@@ -289,6 +290,12 @@ export default function HUD() {
             <span>EST. CGPA:</span>
             <span style={{ color: '#10B981', fontWeight: 'bold' }}>{cgpa} / 10.0</span>
           </div>
+          {state.currentLevel === 4 && (
+            <div style={{ ...styles.metricItem, borderColor: '#EF4444' }} title="AI System Reliability Indicator">
+              <span>TRUST LEVEL:</span>
+              <span style={{ color: '#EF4444', fontWeight: 'bold' }}>{state.trustLevel || 14}% [UNSTABLE]</span>
+            </div>
+          )}
           <button
             style={{
               ...styles.guideIconBtn,
@@ -355,6 +362,60 @@ export default function HUD() {
         <div style={{ ...styles.speedBoostBadge, background: 'rgba(0, 229, 255, 0.25)', borderColor: '#00E5FF', color: '#00E5FF' }}>
           ⚡ TIME ECHO ACTIVE: CYAN GHOST CLONE HOLDING PRESSURE PLATE!
         </div>
+      )}
+
+      {/* ========================================================
+          GLOBAL TROLL CHALLENGE: DEATH COUNTER ROAST BANNER
+          ======================================================== */}
+      {state.latestDeathRoast && (
+        <div style={styles.deathRoastBanner}>
+          <div style={styles.deathRoastCard}>
+            <span style={{ fontSize: '20px' }}>💀</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', textAlign: 'left' }}>
+              <span style={styles.deathRoastTag}>
+                CAMPUS DISCIPLINARY LOG #0{state.latestDeathRoast.count} // ATTENDANCE AUDIT
+              </span>
+              <span style={styles.deathRoastText}>
+                "{state.latestDeathRoast.text}"
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================
+          LEVEL 3 TROLL CHALLENGE: CURSED ZONE STEERING INVERSION BADGE
+          ======================================================== */}
+      {state.isControlsScrambled && (
+        <div style={styles.cursedZoneBadge}>
+          ⚡ BIT-FLIP MAGNETIC FIELD: HORIZONTAL STEERING INVERTED [A] ⇄ [D]!
+        </div>
+      )}
+
+      {/* ========================================================
+          LEVEL 4 TROLL CHALLENGE: LYING ADMIN HINT BANNER
+          ======================================================== */}
+      {state.lyingAdminHint && (
+        <div style={styles.adminBanner}>
+          <div style={{ ...styles.adminBannerCard, borderColor: '#EF4444', background: 'rgba(15, 23, 42, 0.95)', boxShadow: '0 0 25px rgba(239, 68, 68, 0.5)' }}>
+            <div style={{ ...styles.adminBannerTitle, color: '#EF4444' }}>
+              ⚠️ ADMIN HINT [ATHARVA CORE PROTOCOL]:
+            </div>
+            <div style={{ ...styles.adminBannerDetail, color: '#F8FAFC', fontSize: '13px', fontWeight: 'bold' }}>
+              "{state.lyingAdminHint}"
+            </div>
+            <div style={{ fontSize: '10px', color: '#EF4444', marginTop: '4px' }}>
+              TRUST LEVEL: {state.trustLevel || 14}% • PROCEED AT YOUR OWN RISK
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================
+          LEVEL 2 TROLL CHALLENGE: FAKE SYSTEM / ERP ATTENDANCE POPUP
+          ======================================================== */}
+      {state.fakePopup && (
+        <FakeSystemPopup popup={state.fakePopup} />
       )}
 
       {/* ========================================================
@@ -426,13 +487,14 @@ export default function HUD() {
               </div>
             </div>
           ) : (
-            /* Sleek Live Mechanic Badges */
+            /* Sleek Live Mechanic Badges (Supports Level 4 Panel Glitch Challenge) */
             <div style={styles.mechanicPillsRow}>
               <div
                 style={{
                   ...styles.statusBadge,
-                  borderColor: state.gravityInverted ? '#FF2E93' : '#00E5FF',
-                  color: state.gravityInverted ? '#FF2E93' : '#00E5FF'
+                  borderColor: state.panelGlitchActive ? '#EF4444' : (state.gravityInverted ? '#FF2E93' : '#00E5FF'),
+                  color: state.panelGlitchActive ? '#EF4444' : (state.gravityInverted ? '#FF2E93' : '#00E5FF'),
+                  boxShadow: state.panelGlitchActive ? '0 0 10px rgba(239, 68, 68, 0.6)' : 'none'
                 }}
                 onClick={() => {
                   GameState.toggleGravity();
@@ -440,14 +502,17 @@ export default function HUD() {
                 }}
                 title="Gravity Vector [G] (20 Energy)"
               >
-                <span style={{ opacity: 0.7 }}>GRAVITY:</span> {state.gravityInverted ? 'INVERTED ▲' : 'NORMAL ▼'}
+                <span style={{ opacity: 0.7 }}>GRAVITY:</span>{' '}
+                {state.panelGlitchActive
+                  ? (state.gravityInverted ? 'NORMAL ▼ [DESYNC]' : 'INVERTED ▲ [DESYNC]')
+                  : (state.gravityInverted ? 'INVERTED ▲' : 'NORMAL ▼')}
               </div>
 
               <div
                 style={{
                   ...styles.statusBadge,
-                  borderColor: state.timeFrozen ? '#00E5FF' : (state.freezeCooldown > 0 ? '#64748B' : '#10B981'),
-                  color: state.timeFrozen ? '#00E5FF' : (state.freezeCooldown > 0 ? '#94A3B8' : '#10B981')
+                  borderColor: state.panelGlitchActive ? '#EF4444' : (state.timeFrozen ? '#00E5FF' : (state.freezeCooldown > 0 ? '#64748B' : '#10B981')),
+                  color: state.panelGlitchActive ? '#EF4444' : (state.timeFrozen ? '#00E5FF' : (state.freezeCooldown > 0 ? '#94A3B8' : '#10B981'))
                 }}
                 onClick={() => {
                   GameState.triggerTimeFreeze();
@@ -455,7 +520,10 @@ export default function HUD() {
                 }}
                 title="Time Stasis [F] (35 Energy)"
               >
-                <span style={{ opacity: 0.7 }}>TIME:</span> {state.timeFrozen ? 'FROZEN ❄' : (state.freezeCooldown > 0 ? `CD (${state.freezeCooldown}s)` : 'ACTIVE ▶')}
+                <span style={{ opacity: 0.7 }}>TIME:</span>{' '}
+                {state.panelGlitchActive
+                  ? 'FROZEN ❄ [DESYNC]'
+                  : (state.timeFrozen ? 'FROZEN ❄' : (state.freezeCooldown > 0 ? `CD (${state.freezeCooldown}s)` : 'ACTIVE ▶'))}
               </div>
 
               <div
@@ -1043,5 +1111,58 @@ const styles = {
     borderRadius: '20px',
     boxShadow: '0 0 15px rgba(245, 158, 11, 0.5)',
     zIndex: 85
+  },
+  deathRoastBanner: {
+    position: 'absolute',
+    top: '85px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    zIndex: 95,
+    pointerEvents: 'none',
+    width: '92%',
+    maxWidth: '580px',
+    animation: 'slideDown 0.3s ease-out'
+  },
+  deathRoastCard: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    background: 'linear-gradient(135deg, rgba(127, 29, 29, 0.96), rgba(15, 23, 42, 0.96))',
+    border: '2px solid #EF4444',
+    borderRadius: '8px',
+    padding: '12px 18px',
+    boxShadow: '0 8px 32px rgba(239, 68, 68, 0.6)',
+    backdropFilter: 'blur(8px)'
+  },
+  deathRoastTag: {
+    fontSize: '11px',
+    fontWeight: '900',
+    letterSpacing: '1px',
+    color: '#F87171',
+    fontFamily: '"Space Mono", monospace'
+  },
+  deathRoastText: {
+    fontSize: '13px',
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    fontStyle: 'italic',
+    lineHeight: '1.4'
+  },
+  cursedZoneBadge: {
+    position: 'absolute',
+    top: '90px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    background: 'rgba(255, 46, 147, 0.95)',
+    color: '#FFFFFF',
+    fontWeight: '900',
+    fontSize: '12px',
+    letterSpacing: '1.2px',
+    padding: '8px 20px',
+    borderRadius: '24px',
+    boxShadow: '0 0 25px rgba(255, 46, 147, 0.7)',
+    zIndex: 95,
+    fontFamily: '"Space Mono", monospace',
+    animation: 'pulse 1s infinite alternate'
   }
 };
