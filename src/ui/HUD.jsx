@@ -7,7 +7,6 @@ import { Sound } from '../systems/AudioSystem';
 import DetainedModal from './DetainedModal';
 import SectorBriefingModal from './SectorBriefingModal';
 import StoryTerminalModal from './StoryTerminalModal';
-import FakeSystemPopup from './FakeSystemPopup';
 
 const LEVEL_THEMES = {
   1: {
@@ -365,7 +364,7 @@ export default function HUD() {
       )}
 
       {/* ========================================================
-          GLOBAL TROLL CHALLENGE: DEATH COUNTER ROAST BANNER
+          GLOBAL CAMPUS CHALLENGE: DEATH COUNTER ROAST BANNER
           ======================================================== */}
       {state.latestDeathRoast && (
         <div style={styles.deathRoastBanner}>
@@ -383,39 +382,18 @@ export default function HUD() {
         </div>
       )}
 
-      {/* ========================================================
-          LEVEL 3 TROLL CHALLENGE: CURSED ZONE STEERING INVERSION BADGE
-          ======================================================== */}
-      {state.isControlsScrambled && (
-        <div style={styles.cursedZoneBadge}>
-          ⚡ BIT-FLIP MAGNETIC FIELD: HORIZONTAL STEERING INVERTED [A] ⇄ [D]!
+      {/* Hyper-Sprint Simulation Constant Badge */}
+      {state.hyperSprint && (
+        <div style={{ ...styles.speedBoostBadge, background: 'rgba(255, 225, 77, 0.95)', color: '#0F172A', boxShadow: '0 0 20px rgba(255, 225, 77, 0.7)' }}>
+          ⚡ HYPER-SPRINT ACTIVE: DRIVE VELOCITY 16.0 m/s!
         </div>
       )}
 
-      {/* ========================================================
-          LEVEL 4 TROLL CHALLENGE: LYING ADMIN HINT BANNER
-          ======================================================== */}
-      {state.lyingAdminHint && (
-        <div style={styles.adminBanner}>
-          <div style={{ ...styles.adminBannerCard, borderColor: '#EF4444', background: 'rgba(15, 23, 42, 0.95)', boxShadow: '0 0 25px rgba(239, 68, 68, 0.5)' }}>
-            <div style={{ ...styles.adminBannerTitle, color: '#EF4444' }}>
-              ⚠️ ADMIN HINT [ATHARVA CORE PROTOCOL]:
-            </div>
-            <div style={{ ...styles.adminBannerDetail, color: '#F8FAFC', fontSize: '13px', fontWeight: 'bold' }}>
-              "{state.lyingAdminHint}"
-            </div>
-            <div style={{ fontSize: '10px', color: '#EF4444', marginTop: '4px' }}>
-              TRUST LEVEL: {state.trustLevel || 14}% • PROCEED AT YOUR OWN RISK
-            </div>
-          </div>
+      {/* Low-G Moon Jump Simulation Constant Badge */}
+      {(state.gravityStrength || 9.81) < 5.0 && (
+        <div style={{ ...styles.speedBoostBadge, top: state.hyperSprint ? '130px' : '90px', background: 'rgba(0, 229, 255, 0.95)', color: '#0F172A', boxShadow: '0 0 20px rgba(0, 229, 255, 0.7)' }}>
+          🌙 LOW-GRAVITY COMPILED: GRAVITY 3.2 m/s² (MOON JUMP)!
         </div>
-      )}
-
-      {/* ========================================================
-          LEVEL 2 TROLL CHALLENGE: FAKE SYSTEM / ERP ATTENDANCE POPUP
-          ======================================================== */}
-      {state.fakePopup && (
-        <FakeSystemPopup popup={state.fakePopup} />
       )}
 
       {/* ========================================================
@@ -487,14 +465,13 @@ export default function HUD() {
               </div>
             </div>
           ) : (
-            /* Sleek Live Mechanic Badges (Supports Level 4 Panel Glitch Challenge) */
+            /* Sleek Live Mechanic Badges (Reflects Active Reality & Simulation Constants) */
             <div style={styles.mechanicPillsRow}>
               <div
                 style={{
                   ...styles.statusBadge,
-                  borderColor: state.panelGlitchActive ? '#EF4444' : (state.gravityInverted ? '#FF2E93' : '#00E5FF'),
-                  color: state.panelGlitchActive ? '#EF4444' : (state.gravityInverted ? '#FF2E93' : '#00E5FF'),
-                  boxShadow: state.panelGlitchActive ? '0 0 10px rgba(239, 68, 68, 0.6)' : 'none'
+                  borderColor: state.gravityInverted ? '#FF2E93' : ((state.gravityStrength || 9.81) < 5.0 ? '#00E5FF' : '#00E5FF'),
+                  color: state.gravityInverted ? '#FF2E93' : ((state.gravityStrength || 9.81) < 5.0 ? '#00E5FF' : '#00E5FF')
                 }}
                 onClick={() => {
                   GameState.toggleGravity();
@@ -503,16 +480,16 @@ export default function HUD() {
                 title="Gravity Vector [G] (20 Energy)"
               >
                 <span style={{ opacity: 0.7 }}>GRAVITY:</span>{' '}
-                {state.panelGlitchActive
-                  ? (state.gravityInverted ? 'NORMAL ▼ [DESYNC]' : 'INVERTED ▲ [DESYNC]')
-                  : (state.gravityInverted ? 'INVERTED ▲' : 'NORMAL ▼')}
+                {state.gravityInverted
+                  ? 'INVERTED ▲'
+                  : ((state.gravityStrength || 9.81) < 5.0 ? 'LOW-G (3.2) 🌙' : 'NORMAL ▼')}
               </div>
 
               <div
                 style={{
                   ...styles.statusBadge,
-                  borderColor: state.panelGlitchActive ? '#EF4444' : (state.timeFrozen ? '#00E5FF' : (state.freezeCooldown > 0 ? '#64748B' : '#10B981')),
-                  color: state.panelGlitchActive ? '#EF4444' : (state.timeFrozen ? '#00E5FF' : (state.freezeCooldown > 0 ? '#94A3B8' : '#10B981'))
+                  borderColor: state.timeFrozen ? '#00E5FF' : (state.freezeCooldown > 0 ? '#64748B' : '#10B981'),
+                  color: state.timeFrozen ? '#00E5FF' : (state.freezeCooldown > 0 ? '#94A3B8' : '#10B981')
                 }}
                 onClick={() => {
                   GameState.triggerTimeFreeze();
@@ -521,9 +498,7 @@ export default function HUD() {
                 title="Time Stasis [F] (35 Energy)"
               >
                 <span style={{ opacity: 0.7 }}>TIME:</span>{' '}
-                {state.panelGlitchActive
-                  ? 'FROZEN ❄ [DESYNC]'
-                  : (state.timeFrozen ? 'FROZEN ❄' : (state.freezeCooldown > 0 ? `CD (${state.freezeCooldown}s)` : 'ACTIVE ▶'))}
+                {state.timeFrozen ? 'FROZEN ❄' : (state.freezeCooldown > 0 ? `CD (${state.freezeCooldown}s)` : 'ACTIVE ▶')}
               </div>
 
               <div

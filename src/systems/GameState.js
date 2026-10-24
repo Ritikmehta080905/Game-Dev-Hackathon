@@ -53,14 +53,16 @@ class GameStateManager {
     this.finalChoice = null; // 'RESTORE_REALITY' or 'BECOME_ARCHITECT'
     this.mouseSensitivity = 1.0;
     this.cataloguesRecovered = new Set();
-    // TROLL CHALLENGE SYSTEMS (CAMPUS ZERO HACKATHON EDITION)
+    // LEVEL 4 EDITABLE RULES / SIMULATION CONSTANTS
+    this.gravityStrength = 9.81; // Toggleable via PhysicsTerminal: 9.81 vs 3.2 (Low-G)
+    this.hyperSprint = false; // Toggleable via PhysicsTerminal: 9.0 vs 16.0 m/s
     this.latestDeathRoast = null;
     this.deathRoastTimeout = null;
-    this.isControlsScrambled = false; // Level 3 Cursed Zone (A ⇄ D inverted)
-    this.fakePopup = null; // Level 2 Fake System / ERP Attendance Popups
-    this.panelGlitchActive = false; // Level 4 Reality Panel Glitch
-    this.lyingAdminHint = null; // Level 4 Deceptive Admin Hints
-    this.trustLevel = 88; // Level 4 System Trust Meter
+    this.isControlsScrambled = false;
+    this.fakePopup = null;
+    this.panelGlitchActive = false;
+    this.lyingAdminHint = null;
+    this.trustLevel = 100;
     this.studentInfo = {
       name: 'Karan Rao',
       role: 'Student Debugger',
@@ -120,6 +122,12 @@ class GameStateManager {
     this.showSectorIntro = true;
     this.detentionReason = '';
     this.checkpoint = [0, 2, 8];
+    this.gravityStrength = 9.81;
+    this.hyperSprint = false;
+    this.isControlsScrambled = false;
+    this.fakePopup = null;
+    this.panelGlitchActive = false;
+    this.lyingAdminHint = null;
     this.clearTimeEcho();
     // Level specific exam bell times
     const timerMap = { 1: 90, 2: 120, 3: 150, 4: 180 };
@@ -476,6 +484,17 @@ class GameStateManager {
 
   setTrustLevel(level) {
     this.trustLevel = Math.max(0, Math.min(100, level));
+    this.notify();
+  }
+
+  // LEVEL 4 EDITABLE RULES / SIMULATION CONSTANTS
+  setGravityStrength(val) {
+    this.gravityStrength = val;
+    this.notify();
+  }
+
+  setHyperSprint(val) {
+    this.hyperSprint = Boolean(val);
     this.notify();
   }
 

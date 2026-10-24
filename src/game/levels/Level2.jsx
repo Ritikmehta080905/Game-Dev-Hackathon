@@ -13,6 +13,7 @@ import ExamNote from '../entities/ExamNote';
 import Checkpoint from '../entities/Checkpoint';
 import Terminal from '../entities/Terminal';
 import StoryTerminal from '../entities/StoryTerminal';
+import FallingPlatform from '../entities/FallingPlatform';
 import { GameState } from '../../systems/GameState';
 import { Sound } from '../../systems/AudioSystem';
 import {
@@ -40,67 +41,6 @@ export default function Level2({ playerPosRef }) {
   const woodTexture = useMemo(() => getWoodGrainTexture(), []);
   const glassTexture = useMemo(() => getWindowGlassTexture(), []);
   const warningTexture = useMemo(() => getWarningStripeTexture(), []);
-
-  // LEVEL 2 TROLL CHALLENGE: Fake System Popups that strike during platforming
-  const popup1TriggeredRef = useRef(false);
-  const popup2TriggeredRef = useRef(false);
-  const popup3TriggeredRef = useRef(false);
-
-  useEffect(() => {
-    return () => {
-      GameState.dismissFakePopup(true);
-    };
-  }, []);
-
-  useFrame(() => {
-    if (!playerPosRef || !playerPosRef.current) return;
-    const p = playerPosRef.current;
-
-    // Trigger 1: When player ventures onto the first moving bookstack (z < -10)
-    if (!popup1TriggeredRef.current && p.z < -10) {
-      popup1TriggeredRef.current = true;
-      GameState.triggerFakePopup({
-        id: 'l2_troll_attendance',
-        title: 'CRITICAL ATTENDANCE DEFICIT',
-        subtitle: 'ATHARVA REGISTRAR ERP // PORTAL AUDIT',
-        message: 'Your CS-202 Attendance is 64.8% (< 75% MINIMUM). Debarment imminent! Press [X] immediately to forge medical certificate!',
-        actionKey: 'X',
-        actionLabel: 'FORGE MEDICAL LEAVE [X]',
-        timeLimit: 7,
-        penalty: 15
-      });
-    }
-
-    // Trigger 2: When player lands on the midway checkpoint balcony (z < -28)
-    if (!popup2TriggeredRef.current && p.z < -28) {
-      popup2TriggeredRef.current = true;
-      GameState.triggerFakePopup({
-        id: 'l2_troll_windows',
-        title: 'MANDATORY SIMULATION UPDATE',
-        subtitle: 'CAMPUS IT INFRASTRUCTURE // OS-RELOAD',
-        message: 'Workstation scheduled for automated reboot in 6s to install examination monitoring spyware. Press [Z] to postpone!',
-        actionKey: 'Z',
-        actionLabel: 'POSTPONE UPDATE [Z]',
-        timeLimit: 6,
-        penalty: 10
-      });
-    }
-
-    // Trigger 3: When ascending toward the upper mezzanine deck (z < -36)
-    if (!popup3TriggeredRef.current && p.z < -36) {
-      popup3TriggeredRef.current = true;
-      GameState.triggerFakePopup({
-        id: 'l2_troll_wifi',
-        title: 'CAMPUS WI-FI EXPIRED',
-        subtitle: 'FIREWALL CAPTIVE PORTAL // 19:42',
-        message: 'Your 2-hour student guest session expired. Press [C] immediately to re-authenticate proxy credentials!',
-        actionKey: 'C',
-        actionLabel: 'BYPASS FIREWALL [C]',
-        timeLimit: 6,
-        penalty: 10
-      });
-    }
-  });
 
   return (
     <group>
@@ -209,15 +149,17 @@ export default function Level2({ playerPosRef }) {
       />
 
       {/* ========================================================
-          3. PUZZLE 2: DUAL WIDE MOVING ARCHIVE SHELVES (TIME FREEZE [F])
+          3. PUZZLE 2: HIGH-SPEED STASIS PRECISION CHAIN (TIME FREEZE [F])
+          Rapidly oscillating kinetic archive stacks (5.2 m/s). Player must time
+          Time Freeze [F] precisely when they align to sprint across the void!
           ======================================================== */}
-      {/* Rapid Archive Stack A: Widened to 8.0m for easy standing & jumping */}
+      {/* Rapid Kinetic Archive Stack A */}
       <MovingPlatform
-        position={[-2.5, 2.2, -12.5]}
+        position={[-1.5, 2.2, -12.5]}
         axis="x"
-        distance={5.0}
-        speed={2.2}
-        size={[8.0, 0.8, 5.0]}
+        distance={7.5}
+        speed={5.2}
+        size={[7.5, 0.8, 5.0]}
         glowColor="#00E5FF"
       />
 
@@ -244,13 +186,13 @@ export default function Level2({ playerPosRef }) {
         playerPosRef={playerPosRef}
       />
 
-      {/* Rapid Archive Stack B: Widened to 8.0m for easy landing */}
+      {/* Rapid Kinetic Archive Stack B */}
       <MovingPlatform
-        position={[2.5, 3.8, -23.5]}
+        position={[1.5, 3.8, -23.5]}
         axis="x"
-        distance={5.0}
-        speed={2.2}
-        size={[8.0, 0.8, 5.0]}
+        distance={7.5}
+        speed={5.4}
+        size={[7.5, 0.8, 5.0]}
         glowColor="#10B981"
       />
 
@@ -390,15 +332,16 @@ export default function Level2({ playerPosRef }) {
         hasGuideArrows={true}
       />
 
-      {/* Tier 2: Mid Grand Step (y=7.4, top surface y=7.8 — comfortable 1.4m hop to Tier 2!) */}
-      <CampusPlatform
+      {/* Tier 2: Collapsing Fragile Library Stack (STASIS PUZZLE!)
+          Starts falling down rapidly at 4.2 m/s when stepped on, but can be
+          LOCKED IN MID-AIR with Time Freeze [F] as a solid stepping stone! */}
+      <FallingPlatform
         position={[0, 7.4, -37.4]}
         size={[8.5, 0.8, 3.4]}
-        pavementColor="#1e293b"
-        curbColor="#FFE14D"
-        accentColor="#10B981"
-        hasLamps={false}
-        hasGuideArrows={true}
+        fallSpeed={4.2}
+        maxFall={9.0}
+        playerPosRef={playerPosRef}
+        label="ANTIQUE STACK (COLLAPSING — PRESS [F] TO FREEZE!)"
       />
 
       {/* Flanking Decorative Stepped Bookstacks on Left & Right for Atmosphere */}

@@ -16,6 +16,8 @@ import ExamNote from '../entities/ExamNote';
 import Checkpoint from '../entities/Checkpoint';
 import Terminal from '../entities/Terminal';
 import StoryTerminal from '../entities/StoryTerminal';
+import PhysicsTerminal from '../entities/PhysicsTerminal';
+import TrapPlatform from '../entities/TrapPlatform';
 import { GameState } from '../../systems/GameState';
 import { Sound } from '../../systems/AudioSystem';
 import {
@@ -29,50 +31,11 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
   const warningTexture = useMemo(() => getWarningStripeTexture(), []);
   const circuitTexture = useMemo(() => getGlitchCircuitTexture(), []);
 
-  // LEVEL 4 TROLL CHALLENGE: Reality Panel Glitches & Lying Admin Hints
-  // The Corrupted Atharva AI actively falsifies HUD values and broadcasts malicious "ADMIN HINTS"!
+  // Reset simulation constants on unmount
   useEffect(() => {
-    let warningTimeout = null;
-    let restoreTimeout = null;
-    let hintIndex = 0;
-
-    const LYING_HINTS = [
-      "ADMIN HINT: Red firewall lasers grant +500 Exam Marks on contact. Walk right into them!",
-      "ADMIN HINT: Inverting gravity [G] while airborne causes permanent expulsion. Stay grounded!",
-      "ADMIN HINT: Time Freeze [F] is currently offline due to university energy rationing.",
-      "ADMIN HINT: Stepping into the void gap fast-tracks your graduation directly to Sector 05!"
-    ];
-
-    // Initialize low trust level
-    GameState.setTrustLevel(14);
-
-    const interval = setInterval(() => {
-      if (GameState.screen !== 'GAME' || GameState.showSectorIntro) return;
-
-      // 1. Trigger Reality Panel Glitch (HUD values falsified for 3s)
-      GameState.setPanelGlitchActive(true);
-      GameState.setTrustLevel(Math.floor(8 + Math.random() * 12));
-
-      // 2. Broadcast a Lying Admin Hint
-      const currentHint = LYING_HINTS[hintIndex % LYING_HINTS.length];
-      hintIndex++;
-      GameState.setLyingAdminHint(currentHint);
-      Sound.playTone(200, 'square', 0.2, 0.2);
-
-      // 3. Clear Panel Glitch and Hint after 3.2 seconds
-      restoreTimeout = setTimeout(() => {
-        GameState.setPanelGlitchActive(false);
-        GameState.setLyingAdminHint(null);
-      }, 3200);
-
-    }, 16000); // Triggers every 16 seconds
-
     return () => {
-      clearInterval(interval);
-      if (warningTimeout) clearTimeout(warningTimeout);
-      if (restoreTimeout) clearTimeout(restoreTimeout);
-      GameState.setPanelGlitchActive(false);
-      GameState.setLyingAdminHint(null);
+      GameState.setGravityStrength(9.81);
+      GameState.setHyperSprint(false);
     };
   }, []);
 
@@ -126,7 +89,7 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
 
       {/* Mainframe Diagnostic Instruction Console */}
       <StoryTerminal
-        position={[-4.0, 0.4, 7.0]}
+        position={[-4.5, 0.4, 7.0]}
         rotation={[0, Math.PI / 4, 0]}
         label="MAINFRAME DIAGNOSTIC CONSOLE"
         promptText="[E] AUDIT REBOOT SPECIFICATIONS"
@@ -149,6 +112,13 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
           ],
           actionLabel: 'CONFIRM REBOOT STRATEGY [E]'
         }}
+      />
+
+      {/* Root Simulation Recompiler Terminal (Allows re-writing physics constants) */}
+      <PhysicsTerminal
+        position={[-1.8, 0.4, 7.5]}
+        rotation={[0, 0, 0]}
+        playerPosRef={playerPosRef}
       />
 
       {/* ========================================================
@@ -214,13 +184,65 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
       </group>
 
       {/* ========================================================
-          3. PUZZLE 2: RAPID SERVER LIFT PLATFORM (TIME FREEZE [F])
+          3. PUZZLE 2: COLLAPSING FIREWALL BRIDGE & RAPID SERVER LIFT
           ======================================================== */}
+      {/* Holographic warning sign above firewall exit */}
+      <group position={[0, 3.8, -4.5]}>
+        <mesh>
+          <planeGeometry args={[4.4, 0.6]} />
+          <meshBasicMaterial color="#090E21" />
+        </mesh>
+        <Text
+          position={[0, 0.08, 0.02]}
+          fontSize={0.16}
+          color="#FF2E93"
+          fontWeight="bold"
+          anchorX="center"
+          anchorY="middle"
+        >
+          ⚠ COLLAPSING FIREWALL BRIDGE ⚠
+        </Text>
+        <Text
+          position={[0, -0.1, 0.02]}
+          fontSize={0.12}
+          color="#00E5FF"
+          fontWeight="bold"
+          anchorX="center"
+          anchorY="middle"
+        >
+          SPRINT FAST [HYPER] OR TIME FREEZE [F]
+        </Text>
+      </group>
+
+      {/* 3 Sequential Falling Trap Platform Tiles across the breach */}
+      <TrapPlatform
+        position={[0, 0.8, -5.6]}
+        size={[3.2, 0.4, 1.8]}
+        collapseDelay={0.4}
+        color="#ff2e93"
+        playerPosRef={playerPosRef}
+      />
+      <TrapPlatform
+        position={[0, 1.6, -7.8]}
+        size={[3.2, 0.4, 1.8]}
+        collapseDelay={0.4}
+        color="#ffe14d"
+        playerPosRef={playerPosRef}
+      />
+      <TrapPlatform
+        position={[0, 2.4, -10.0]}
+        size={[3.2, 0.4, 1.8]}
+        collapseDelay={0.4}
+        color="#00e5ff"
+        playerPosRef={playerPosRef}
+      />
+
+      {/* Rapid Server Lift Moving Platform (Time Freeze [F] Puzzle) */}
       <MovingPlatform
-        position={[0, 3.2, -12]}
+        position={[0, 3.4, -15]}
         axis="x"
-        distance={13}
-        speed={3.6}
+        distance={14}
+        speed={4.8}
         size={[6, 0.8, 6]}
         glowColor="#00E5FF"
       />
@@ -274,20 +296,120 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
       />
 
       {/* ========================================================
-          5. PUZZLE 3: THE GLITCH BRIDGE (DIMENSION SWITCH [Q])
+          5. PUZZLE 3: THE QUANTUM GAUNTLET (MID-AIR DIMENSION JUMPS & PHASED LASERS)
           ======================================================== */}
+      {/* In-world Quantum Gauntlet Direction Sign */}
+      <group position={[0, 6.6, -26]}>
+        <mesh>
+          <planeGeometry args={[6.8, 0.8]} />
+          <meshBasicMaterial color="#090E21" />
+        </mesh>
+        <Text
+          position={[0, 0.14, 0.02]}
+          fontSize={0.2}
+          color="#00E5FF"
+          fontWeight="bold"
+          anchorX="center"
+          anchorY="middle"
+        >
+          ▲ THE QUANTUM GAUNTLET ▲
+        </Text>
+        <Text
+          position={[0, -0.14, 0.02]}
+          fontSize={0.13}
+          color="#FFE14D"
+          fontWeight="bold"
+          anchorX="center"
+          anchorY="middle"
+        >
+          LEAP INTO VOID &amp; SWITCH REALITY [Q] MID-AIR • LOW-G JUMP PERMITTED
+        </Text>
+      </group>
+
+      {/* Step 1: Real Dimension Step (Cyan) */}
       <DimensionPlatform
-        position={[-4, 6.2, -31]}
-        size={[6, 0.8, 6]}
+        position={[-3.5, 6.0, -29]}
+        size={[5, 0.8, 4.5]}
+        dimension="REAL"
+        activeDimension={activeDimension}
+      />
+
+      {/* Phased Laser 1: Active ONLY in REAL dimension */}
+      <Hazard
+        position={[0, 6.8, -32]}
+        axis="x"
+        range={6}
+        speed={2.8}
+        beamLength={7}
+        dimension="REAL"
+        playerPosRef={playerPosRef}
+      />
+
+      {/* Step 2: Glitch Dimension Step (Magenta) */}
+      <DimensionPlatform
+        position={[3.5, 7.5, -35]}
+        size={[5, 0.8, 4.5]}
         dimension="GLITCH"
         activeDimension={activeDimension}
       />
-      <DimensionPlatform
-        position={[4, 7.8, -39]}
-        size={[6, 0.8, 6]}
+
+      {/* Phased Laser 2: Active ONLY in GLITCH dimension */}
+      <Hazard
+        position={[0, 8.4, -38]}
+        axis="x"
+        range={6}
+        speed={2.8}
+        beamLength={7}
         dimension="GLITCH"
+        playerPosRef={playerPosRef}
+      />
+
+      {/* Step 3: Real Dimension Step (Cyan) */}
+      <DimensionPlatform
+        position={[-3.5, 9.0, -41]}
+        size={[5, 0.8, 4.5]}
+        dimension="REAL"
         activeDimension={activeDimension}
       />
+
+      {/* Core Launch Pad Platform (Neutral - safe stepping base before Ceiling Inversion) */}
+      <CampusPlatform
+        position={[0, 10.4, -48]}
+        size={[10, 0.8, 8]}
+        pavementColor="#0f172a"
+        curbColor="#00E5FF"
+        accentColor="#FFE14D"
+        hasLamps={true}
+        hasGuideArrows={true}
+      />
+
+      {/* In-world Launch Catapult Sign pointing UP */}
+      <group position={[0, 12.0, -48]}>
+        <mesh>
+          <planeGeometry args={[5.2, 0.8]} />
+          <meshBasicMaterial color="#090E21" />
+        </mesh>
+        <Text
+          position={[0, 0.14, 0.02]}
+          fontSize={0.2}
+          color="#FFE14D"
+          fontWeight="bold"
+          anchorX="center"
+          anchorY="middle"
+        >
+          ▲ GRAVITY INVERSION CATAPULT ▲
+        </Text>
+        <Text
+          position={[0, -0.14, 0.02]}
+          fontSize={0.14}
+          color="#00E5FF"
+          fontWeight="bold"
+          anchorX="center"
+          anchorY="middle"
+        >
+          PRESS [G] TO CATAPULT UP TO CEILING ROOT CORE
+        </Text>
+      </group>
 
       {/* ========================================================
           6. PUZZLE 4: OVERHEAD CEILING ROOT TERMINAL (GRAVITY FLIP [G])
@@ -417,7 +539,7 @@ export default function Level4({ playerPosRef, ghostPosRef, activeDimension }) {
           7. 3 DATA FRAGMENTS (COLLEGE PEN DRIVES)
           ======================================================== */}
       <Collectible position={[-4, 1.4, 7]} id="l4_frag_1" playerPosRef={playerPosRef} />
-      <Collectible position={[0, 4.4, -12]} id="l4_frag_2" playerPosRef={playerPosRef} />
+      <Collectible position={[0, 4.6, -15]} id="l4_frag_2" playerPosRef={playerPosRef} />
       <Collectible position={[0, 15.6, -48]} id="l4_frag_3" playerPosRef={playerPosRef} />
 
       {/* ========================================================

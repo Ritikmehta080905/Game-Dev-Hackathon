@@ -125,7 +125,6 @@ export default function Player({ playerPosRef, ghostPosRef, gravityInverted }) {
     if (playerPosRef) {
       playerPosRef.current = { x: cp[0], y: cp[1] + 1.2, z: cp[2] };
     }
-    GameState.setControlsScrambled(false);
     Sound.playDeath();
   };
 
@@ -152,15 +151,11 @@ export default function Player({ playerPosRef, ghostPosRef, gravityInverted }) {
       return;
     }
 
-    // Movement
-    const moveSpeed = GameState.speedBoostActive ? 13.5 : 9.0;
+    // Movement speed supporting Hyper-Sprint recompiled simulation constant
+    const baseSpeed = GameState.hyperSprint ? 16.0 : (GameState.speedBoostActive ? 13.5 : 9.0);
+    const moveSpeed = baseSpeed;
     const forward = (keys.forward ? 1 : 0) - (keys.backward ? 1 : 0);
-    let side = (keys.right ? 1 : 0) - (keys.left ? 1 : 0);
-
-    // LEVEL 3 TROLL MECHANIC: Inverted Horizontal Steering in Cursed Zones
-    if (GameState.isControlsScrambled) {
-      side = -side;
-    }
+    const side = (keys.right ? 1 : 0) - (keys.left ? 1 : 0);
 
     const cameraDirection = new THREE.Vector3();
     state.camera.getWorldDirection(cameraDirection);

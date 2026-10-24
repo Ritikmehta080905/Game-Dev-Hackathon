@@ -24,6 +24,7 @@ const levelMap = {
 export default function GameCanvas() {
   const [currentLevel, setCurrentLevel] = useState(GameState.currentLevel);
   const [gravityInverted, setGravityInverted] = useState(GameState.gravityInverted);
+  const [gravityStrength, setGravityStrength] = useState(GameState.gravityStrength || 9.81);
   const [activeDimension, setActiveDimension] = useState(GameState.activeDimension);
   const [isPaused, setIsPaused] = useState(GameState.screen === 'PAUSE' || Boolean(GameState.activeStoryModal));
   const playerPosRef = useRef({ x: 0, y: 2, z: 8 });
@@ -33,6 +34,7 @@ export default function GameCanvas() {
     return GameState.subscribe((state) => {
       setCurrentLevel(state.currentLevel);
       setGravityInverted(state.gravityInverted);
+      setGravityStrength(state.gravityStrength || 9.81);
       setActiveDimension(state.activeDimension);
       setIsPaused(state.screen === 'PAUSE' || Boolean(state.activeStoryModal));
       if (state.timeEchoActive && state.timeEchoPos) {
@@ -43,7 +45,8 @@ export default function GameCanvas() {
     });
   }, []);
 
-  const gravityVector = gravityInverted ? [0, 9.81, 0] : [0, -9.81, 0];
+  const gVal = gravityStrength || 9.81;
+  const gravityVector = gravityInverted ? [0, gVal, 0] : [0, -gVal, 0];
   const LevelComponent = levelMap[currentLevel] || Level1;
   const env = ENV_SETTINGS[currentLevel] || ENV_SETTINGS[1];
 

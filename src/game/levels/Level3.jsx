@@ -13,7 +13,6 @@ import ExamNote from '../entities/ExamNote';
 import Checkpoint from '../entities/Checkpoint';
 import Terminal from '../entities/Terminal';
 import StoryTerminal from '../entities/StoryTerminal';
-import CursedZone from '../entities/CursedZone';
 import { GameState } from '../../systems/GameState';
 import { Sound } from '../../systems/AudioSystem';
 import {
@@ -191,21 +190,74 @@ export default function Level3({ playerPosRef, activeDimension }) {
       />
 
       {/* ========================================================
-          3. PUZZLE 2: THE GLITCH BRIDGE (BRIDGES OVER THE VOID)
+          3. PUZZLE 2: MID-AIR DIMENSION JUMPS (THE "EFFECT & CAUSE" CHALLENGE)
+          Alternating Real (Blue) and Glitch (Magenta) platforms across the void!
+          Player MUST leap into the air and press [Q] in mid-air to materialize
+          the next platform before falling through!
           ======================================================== */}
-      {/* Glitch-only neon cyber-bridges! Fully solid in GLITCH dimension, visible in REAL dimension */}
+      {/* Platform 1: Solid in REAL dimension (Cyan) */}
       <DimensionPlatform
-        position={[-3.5, 2.6, -14]}
-        size={[6, 0.8, 6]}
+        position={[-3.2, 2.2, -12]}
+        size={[5.5, 0.8, 5.0]}
+        dimension="REAL"
+        activeDimension={activeDimension}
+        label="REAL (BLUE)"
+      />
+
+      {/* Platform 2: Solid in GLITCH dimension (Magenta) */}
+      <DimensionPlatform
+        position={[3.2, 3.2, -18]}
+        size={[5.5, 0.8, 5.0]}
         dimension="GLITCH"
         activeDimension={activeDimension}
+        label="GLITCH (PINK)"
       />
+
+      {/* Platform 3: Solid in REAL dimension (Cyan) */}
       <DimensionPlatform
-        position={[3.5, 4.2, -22]}
-        size={[6, 0.8, 6]}
+        position={[-2.8, 4.2, -24]}
+        size={[5.5, 0.8, 5.0]}
+        dimension="REAL"
+        activeDimension={activeDimension}
+        label="REAL (BLUE)"
+      />
+
+      {/* Platform 4: Solid in GLITCH dimension (Magenta) */}
+      <DimensionPlatform
+        position={[2.8, 4.8, -28.5]}
+        size={[5.5, 0.8, 4.5]}
         dimension="GLITCH"
         activeDimension={activeDimension}
+        label="GLITCH (PINK)"
       />
+
+      {/* Mid-Air Phase Guide Hologram Sign */}
+      <group position={[0, 6.8, -15]}>
+        <mesh>
+          <planeGeometry args={[7.2, 1.2]} />
+          <meshBasicMaterial color="#090E21" transparent opacity={0.92} />
+        </mesh>
+        <Text
+          position={[0, 0.22, 0.02]}
+          fontSize={0.22}
+          color="#FFE14D"
+          fontWeight="bold"
+          anchorX="center"
+          anchorY="middle"
+        >
+          ⚡ PROTOCOL: MID-AIR PHASE SHIFT
+        </Text>
+        <Text
+          position={[0, -0.2, 0.02]}
+          fontSize={0.16}
+          color="#00E5FF"
+          fontWeight="bold"
+          anchorX="center"
+          anchorY="middle"
+        >
+          JUMP INTO AIR ➔ PRESS [Q] IN MID-AIR TO MATERIALIZE NEXT STEP!
+        </Text>
+      </group>
 
       {/* ========================================================
           4. MIDWAY CHECKPOINT PLATFORM (EXISTS IN BOTH DIMENSIONS)
@@ -221,63 +273,42 @@ export default function Level3({ playerPosRef, activeDimension }) {
       />
       <Checkpoint position={[0, 5.7, -31]} playerPosRef={playerPosRef} />
 
-      {/* Midway Checkpoint Puzzle 3 Hint Guide */}
-      <group position={[0, 8.2, -31]}>
-        <mesh>
-          <planeGeometry args={[6.5, 0.95]} />
-          <meshBasicMaterial color="#090E21" transparent opacity={0.9} />
-        </mesh>
-        <Text
-          position={[0, 0.18, 0.02]}
-          fontSize={0.2}
-          color="#FFE14D"
-          fontWeight="bold"
-          anchorX="center"
-          anchorY="middle"
-        >
-          ⚡ PUZZLE 3: GLITCH LASER CORRIDOR
-        </Text>
-        <Text
-          position={[0, -0.18, 0.02]}
-          fontSize={0.16}
-          color="#00E5FF"
-          fontWeight="bold"
-          anchorX="center"
-          anchorY="middle"
-        >
-          PRESS [Q] TO SWITCH TO REAL &amp; DEACTIVATE LASER
-        </Text>
-      </group>
-
       {/* ========================================================
-          LEVEL 3 TROLL CHALLENGE: CURSED HARD DRIVE BIT-FLIP FIELD
-          Corridor walkway where magnetic interference inverts [A] ⇄ [D] steering!
+          5. PUZZLE 3: PARADOX DUAL-PHASE LASER CORRIDOR
+          Walkway with alternating dimension-phase hazards!
+          Laser A only harms in GLITCH; Laser B only harms in REAL.
+          Player must rhythm-switch [Q] as they sprint forward!
           ======================================================== */}
+      {/* Walkway corridor connecting Checkpoint to Exit Balcony */}
       <CampusPlatform
         position={[0, 5.8, -37.5]}
         size={[8.0, 0.8, 6.0]}
         pavementColor="#1e293b"
-        curbColor="#FF2E93"
+        curbColor="#00E5FF"
         accentColor="#FFE14D"
         hasLamps={false}
         hasGuideArrows={true}
       />
-      <CursedZone
-        position={[0, 5.8, -37.5]}
-        size={[8.5, 3.5, 6.5]}
+
+      {/* Hazard 1: Active ONLY in GLITCH dimension (Magenta) */}
+      <Hazard
+        position={[0, 6.4, -35.5]}
+        axis="x"
+        range={8}
+        speed={2.2}
+        beamLength={7}
+        dimension="GLITCH"
         playerPosRef={playerPosRef}
       />
 
-      {/* ========================================================
-          5. PUZZLE 3: GLITCH-ONLY SECURITY SCANNER LASER
-          ======================================================== */}
+      {/* Hazard 2: Active ONLY in REAL dimension (Cyan) */}
       <Hazard
-        position={[0, 6.4, -38]}
+        position={[0, 6.4, -39.5]}
         axis="x"
-        range={9}
-        speed={2.4}
-        beamLength={8}
-        dimension="GLITCH"
+        range={8}
+        speed={2.5}
+        beamLength={7}
+        dimension="REAL"
         playerPosRef={playerPosRef}
       />
 
