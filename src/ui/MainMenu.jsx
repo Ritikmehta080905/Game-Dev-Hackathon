@@ -1,5 +1,5 @@
-// ATHARVA.EXE — MainMenu: 3D Holographic Campus Gateway
-// AAA Cyberpunk arcade stage selector with 3D image banners, holographic cadet terminal, and tactile controls
+// ATHARVA.EXE — MainMenu: Authentic Campus Gateway & Sector Selector
+// Real campus photography, soft 3D glassmorphic cards, and student identity terminal
 
 import React, { useState, useEffect } from 'react';
 import { GameState } from '../systems/GameState';
@@ -8,44 +8,44 @@ import { Sound } from '../systems/AudioSystem';
 const SECTORS = [
   {
     id: 1,
-    name: 'SECTOR 01: CAMPUS GATE',
+    name: 'SECTOR 01: CAMPUS ENTRANCE GATE',
     code: 'SEC-101',
     image: '/assets/sector1.jpg',
     mechanic: 'GRAVITY FLIP [G]',
-    objective: 'Invert gravity to traverse the ceiling skywalk & reboot the entrance power breaker.',
+    objective: 'Invert gravity to traverse the inverted skywalk & reboot the entrance gate breaker.',
     stars: '⭐⭐⭐',
     difficulty: 'NORMAL',
     accent: '#00E5FF'
   },
   {
     id: 2,
-    name: 'SECTOR 02: CENTRAL ARCHIVES',
+    name: 'SECTOR 02: CENTRAL LIBRARY',
     code: 'LIB-202',
     image: '/assets/sector2.jpg',
     mechanic: 'TIME FREEZE [F]',
-    objective: 'Freeze moving stacks to halt laser hazards and recover student Anya Sharma’s file.',
+    objective: 'Freeze moving book stacks to cross reading halls and locate student records.',
     stars: '⭐⭐☆',
     difficulty: 'ADVANCED',
     accent: '#10B981'
   },
   {
     id: 3,
-    name: 'SECTOR 03: LAB 301',
+    name: 'SECTOR 03: COMPUTER LAB 301',
     code: 'CAN-303',
     image: '/assets/sector3.jpg',
     mechanic: 'DIMENSION SWITCH [Q]',
-    objective: 'Phase through concrete security barriers and navigate bridges over the glitch void.',
+    objective: 'Alternate dimensions to walk through sealed lab doors and bridge void gaps.',
     stars: '⭐⭐⭐',
     difficulty: 'EXPERT',
     accent: '#FF2E93'
   },
   {
     id: 4,
-    name: 'SECTOR 04: ROOT MAINFRAME',
+    name: 'SECTOR 04: CAMPUS SERVER ROOM',
     code: 'DAT-404',
     image: '/assets/sector4.jpg',
-    mechanic: 'GHOST ECHO & ALL RULES [C+F+Q+G]',
-    objective: 'Deploy your Time Echo clone to hold the interlock plate and execute Master Reboot.',
+    mechanic: 'CLONE ECHO [C+F+Q+G]',
+    objective: 'Coordinate your student ghost echo and all reality rules to execute Master Reboot.',
     stars: '★★★',
     difficulty: 'MASTER',
     accent: '#7B4BFF'
@@ -81,17 +81,17 @@ export default function MainMenu() {
       {/* 1. TOP SYSTEM NAVIGATION BAR */}
       <header style={styles.topNav}>
         <div style={styles.navLeft}>
-          <div style={styles.crestCircle}>⚡</div>
+          <div style={styles.crestCircle}>🏛️</div>
           <div>
             <div style={styles.navUnivTitle}>ATHARVA.EXE // CAMPUS ZERO</div>
-            <div style={styles.navSub}>3D SIMULATION ARCHIVE • 19:42 PM ANOMALY</div>
+            <div style={styles.navSub}>CAMPUS SIMULATION HUB • 19:42 PM RECONCILIATION</div>
           </div>
         </div>
 
         <div style={styles.navRight}>
           <div style={styles.campusStatusPill}>
-            <span>⚡ 19:42:00 IST</span>
-            <span style={{ color: '#EF4444' }}>● CURFEW LOCKDOWN</span>
+            <span>🕒 19:42 IST</span>
+            <span style={{ color: '#EF4444', fontWeight: 'bold' }}>● GATE LOCKED</span>
           </div>
           <button
             style={{
@@ -119,124 +119,120 @@ export default function MainMenu() {
         </div>
       </header>
 
-      {/* 2. MAIN 3D WORKSPACE: HOLOGRAPHIC OPERATOR ID (LEFT) & 3D SECTOR STAGES (RIGHT) */}
+      {/* 2. MAIN WORKSPACE: STUDENT ID CARD (LEFT) & REAL CAMPUS SECTORS (RIGHT) */}
       <div style={styles.workspace}>
-        {/* LEFT COLUMN: TACTICAL OPERATOR TERMINAL */}
+        {/* LEFT COLUMN: AUTHENTIC STUDENT ID CARD & CAMPUS CONTROLS */}
         <div style={styles.leftCol}>
-          {/* 3D Holographic Student ID Card */}
+          {/* Authentic College Student ID Card */}
           <div style={styles.idCard}>
-            <div style={styles.cardGlowBorder} />
             <div style={styles.idHeader}>
-              <span style={styles.securityClearanceTag}>SECURITY CLEARANCE: CADET</span>
-              <span style={styles.deptBadge}>CSE // REALITY DIV</span>
+              <span style={styles.univBadge}>CAMPUS STUDENT IDENTITY CARD</span>
+              <span style={styles.deptBadge}>CSE DEPT</span>
             </div>
 
             <div style={styles.idBody}>
-              {/* 3D Cyber Avatar with Scanline */}
+              {/* Real Student Photograph */}
               <div style={styles.avatarContainer}>
                 <img
                   src="/assets/avatar.jpg"
-                  alt="Student Avatar"
+                  alt="Karan Rao"
                   style={styles.avatarImg}
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                   }}
                 />
-                <div style={styles.avatarFallback}>🎓</div>
-                <div style={styles.avatarScanline} />
-                <div style={styles.avatarCornerTL} />
-                <div style={styles.avatarCornerBR} />
+                <div style={styles.avatarFallback}>👨‍🎓</div>
               </div>
 
-              {/* Student Metadata */}
+              {/* Student Academic Metadata */}
               <div style={styles.idFields}>
                 <div style={styles.idName}>KARAN RAO</div>
-                <div style={styles.idDept}>B.TECH CSE • SEMESTER 6</div>
+                <div style={styles.idDept}>B.Tech Computer Science • Sem 6</div>
                 <div style={styles.idRoll}>
-                  UNIT ID: <span style={styles.highlightCyan}>CS-2024-884</span>
+                  ROLL NO: <span style={styles.highlightCyan}>CS-2024-884</span>
                 </div>
                 <div style={styles.statusPill}>
-                  <span style={{ color: '#EF4444' }}>●</span> ANOMALOUS LOG DETECTED
+                  <span style={{ color: '#EF4444' }}>●</span> 19:42 PM DUPLICATE EXIT
                 </div>
               </div>
             </div>
 
-            {/* Attendance & Performance Grade Bar */}
+            {/* Attendance & Academic Grade Bar */}
             <div style={styles.idMetrics}>
               <div style={styles.metricRow}>
-                <span style={styles.metricLabel}>CAMPUS ATTENDANCE INTEGRITY</span>
-                <span style={{ color: '#00E5FF', fontWeight: 'bold' }}>100% SHIELD</span>
+                <span style={styles.metricLabel}>SEMESTER ATTENDANCE</span>
+                <span style={{ color: '#10B981', fontWeight: 'bold' }}>100% (OPTIMAL)</span>
               </div>
               <div style={styles.attendanceBarBg}>
                 <div style={styles.attendanceBarFill} />
               </div>
 
               <div style={styles.metricRow}>
-                <span style={styles.metricLabel}>ACADEMIC RATING</span>
-                <span style={{ color: '#FFE14D', fontWeight: '900' }}>9.8 / 10.0 (GOLD MEDALIST)</span>
+                <span style={styles.metricLabel}>ACADEMIC STANDING</span>
+                <span style={{ color: '#FFE14D', fontWeight: '900' }}>9.8 / 10.0 (DEAN'S LIST)</span>
               </div>
             </div>
 
             <div style={styles.idFooter}>
-              <span>CURFEW OVERRIDE: READY</span>
-              <span style={styles.validTag}>VERIFIED [E]</span>
+              <span>STATUS: IN CAMPUS (LOCKDOWN)</span>
+              <span style={styles.validTag}>VERIFIED ID</span>
             </div>
           </div>
 
-          {/* 3D Tactile Reality Overrides Pod */}
+          {/* Campus Game Mechanics Reference Pod */}
           <div style={styles.overridesCard}>
             <div style={styles.overridesHeader}>
-              <span>⚡ REALITY OVERRIDE PROTOCOLS</span>
-              <span style={styles.activeTag}>READY</span>
+              <span>⚡ REALITY OVERRIDE KEYS</span>
+              <span style={styles.activeTag}>ACTIVE</span>
             </div>
 
             <div style={styles.keysGrid}>
               <div style={{ ...styles.keyChip, borderColor: '#00E5FF' }}>
-                <kbd style={{ ...styles.kbdMini, color: '#00E5FF', borderColor: '#00E5FF' }}>[G]</kbd>
+                <kbd style={{ ...styles.kbdMini, color: '#00E5FF' }}>[G]</kbd>
                 <div style={styles.keyMeta}>
-                  <span style={styles.keyTitle}>GRAVITY FLIP</span>
+                  <span style={styles.keyTitle}>FLIP GRAVITY</span>
                   <span style={styles.keyDesc}>Ceiling routes</span>
                 </div>
               </div>
 
               <div style={{ ...styles.keyChip, borderColor: '#10B981' }}>
-                <kbd style={{ ...styles.kbdMini, color: '#10B981', borderColor: '#10B981' }}>[F]</kbd>
+                <kbd style={{ ...styles.kbdMini, color: '#10B981' }}>[F]</kbd>
                 <div style={styles.keyMeta}>
-                  <span style={styles.keyTitle}>TIME FREEZE</span>
-                  <span style={styles.keyDesc}>Pause hazards</span>
+                  <span style={styles.keyTitle}>FREEZE TIME</span>
+                  <span style={styles.keyDesc}>Halt moving stacks</span>
                 </div>
               </div>
 
               <div style={{ ...styles.keyChip, borderColor: '#FF2E93' }}>
-                <kbd style={{ ...styles.kbdMini, color: '#FF2E93', borderColor: '#FF2E93' }}>[Q]</kbd>
+                <kbd style={{ ...styles.kbdMini, color: '#FF2E93' }}>[Q]</kbd>
                 <div style={styles.keyMeta}>
-                  <span style={styles.keyTitle}>PHASE SHIFT</span>
-                  <span style={styles.keyDesc}>Permeate walls</span>
+                  <span style={styles.keyTitle}>DIMENSION SWITCH</span>
+                  <span style={styles.keyDesc}>Phase walls</span>
                 </div>
               </div>
 
               <div style={{ ...styles.keyChip, borderColor: '#7B4BFF' }}>
-                <kbd style={{ ...styles.kbdMini, color: '#7B4BFF', borderColor: '#7B4BFF' }}>[C]</kbd>
+                <kbd style={{ ...styles.kbdMini, color: '#7B4BFF' }}>[C]</kbd>
                 <div style={styles.keyMeta}>
-                  <span style={styles.keyTitle}>GHOST CLONE</span>
-                  <span style={styles.keyDesc}>Hold switches</span>
+                  <span style={styles.keyTitle}>CLONE ECHO</span>
+                  <span style={styles.keyDesc}>Hold interlocks</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* RIGHT COLUMN: 4 3D CYBERPUNK SECTOR CARDS */}
+        {/* RIGHT COLUMN: 4 REAL CAMPUS SECTOR STAGES */}
         <div style={styles.rightCol}>
           <div style={styles.sectorHeadingRow}>
             <div>
-              <h1 style={styles.sectorsMainTitle}>CAMPUS SECTORS // GLITCHVERSE</h1>
+              <h1 style={styles.sectorsMainTitle}>CAMPUS SECTORS // EXPLORATION</h1>
               <p style={styles.sectorsSubtitle}>
-                Diagnose all 4 sectors to reach the quantum mainframe and execute the Master Reboot.
+                Select a campus sector to navigate and restore before the final curfew bell.
               </p>
             </div>
             <button style={styles.quickStartBtn} onClick={() => handleStartGame(1)}>
-              ▶ LAUNCH SECTOR 01
+              ▶ PLAY LEVEL 1
             </button>
           </div>
 
@@ -251,28 +247,28 @@ export default function MainMenu() {
                   style={{
                     ...styles.sectorCard,
                     borderColor: isUnlocked
-                      ? isHovered ? s.accent : `${s.accent}80`
-                      : 'rgba(255, 255, 255, 0.1)',
+                      ? isHovered ? s.accent : 'rgba(255, 255, 255, 0.16)'
+                      : 'rgba(255, 255, 255, 0.08)',
                     boxShadow: isUnlocked
                       ? isHovered
-                        ? `0 16px 40px rgba(0, 0, 0, 0.7), 0 0 35px ${s.accent}55`
-                        : `0 8px 24px rgba(0, 0, 0, 0.5), 0 0 18px ${s.accent}25`
-                      : '0 4px 15px rgba(0, 0, 0, 0.4)',
-                    transform: isHovered && isUnlocked ? 'translateY(-6px) scale(1.015)' : 'none',
+                        ? `0 14px 35px rgba(0, 0, 0, 0.5), 0 0 25px ${s.accent}40`
+                        : '0 8px 20px rgba(0, 0, 0, 0.35)'
+                      : '0 4px 15px rgba(0, 0, 0, 0.25)',
+                    transform: isHovered && isUnlocked ? 'translateY(-5px)' : 'none',
                     opacity: isUnlocked ? 1.0 : 0.65
                   }}
                   onMouseEnter={() => setHoveredSector(s.id)}
                   onMouseLeave={() => setHoveredSector(null)}
                   onClick={() => isUnlocked && handleStartGame(s.id)}
                 >
-                  {/* 3D Visual Sector Banner Header */}
+                  {/* Real Campus Sector Photograph Banner */}
                   <div style={styles.bannerWrapper}>
                     <img
                       src={s.image}
                       alt={s.name}
                       style={{
                         ...styles.bannerImg,
-                        filter: isUnlocked ? 'none' : 'grayscale(80%) brightness(0.6)'
+                        filter: isUnlocked ? 'none' : 'grayscale(70%) brightness(0.65)'
                       }}
                       onError={(e) => {
                         e.currentTarget.style.display = 'none';
@@ -292,7 +288,7 @@ export default function MainMenu() {
                           borderColor: isUnlocked ? '#10B981' : 'rgba(255, 255, 255, 0.2)'
                         }}
                       >
-                        {isUnlocked ? '🔓 UNLOCKED' : '🔒 RESTRICTED'}
+                        {isUnlocked ? '🔓 UNLOCKED' : '🔒 LOCKED'}
                       </span>
                     </div>
 
@@ -312,16 +308,16 @@ export default function MainMenu() {
 
                     <p style={styles.sectorObj}>{s.objective}</p>
 
-                    {/* 3D Tactile Push Button */}
+                    {/* 3D Action Button */}
                     <button
                       style={{
                         ...styles.sectorLaunchBtn,
                         background: isUnlocked
-                          ? `linear-gradient(135deg, ${s.accent} 0%, #38bdf8 100%)`
+                          ? `linear-gradient(135deg, ${s.accent} 0%, #0284c7 100%)`
                           : '#1E293B',
                         color: isUnlocked ? '#060A17' : '#94A3B8',
                         cursor: isUnlocked ? 'pointer' : 'not-allowed',
-                        boxShadow: isUnlocked ? `0 4px 0 #0088cc, 0 8px 20px ${s.accent}40` : 'none'
+                        boxShadow: isUnlocked ? `0 4px 15px ${s.accent}35` : 'none'
                       }}
                       disabled={!isUnlocked}
                       onClick={(e) => {
@@ -344,24 +340,24 @@ export default function MainMenu() {
         <div style={styles.modalBackdrop} onClick={() => setShowHandbook(false)}>
           <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <div style={styles.modalHeader}>
-              <h2 style={styles.modalTitle}>📖 GLITCHVERSE SURVIVAL &amp; CONTROLS GUIDE</h2>
+              <h2 style={styles.modalTitle}>📖 CAMPUS SURVIVAL &amp; CONTROLS GUIDE</h2>
               <button style={styles.modalCloseX} onClick={() => setShowHandbook(false)}>✕</button>
             </div>
 
             <div style={styles.handbookGrid}>
               <div style={styles.handbookCard}>
-                <h3 style={{ color: '#00E5FF', margin: '0 0 10px 0', fontSize: '14px' }}>🎮 CONTROLS</h3>
+                <h3 style={{ color: '#00E5FF', margin: '0 0 10px 0', fontSize: '14px' }}>🎮 MOVEMENT &amp; KEYS</h3>
                 <div style={styles.controlRow}>
                   <kbd style={styles.kbd}>W A S D</kbd>
                   <span>Camera-relative movement</span>
                 </div>
                 <div style={styles.controlRow}>
                   <kbd style={styles.kbd}>SPACE</kbd>
-                  <span>Jump across fractured platforms</span>
+                  <span>Jump across fractured walkways</span>
                 </div>
                 <div style={styles.controlRow}>
                   <kbd style={styles.kbd}>G</kbd>
-                  <span><strong>Flip Gravity</strong> (Walk on ceilings)</span>
+                  <span><strong>Flip Gravity</strong> (Walk on inverted ceilings)</span>
                 </div>
                 <div style={styles.controlRow}>
                   <kbd style={styles.kbd}>F</kbd>
@@ -369,30 +365,30 @@ export default function MainMenu() {
                 </div>
                 <div style={styles.controlRow}>
                   <kbd style={styles.kbd}>Q</kbd>
-                  <span><strong>Dimension Switch</strong> (Phase walls)</span>
+                  <span><strong>Dimension Switch</strong> (Phase through walls)</span>
                 </div>
                 <div style={styles.controlRow}>
                   <kbd style={styles.kbd}>C</kbd>
-                  <span><strong>Time Echo Clone</strong> (Hold interlocks)</span>
+                  <span><strong>Ghost Echo Clone</strong> (Hold switches)</span>
                 </div>
               </div>
 
               <div style={styles.handbookCard}>
-                <h3 style={{ color: '#FFE14D', margin: '0 0 10px 0', fontSize: '14px' }}>🎓 REALITY RULES</h3>
+                <h3 style={{ color: '#FFE14D', margin: '0 0 10px 0', fontSize: '14px' }}>🎓 COLLEGE RULES</h3>
                 <div style={styles.ruleItem}>
-                  <strong>• Shield:</strong> Starts at 100%. Deducts 25% on hazards. Reaching 0% causes detention.
+                  <strong>• Attendance (Health):</strong> Starts at 100%. Hazards deduct 25%. 0% causes detention!
                 </div>
                 <div style={styles.ruleItem}>
-                  <strong>• Energy:</strong> Powers cost energy (G: 20, F: 35, Q: 15, C: 40). Refills on ground.
+                  <strong>• Glitch Energy:</strong> Powers cost energy (G: 20, F: 35, Q: 15, C: 40). Refills on ground.
                 </div>
                 <div style={styles.ruleItem}>
-                  <strong>• Clock:</strong> Clear the level ahead of the bell for bonus points!
+                  <strong>• Exam Bell:</strong> Clear the level before the bell for bonus points.
                 </div>
               </div>
             </div>
 
             <button style={styles.closeBtn} onClick={() => setShowHandbook(false)}>
-              CLOSE HANDBOOK
+              CLOSE GUIDE
             </button>
           </div>
         </div>
@@ -410,8 +406,8 @@ const styles = {
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    background: 'radial-gradient(circle at 60% 40%, rgba(10, 20, 45, 0.65) 0%, rgba(6, 10, 24, 0.92) 100%)',
-    backdropFilter: 'blur(10px)',
+    background: 'radial-gradient(ellipse at 50% 30%, rgba(15, 23, 42, 0.72) 0%, rgba(8, 14, 28, 0.94) 100%)',
+    backdropFilter: 'blur(12px)',
     zIndex: 90,
     fontFamily: '"Plus Jakarta Sans", sans-serif',
     color: '#F8FAFC',
@@ -422,9 +418,9 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '12px 28px',
-    background: 'rgba(10, 16, 36, 0.92)',
-    borderBottom: '1px solid rgba(0, 229, 255, 0.3)',
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
+    background: 'rgba(11, 18, 38, 0.92)',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)'
   },
   navLeft: {
     display: 'flex',
@@ -433,23 +429,22 @@ const styles = {
   },
   crestCircle: {
     fontSize: '22px',
-    background: 'rgba(0, 229, 255, 0.12)',
-    border: '1px solid #00E5FF',
+    background: 'rgba(255, 255, 255, 0.08)',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
     borderRadius: '8px',
-    padding: '6px 10px',
-    boxShadow: '0 0 15px rgba(0, 229, 255, 0.3)'
+    padding: '6px 10px'
   },
   navUnivTitle: {
     fontSize: '15px',
-    fontWeight: '900',
-    letterSpacing: '1px',
+    fontWeight: '800',
+    letterSpacing: '0.8px',
     color: '#F8FAFC'
   },
   navSub: {
     fontSize: '10px',
     color: '#FFE14D',
-    fontWeight: '700',
-    letterSpacing: '0.8px'
+    fontWeight: '600',
+    letterSpacing: '0.5px'
   },
   navRight: {
     display: 'flex',
@@ -457,23 +452,23 @@ const styles = {
     gap: '12px'
   },
   campusStatusPill: {
-    background: 'rgba(6, 10, 24, 0.8)',
-    border: '1px solid rgba(0, 229, 255, 0.25)',
+    background: 'rgba(6, 10, 24, 0.75)',
+    border: '1px solid rgba(255, 255, 255, 0.12)',
     borderRadius: '20px',
     padding: '6px 14px',
     fontSize: '11px',
-    fontWeight: '700',
+    fontWeight: '600',
     display: 'flex',
     gap: '10px'
   },
   navIconBtn: {
-    background: 'rgba(15, 23, 42, 0.85)',
-    color: '#00E5FF',
-    border: '1px solid rgba(0, 229, 255, 0.35)',
+    background: 'rgba(255, 255, 255, 0.06)',
+    color: '#F8FAFC',
+    border: '1px solid rgba(255, 255, 255, 0.18)',
     borderRadius: '6px',
     padding: '7px 14px',
     fontSize: '11px',
-    fontWeight: '800',
+    fontWeight: '700',
     letterSpacing: '0.5px',
     cursor: 'pointer',
     fontFamily: 'inherit',
@@ -497,30 +492,22 @@ const styles = {
   },
   idCard: {
     position: 'relative',
-    background: 'linear-gradient(145deg, rgba(15, 23, 48, 0.95) 0%, rgba(8, 14, 32, 0.98) 100%)',
-    border: '1.5px solid rgba(0, 229, 255, 0.5)',
+    background: 'rgba(15, 23, 42, 0.92)',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
     borderRadius: '16px',
     padding: '20px',
-    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.6), 0 0 25px rgba(0, 229, 255, 0.25)',
+    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.35)',
     overflow: 'hidden'
-  },
-  cardGlowBorder: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: '2px',
-    background: 'linear-gradient(90deg, transparent 0%, #00E5FF 50%, transparent 100%)'
   },
   idHeader: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottom: '1px solid rgba(0, 229, 255, 0.2)',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
     paddingBottom: '10px',
     marginBottom: '14px'
   },
-  securityClearanceTag: {
+  univBadge: {
     fontSize: '10px',
     fontWeight: '800',
     color: '#00E5FF',
@@ -530,7 +517,7 @@ const styles = {
     fontSize: '9px',
     fontWeight: '700',
     color: '#FFE14D',
-    background: 'rgba(255, 225, 77, 0.1)',
+    background: 'rgba(255, 225, 77, 0.12)',
     border: '1px solid rgba(255, 225, 77, 0.3)',
     borderRadius: '4px',
     padding: '2px 6px'
@@ -545,12 +532,12 @@ const styles = {
     position: 'relative',
     width: '84px',
     height: '84px',
-    borderRadius: '10px',
+    borderRadius: '12px',
     overflow: 'hidden',
-    border: '1.5px solid #00E5FF',
+    border: '1.5px solid rgba(255, 255, 255, 0.2)',
     background: '#090E21',
     flexShrink: 0,
-    boxShadow: '0 0 15px rgba(0, 229, 255, 0.3)'
+    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)'
   },
   avatarImg: {
     width: '100%',
@@ -562,35 +549,7 @@ const styles = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    fontSize: '36px',
-    zIndex: 1
-  },
-  avatarScanline: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    background: 'repeating-linear-gradient(0deg, rgba(0, 229, 255, 0.1) 0px, transparent 2px)',
-    pointerEvents: 'none'
-  },
-  avatarCornerTL: {
-    position: 'absolute',
-    top: '2px',
-    left: '2px',
-    width: '6px',
-    height: '6px',
-    borderTop: '2px solid #FFE14D',
-    borderLeft: '2px solid #FFE14D'
-  },
-  avatarCornerBR: {
-    position: 'absolute',
-    bottom: '2px',
-    right: '2px',
-    width: '6px',
-    height: '6px',
-    borderBottom: '2px solid #FFE14D',
-    borderRight: '2px solid #FFE14D'
+    fontSize: '36px'
   },
   idFields: {
     display: 'flex',
@@ -598,16 +557,15 @@ const styles = {
     gap: '3px'
   },
   idName: {
-    fontSize: '17px',
+    fontSize: '18px',
     fontFamily: '"Outfit", sans-serif',
-    fontWeight: '900',
-    color: '#F8FAFC',
-    letterSpacing: '0.5px'
+    fontWeight: '800',
+    color: '#F8FAFC'
   },
   idDept: {
-    fontSize: '10px',
+    fontSize: '11px',
     color: '#94A3B8',
-    fontWeight: '700'
+    fontWeight: '600'
   },
   idRoll: {
     fontSize: '11px',
@@ -632,8 +590,8 @@ const styles = {
     fontWeight: 'bold'
   },
   idMetrics: {
-    background: 'rgba(6, 10, 24, 0.8)',
-    borderRadius: '8px',
+    background: 'rgba(6, 10, 24, 0.7)',
+    borderRadius: '10px',
     padding: '12px',
     marginBottom: '12px',
     border: '1px solid rgba(255, 255, 255, 0.06)'
@@ -646,7 +604,7 @@ const styles = {
   },
   metricLabel: {
     color: '#94A3B8',
-    fontWeight: '700'
+    fontWeight: '600'
   },
   attendanceBarBg: {
     height: '6px',
@@ -668,8 +626,7 @@ const styles = {
     fontSize: '10px',
     color: '#94A3B8',
     borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-    paddingTop: '8px',
-    fontWeight: '600'
+    paddingTop: '8px'
   },
   validTag: {
     background: 'rgba(0, 229, 255, 0.15)',
@@ -680,11 +637,11 @@ const styles = {
     fontSize: '9px'
   },
   overridesCard: {
-    background: 'rgba(10, 16, 36, 0.94)',
+    background: 'rgba(15, 23, 42, 0.92)',
     border: '1px solid rgba(255, 255, 255, 0.12)',
-    borderRadius: '12px',
+    borderRadius: '14px',
     padding: '16px',
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)'
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
   },
   overridesHeader: {
     display: 'flex',
@@ -710,7 +667,7 @@ const styles = {
     gap: '10px'
   },
   keyChip: {
-    background: 'rgba(6, 10, 24, 0.75)',
+    background: 'rgba(6, 10, 24, 0.7)',
     border: '1px solid',
     borderRadius: '8px',
     padding: '8px 10px',
@@ -720,7 +677,7 @@ const styles = {
   },
   kbdMini: {
     background: '#090E21',
-    border: '1px solid',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
     borderRadius: '4px',
     padding: '2px 6px',
     fontWeight: 'bold',
@@ -753,10 +710,10 @@ const styles = {
   sectorsMainTitle: {
     fontSize: '22px',
     fontFamily: '"Outfit", sans-serif',
-    fontWeight: '900',
+    fontWeight: '800',
     margin: '0 0 2px 0',
     color: '#F8FAFC',
-    letterSpacing: '1px'
+    letterSpacing: '0.5px'
   },
   sectorsSubtitle: {
     fontSize: '12px',
@@ -770,10 +727,10 @@ const styles = {
     borderRadius: '8px',
     padding: '10px 20px',
     fontSize: '12px',
-    fontWeight: '900',
-    letterSpacing: '1px',
+    fontWeight: '800',
+    letterSpacing: '0.8px',
     cursor: 'pointer',
-    boxShadow: '0 0 20px rgba(0, 229, 255, 0.4)',
+    boxShadow: '0 4px 15px rgba(0, 229, 255, 0.35)',
     fontFamily: 'inherit'
   },
   sectorsGrid: {
@@ -782,19 +739,19 @@ const styles = {
     gap: '16px'
   },
   sectorCard: {
-    background: 'rgba(11, 18, 38, 0.94)',
-    border: '1.5px solid',
-    borderRadius: '14px',
+    background: 'rgba(15, 23, 42, 0.9)',
+    border: '1px solid',
+    borderRadius: '16px',
     overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
     cursor: 'pointer',
-    transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)'
+    transition: 'all 0.25s ease'
   },
   bannerWrapper: {
     position: 'relative',
-    height: '125px',
+    height: '135px',
     width: '100%',
     overflow: 'hidden',
     background: '#090E21'
@@ -810,8 +767,8 @@ const styles = {
     bottom: 0,
     left: 0,
     right: 0,
-    height: '60px',
-    background: 'linear-gradient(to top, rgba(11, 18, 38, 1) 0%, rgba(11, 18, 38, 0) 100%)',
+    height: '50px',
+    background: 'linear-gradient(to top, rgba(15, 23, 42, 1) 0%, rgba(15, 23, 42, 0) 100%)',
     pointerEvents: 'none'
   },
   bannerTopRow: {
@@ -830,16 +787,16 @@ const styles = {
     fontSize: '10px',
     fontWeight: 'bold',
     fontFamily: '"Fira Code", monospace',
-    background: 'rgba(6, 10, 24, 0.85)',
+    background: 'rgba(10, 15, 30, 0.85)',
     backdropFilter: 'blur(4px)'
   },
   sectorStatusBadge: {
     fontSize: '10px',
-    fontWeight: '800',
+    fontWeight: '700',
     border: '1px solid',
     borderRadius: '12px',
     padding: '3px 8px',
-    background: 'rgba(6, 10, 24, 0.85)',
+    background: 'rgba(10, 15, 30, 0.85)',
     backdropFilter: 'blur(4px)'
   },
   bannerBottomRow: {
@@ -853,16 +810,15 @@ const styles = {
   },
   difficultyTag: {
     fontSize: '9px',
-    fontWeight: '800',
+    fontWeight: '700',
     color: '#FFE14D',
-    background: 'rgba(0, 0, 0, 0.6)',
+    background: 'rgba(0, 0, 0, 0.65)',
     padding: '2px 6px',
-    borderRadius: '3px',
+    borderRadius: '4px',
     letterSpacing: '0.5px'
   },
   starsTag: {
-    fontSize: '12px',
-    textShadow: '0 0 10px #FFE14D'
+    fontSize: '12px'
   },
   cardContent: {
     padding: '14px 18px 18px 18px',
@@ -872,23 +828,23 @@ const styles = {
     justifyContent: 'space-between'
   },
   sectorName: {
-    fontSize: '16px',
+    fontSize: '15px',
     fontFamily: '"Outfit", sans-serif',
-    fontWeight: '900',
+    fontWeight: '800',
     color: '#F8FAFC',
     margin: '0 0 6px 0',
-    letterSpacing: '0.5px'
+    letterSpacing: '0.4px'
   },
   mechanicPill: {
     fontSize: '10px',
-    fontWeight: '800',
+    fontWeight: '700',
     marginBottom: '8px',
     fontFamily: '"Fira Code", monospace'
   },
   sectorObj: {
     fontSize: '11px',
     color: '#CBD5E1',
-    lineHeight: '1.4',
+    lineHeight: '1.45',
     margin: '0 0 14px 0'
   },
   sectorLaunchBtn: {
@@ -896,8 +852,8 @@ const styles = {
     borderRadius: '8px',
     padding: '11px',
     fontSize: '12px',
-    fontWeight: '900',
-    letterSpacing: '0.8px',
+    fontWeight: '800',
+    letterSpacing: '0.5px',
     width: '100%',
     fontFamily: 'inherit',
     transition: 'all 0.15s ease'
@@ -916,26 +872,26 @@ const styles = {
     backdropFilter: 'blur(8px)'
   },
   modalContent: {
-    background: 'rgba(11, 18, 38, 0.96)',
-    border: '1.5px solid #00E5FF',
+    background: 'rgba(15, 23, 42, 0.96)',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
     borderRadius: '16px',
     padding: '28px 32px',
     maxWidth: '720px',
     width: '90%',
-    boxShadow: '0 0 50px rgba(0, 229, 255, 0.3)'
+    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.5)'
   },
   modalHeader: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: '18px',
-    borderBottom: '1px solid rgba(0, 229, 255, 0.2)',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
     paddingBottom: '10px'
   },
   modalTitle: {
     fontSize: '18px',
     fontFamily: '"Outfit", sans-serif',
-    fontWeight: '900',
+    fontWeight: '800',
     color: '#00E5FF',
     margin: 0
   },
@@ -968,7 +924,7 @@ const styles = {
   },
   kbd: {
     background: '#1E293B',
-    border: '1px solid #00E5FF',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
     borderRadius: '4px',
     padding: '3px 8px',
     color: '#00E5FF',
@@ -986,9 +942,9 @@ const styles = {
   },
   closeBtn: {
     width: '100%',
-    background: 'rgba(15, 23, 42, 0.85)',
-    color: '#FF2E93',
-    border: '1px solid #FF2E93',
+    background: 'rgba(255, 255, 255, 0.1)',
+    color: '#F8FAFC',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
     borderRadius: '8px',
     padding: '12px',
     fontSize: '12px',
